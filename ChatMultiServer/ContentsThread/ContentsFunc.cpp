@@ -12,6 +12,7 @@ LFreeQ<CPacket*> g_ContentsJobQ[CONTENTS_THREADCOUNT];
 extern Player* g_PlayerArr;
 
 extern std::list<Player*> Sector[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
+extern std::mutex SectorLock[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
 
 extern long long g_playerCount;
 

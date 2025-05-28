@@ -4,6 +4,7 @@
 #include "ContentsThread/ContentsFunc.h"
 
 std::list<Player*> Sector[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
+std::mutex SectorLock[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
 int sectorXRange = dfRANGE_MOVE_RIGHT / SECTOR_RATIO;
 int sectorYRange = dfRANGE_MOVE_BOTTOM / SECTOR_RATIO;
 
@@ -25,16 +26,19 @@ bool SyncSector(ULONG64 UserId, int beforeX, int beforeY)
 	int SectorX = playerX / SECTOR_RATIO;
 	int SectorY = playerY / SECTOR_RATIO;
 	
+	SectorLock[beforeSectorX][beforeSectorY].lock();
 	size_t debugSize = Sector[beforeSectorX][beforeSectorY].size();
 	Sector[beforeSectorX][beforeSectorY].remove(&g_PlayerArr[playerIndex]);
-
 	if (debugSize == Sector[beforeSectorX][beforeSectorY].size())
 	{
 		__debugbreak();
 		return false;
 	}
+	SectorLock[beforeSectorX][beforeSectorY].unlock();
 
+	SectorLock[SectorX][SectorY].lock();
 	Sector[SectorX][SectorY].push_back(&g_PlayerArr[playerIndex]);
+	SectorLock[SectorX][SectorY].unlock();
 
 	return true;
 }
@@ -53,6 +57,8 @@ bool CheckSector(ULONG64 UserId)
 
 	localX = g_PlayerArr[playerIndex].GetX();
 	localY = g_PlayerArr[playerIndex].GetY();
+
+	SectorLock[localX / SECTOR_RATIO][localY / SECTOR_RATIO].lock();
 	auto searchIt = std::find(Sector[localX / SECTOR_RATIO][localY / SECTOR_RATIO].begin(),
 		Sector[localX / SECTOR_RATIO][localY / SECTOR_RATIO].end(),
 		&g_PlayerArr[playerIndex]);
@@ -61,6 +67,8 @@ bool CheckSector(ULONG64 UserId)
 		__debugbreak();
 		return false;
 	}
+	SectorLock[localX / SECTOR_RATIO][localY / SECTOR_RATIO].unlock();
+
 #endif
 	return true;
 }

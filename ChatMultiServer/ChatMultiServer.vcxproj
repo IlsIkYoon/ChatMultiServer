@@ -190,6 +190,7 @@
     <ClCompile Include="ContentsThread\ContentsFunc.cpp" />
     <ClCompile Include="ContentsResource.cpp" />
     <ClCompile Include="ContentsThread\ContentsThreadManager.cpp" />
+    <ClCompile Include="Log\Mornitoring.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Msg\Message.cpp" />
     <ClCompile Include="Player\Player.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="ContentsThread\ContentsFunc.h" />
     <ClInclude Include="ContentsResource.h" />
     <ClInclude Include="ContentsThread\ContentsThreadManager.h" />
+    <ClInclude Include="Log\Mornitoring.h" />
     <ClInclude Include="Msg\CommonProtocol.h" />
     <ClInclude Include="Msg\ContentsPacket.h" />
     <ClInclude Include="Msg\Message.h" />

@@ -22,6 +22,7 @@ extern long long g_playerCount;
 extern unsigned long long g_PlayerLogOut;
 
 extern std::list<Player*> Sector[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
+extern std::mutex SectorLock[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
 extern int sectorXRange;
 extern int sectorYRange;
 
@@ -36,9 +37,8 @@ extern CLanServer* ntServer;
 void MsgSectorBroadCasting(void (*Func)(ULONG64 srcID, ULONG64 destID, char* Packet), char* _src, char* Packet, bool SendMe)
 {
 	Player* pSrc = (Player*)_src;
-	
-	typename std::list<Player*>::iterator pit = Sector[0][0].begin();
 
+	typename std::list<Player*>::iterator pit = Sector[0][0].begin();
 	int SectorX;
 	int SectorY;
 
@@ -245,6 +245,8 @@ bool HandleCreatePlayer(ULONG64 id)
 
 	if (g_PlayerLogInCount >= PLAYERMAXCOUNT)
 	{
+		//todo//이 로직이 아직 정상이 아님
+		__debugbreak();
 		EnqueueWaitingPlayerQ(id);
 		return false;
 	}
@@ -252,6 +254,8 @@ bool HandleCreatePlayer(ULONG64 id)
 	g_PlayerArr[playerIndex].Init(id);
 
 	ContentsSendCreatePlayerPacket(id);
+
+	
 
 	return true;
 }
@@ -280,7 +284,9 @@ bool HandleDeletePlayer(ULONG64 id)
 	int SectorX = g_PlayerArr[playerIndex].GetX() / SECTOR_RATIO;
 	int SectorY = g_PlayerArr[playerIndex].GetY() / SECTOR_RATIO;
 
+	SectorLock[SectorX][SectorY].lock();
 	Sector[SectorX][SectorY].remove(&g_PlayerArr[playerIndex]);
+	SectorLock[SectorX][SectorY].unlock();
 
 	g_PlayerArr[playerIndex].Clear();
 

@@ -12,13 +12,14 @@ unsigned long long g_PlayerLogInCount;
 unsigned long long g_PlayerLogOut;
 unsigned long long g_HeartBeatOverCount;
 
-long long g_playerCount = 0;
-unsigned long long g_PlayerID = 0;
+long long g_playerCount;
+unsigned long long g_PlayerID;
 
 extern std::stack<int> g_playerIndexStack;
 Player* g_PlayerArr;
 
 extern std::list<Player*> Sector[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
+extern std::mutex SectorLock[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
 extern CLanServer* ntServer;
 
 //-----------------------------------------
@@ -215,7 +216,9 @@ void Player::Init(ULONG64 sessionID)
 	_status = static_cast<BYTE>(STATUS::ALIVE);
 	_timeOut = timeGetTime();
 
+	SectorLock[_x / SECTOR_RATIO][_y / SECTOR_RATIO].lock();
 	Sector[_x / SECTOR_RATIO][_y / SECTOR_RATIO].push_back(this);
+	SectorLock[_x / SECTOR_RATIO][_y / SECTOR_RATIO].unlock();
 
 }
 

@@ -57,7 +57,7 @@ bool HandleConnectAction(DummySession* mySessionArr, DWORD mySessionCount)
 
 		if (completeRetval == true)
 		{
-			__debugbreak();
+			
 			ChangeAction(static_cast<char>(Action::Status::ACTION_MOVE));
 		}
 
