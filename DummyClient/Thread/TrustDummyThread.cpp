@@ -1,10 +1,10 @@
-#include "TrustDummyThread.h"
-#include "ThreadNetworkManager.h"
-#include "RandStringManager.h"
 #include "resource.h"
-#include "Action.h"
+#include "TrustDummyThread.h"
+#include "Network/ThreadNetworkManager.h"
+#include "Msg/RandStringManager.h"
+#include "Action/Action.h"
 #include "DummyThread.h"
-#include "ContentsPacket.h"
+#include "Msg/ContentsPacket.h"
 
 extern DWORD g_threadCount;
 extern DWORD g_ThreadIndex;

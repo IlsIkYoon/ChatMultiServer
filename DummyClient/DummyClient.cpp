@@ -1,10 +1,9 @@
 #include "resource.h"
 #include "DummyClient.h"
-#include "DummyThread.h"
-#include "DummySession.h"
-#include "ws2tcpip.h"
-#include "Action.h"
-#include "TrustDummyThread.h"
+#include "Thread/DummyThread.h"
+#include "Player/DummySession.h"
+#include "Action/Action.h"
+#include "Thread/TrustDummyThread.h"
 //--------------------------------
 // InputData
 //--------------------------------

@@ -1,7 +1,8 @@
+#include "resource.h"
 #include "Action.h"
-#include "DummyThread.h"
-#include "RandStringManager.h"
-#include "ThreadNetworkManager.h"
+#include "Thread/DummyThread.h"
+#include "Msg/RandStringManager.h"
+#include "Network/ThreadNetworkManager.h"
 
 extern SOCKADDR_IN serverAddr;
 extern char g_currentAction;
@@ -56,6 +57,7 @@ bool HandleConnectAction(DummySession* mySessionArr, DWORD mySessionCount)
 
 		if (completeRetval == true)
 		{
+			__debugbreak();
 			ChangeAction(static_cast<char>(Action::Status::ACTION_MOVE));
 		}
 

@@ -10,7 +10,7 @@ public:
 	static int playerCount;
 	HANDLE* contentsThreadArr;
 
-	NetWorkManager* ntManager;
+	static NetWorkManager* ntManager;
 
 
 	static CPlayerManager* playerList;

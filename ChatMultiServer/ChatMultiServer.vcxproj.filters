@@ -77,5 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Config.txt" />
+    <Text Include="ContentsConfig.txt" />
   </ItemGroup>
 </Project>

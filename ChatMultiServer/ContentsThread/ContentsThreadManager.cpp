@@ -9,6 +9,7 @@ LFreeQ<CPacket*>* CContentsThreadManager::contentsJobQ;
 int CContentsThreadManager::threadCount;
 int CContentsThreadManager::playerCount;
 CPlayerManager* CContentsThreadManager::playerList;
+NetWorkManager* CContentsThreadManager::ntManager;
 
 
 CContentsThreadManager::CContentsThreadManager(NetWorkManager* ntLib)
@@ -17,11 +18,7 @@ CContentsThreadManager::CContentsThreadManager(NetWorkManager* ntLib)
 	threadIndex = 0;
 	playerCount = PLAYER_MAXCOUNT; //default 값, 실제 값은 Parser로 읽어서 쓸 예정
 	threadCount = CONTENTS_THREADCOUNT;
-
-
-	contentsJobQ = new LFreeQ<CPacket*>[threadCount];
-	contentsThreadArr = new HANDLE[threadCount];
-	playerList = new CPlayerManager(playerCount);
+	contentsThreadArr = nullptr;
 }
 
 CContentsThreadManager::~CContentsThreadManager()
@@ -52,12 +49,15 @@ bool CContentsThreadManager::ReadConfig()
 	txParser.SearchData("PlayerMaxCount", &playerCount);
 	txParser.SearchData("ThreadCount", &threadCount);
 
-
 	return true;
 }
 
 bool CContentsThreadManager::ContentsThreadInit()
 {
+	contentsJobQ = new LFreeQ<CPacket*>[threadCount];
+	contentsThreadArr = new HANDLE[threadCount];
+	playerList = new CPlayerManager(playerCount);
+
 	for (int i = 0; i < threadCount; i++)
 	{
 		contentsThreadArr[i] = (HANDLE)_beginthreadex(NULL, 0, ContentsThreadFunc, NULL, NULL, NULL);
@@ -105,7 +105,9 @@ unsigned int CContentsThreadManager::ContentsThreadFunc(void*)
 
 		UpdateContentsLogic(myIndex, t_fixedDeltaTime); //멀티 쓰레드로 수정
 
+		ntManager->EnqueSendRequest();
 		//send에 대한 고민은 좀 필요
+		
 
 		DWORD logicTime = timeGetTime() - currentTime;
 

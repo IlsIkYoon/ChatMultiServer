@@ -13,6 +13,7 @@ bool ChatMultiServer()
 	contentsManager->Start();
 	//ContentsThreadManager 인스턴스 생성
 
+	Sleep(INFINITE);
 	
 
 	//키 입력 대기(입력하면 종료)

@@ -1,6 +1,5 @@
 #include "resource.h"
 #include "DummyClient.h"
-#include "CrashDump.h"
 
 
 int main()

@@ -1,6 +1,6 @@
 #pragma once
 #include "resource.h"
-#include "DummySession.h"
+#include "Player/DummySession.h"
 
 class CThreadNetworkManager
 {

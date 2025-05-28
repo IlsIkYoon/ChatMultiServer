@@ -1,9 +1,10 @@
+#include "resource.h"
 #include "DummyThread.h"
-#include "DummySession.h"
-#include "Action.h"
-#include "ContentsPacket.h"
-#include "ThreadNetworkManager.h"
-#include "RandStringManager.h"
+#include "Player/DummySession.h"
+#include "Action/Action.h"
+#include "Msg/ContentsPacket.h"
+#include "Network/ThreadNetworkManager.h"
+#include "Msg/RandStringManager.h"
 
 extern DWORD g_threadCount;
 extern DWORD g_ThreadIndex;
@@ -181,7 +182,7 @@ bool ThreadActionComplete()
 bool SendMoveStartMessage(DummySession* _session)
 {
 	unsigned int enqueResult;
-	bool enqueRetval;
+	
 	stHeader packetHeader;
 	CPacket moveStartMsg;
 	packetHeader.type = stPacket_Client_Chat_MoveStart;
@@ -229,7 +230,6 @@ bool SendHeartBeatMessage(DummySession* _session)
 	}
 
 	unsigned int enqueResult;
-	bool enqueRetval;
 	stHeader packetHeader;
 	packetHeader.type = stPacket_Client_Chat_HeartBeat;
 	packetHeader.size = 0;
@@ -244,7 +244,6 @@ bool SendHeartBeatMessage(DummySession* _session)
 bool SendLocalChatMessage(DummySession* _session, char* chatMessage, int msgLen)
 {
 	unsigned int enqueResult;
-	bool enqueRetval;
 	stHeader packetHeader;
 	CPacket ChatMsg;
 	char localLen;
@@ -333,7 +332,7 @@ bool Decode_NetworkHeader(DummySession* _session,CPacket* ContentsPacket)
 	
 	ClientHeader ntHeader;
 	unsigned int dequeResult;
-	unsigned int enqueResult;
+	
 	int decodeRetval;
 	
 	if (_session->_recvQ.GetSizeUsed() < sizeof(ntHeader)) {

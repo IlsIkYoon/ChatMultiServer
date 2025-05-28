@@ -1,6 +1,6 @@
 #include "DummySession.h"
-#include "RandStringManager.h"
-#include "ThreadNetworkManager.h"
+#include "Msg/RandStringManager.h"
+#include "Network/ThreadNetworkManager.h"
 
 extern CRandStringManager g_RandStringManager;
 
