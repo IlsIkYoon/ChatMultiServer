@@ -4,11 +4,20 @@
 #include "Sector/Sector.h"
 
 
-CContentsThreadManager::CContentsThreadManager()
+long CContentsThreadManager::threadIndex;
+LFreeQ<CPacket*>* CContentsThreadManager::contentsJobQ;
+int CContentsThreadManager::threadCount;
+int CContentsThreadManager::playerCount;
+CPlayerManager* CContentsThreadManager::playerList;
+
+
+CContentsThreadManager::CContentsThreadManager(NetWorkManager* ntLib)
 {
+	ntManager = ntLib;
 	threadIndex = 0;
-	playerCount = PLAYER_MAXCOUNT;
+	playerCount = PLAYER_MAXCOUNT; //default 값, 실제 값은 Parser로 읽어서 쓸 예정
 	threadCount = CONTENTS_THREADCOUNT;
+
 
 	contentsJobQ = new LFreeQ<CPacket*>[threadCount];
 	contentsThreadArr = new HANDLE[threadCount];
@@ -33,9 +42,16 @@ bool CContentsThreadManager::Start()
 
 bool CContentsThreadManager::ReadConfig()
 {
-	//todo//textParser 이용해 Config파일 읽는 함수
-	//ContentsConfig.txt라는 파일을 읽을 예정
-	//playerCount, threadCount 
+	bool retval;
+	retval = txParser.GetData("ContentsConfig.txt");
+	if (retval == false)
+	{
+		__debugbreak();
+	}
+
+	txParser.SearchData("PlayerMaxCount", &playerCount);
+	txParser.SearchData("ThreadCount", &threadCount);
+
 
 	return true;
 }
@@ -50,6 +66,10 @@ bool CContentsThreadManager::ContentsThreadInit()
 	return true;
 }
 
+
+//----------------------------------
+// Frame을 위한 변수들, 내부에서 변수 사용할 가능성이 있어서 tls
+//----------------------------------
 thread_local DWORD t_prevFrameTime;
 thread_local DWORD t_fixedDeltaTime;
 thread_local DWORD t_frame;
@@ -70,7 +90,7 @@ unsigned int CContentsThreadManager::ContentsThreadFunc(void*)
 
 	t_prevFrameTime = startTime - FrameSec;// 초기 값 설정
 
-
+	printf("Thread 생성 : %d\n", GetCurrentThreadId());
 	while (1)
 	{
 		DWORD currentTime = timeGetTime();

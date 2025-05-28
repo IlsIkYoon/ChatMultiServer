@@ -34,7 +34,6 @@ void PrintString()
 void CLanServer::_OnMessage(char* message, ULONG64 ID)
 {
 	//여기서 이제 JobQ에 넣어주기만 할 것임
-	unsigned int enqueResult;
 	int QIndex;
 	ULONG64 localID = GetID(ID);
 	QIndex = GetIndex(ID) % CContentsThreadManager::threadCount;
@@ -46,7 +45,7 @@ void CLanServer::_OnMessage(char* message, ULONG64 ID)
 	EnqueMessage->operator<<(ID);
 	EnqueMessage->PutData(localMessage->GetDataPtr(), localMessage->GetDataSize());
 	{
-		Profiler("g_ContentsJobQ_Enque");
+		Profiler p("g_ContentsJobQ_Enque");
 
 		CContentsThreadManager::contentsJobQ[QIndex].Enqueue(EnqueMessage);
 	}
@@ -82,7 +81,7 @@ void CLanServer::_OnAccept(ULONG64 ID)
 	CreatePlayerMsg->PutData((char*)&msgHeader, sizeof(msgHeader));
 	{
 
-		Profiler("g_ContentsJobQ_Enque");
+		Profiler p("g_ContentsJobQ_Enque");
 		CContentsThreadManager::contentsJobQ[QIndex].Enqueue(CreatePlayerMsg);
 	}
 
@@ -99,7 +98,6 @@ void CLanServer::_OnDisConnect(ULONG64 ID)
 	
 	CPacket* DeletePlayerMsg;
 	stHeader msgHeader;
-	unsigned int dequeResult;
 	int QIndex;
 	QIndex = GetIndex(ID) % CContentsThreadManager::threadCount;
 
@@ -111,7 +109,7 @@ void CLanServer::_OnDisConnect(ULONG64 ID)
 	DeletePlayerMsg->PutData((char*)&msgHeader, sizeof(msgHeader));
 
 	{
-		Profiler("g_ContentsJobQ_Enque");
+		Profiler p("g_ContentsJobQ_Enque");
 
 		CContentsThreadManager::contentsJobQ[QIndex].Enqueue(DeletePlayerMsg);
 	}
@@ -138,11 +136,9 @@ bool HandleContentJob(long myIndex)
 	CPacket* msgPayload;
 	ULONG64 userId;
 
-	ULONG_PTR CPacketPtr;
 
-	//Todo // 락프리큐랑 링버퍼 성능 비교해보기
 	{
-		Profiler("g_ContentsJobQ_Deque");
+		Profiler p("g_ContentsJobQ_Deque");
 
 		JobMessage = CContentsThreadManager::contentsJobQ[myIndex].Dequeue();
 	}

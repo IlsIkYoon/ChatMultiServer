@@ -2,8 +2,8 @@
 
 #include "NetWorkLib_Unified.h"
 
-#define CONTENTS_THREADCOUNT 3
-#define PLAYER_MAXCOUNT 10000
+#define CONTENTS_THREADCOUNT 1
+#define PLAYER_MAXCOUNT 100
 
 
 #define NetWorkProtocol 0xa9

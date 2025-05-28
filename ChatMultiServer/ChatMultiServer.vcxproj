@@ -198,10 +198,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChatMultiServer.h" />
-    <ClInclude Include="CommonProtocol.h" />
     <ClInclude Include="ContentsThread\ContentsFunc.h" />
     <ClInclude Include="ContentsResource.h" />
     <ClInclude Include="ContentsThread\ContentsThreadManager.h" />
+    <ClInclude Include="Msg\CommonProtocol.h" />
     <ClInclude Include="Msg\ContentsPacket.h" />
     <ClInclude Include="Msg\Message.h" />
     <ClInclude Include="Player\Player.h" />

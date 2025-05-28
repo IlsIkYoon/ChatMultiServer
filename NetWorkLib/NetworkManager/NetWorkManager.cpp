@@ -21,9 +21,9 @@ unsigned long long g_LoginSessionCount;
 unsigned long long g_LogoutSessionCount;
 
 
-extern unsigned long long g_AcceptTps;
-extern unsigned long long* g_pRecvTps;
-extern unsigned long long* g_pSendTps;
+unsigned long long g_AcceptTps;
+unsigned long long* g_pRecvTps;
+unsigned long long* g_pSendTps;
 
 unsigned long g_threadIndex;
 
@@ -582,7 +582,7 @@ bool NetWorkManager::SendPacket(ULONG64 playerId, char* buf)
 
 void NetWorkManager::_DisconnectSession(ULONG64 sessionID)
 {
-	DWORD currentLoginCount;
+	unsigned long long currentLoginCount;
 
 	unsigned short localIndex = GetIndex(sessionID);
 	ULONG64 localID = GetID(sessionID);

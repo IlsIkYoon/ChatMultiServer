@@ -3,7 +3,7 @@
 #include "Sector/Sector.h"
 #include "ContentsPacket.h"
 #include "Player/Player.h"
-#include "ContentsFunc.h"
+#include "ContentsThread/ContentsFunc.h"
 //-----------------------------------------
 // 출력을 위한 메세지 카운팅
 //-----------------------------------------

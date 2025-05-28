@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "Msg/ContentsPacket.h"
 #include "Sector/Sector.h"
-#include "ContentsFunc.h"
+#include "ContentsThread/ContentsFunc.h"
 #include "Msg/Message.h"
 //-----------------------------------------
 // 플레이어 카운팅을 위한 변수

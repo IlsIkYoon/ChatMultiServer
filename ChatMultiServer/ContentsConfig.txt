@@ -1,0 +1,2 @@
+PlayerMaxCount = 10000
+ThreadCount = 3

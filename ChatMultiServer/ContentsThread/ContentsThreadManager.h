@@ -10,9 +10,13 @@ public:
 	static int playerCount;
 	HANDLE* contentsThreadArr;
 
+	NetWorkManager* ntManager;
+
+
 	static CPlayerManager* playerList;
 
-	CContentsThreadanager();
+	CContentsThreadManager() = delete;
+	CContentsThreadManager(NetWorkManager* ntLib);
 	~CContentsThreadManager();
 
 	bool ReadConfig();

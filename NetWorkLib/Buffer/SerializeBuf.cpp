@@ -2,9 +2,10 @@
 #include "SerializeBuf.h"
 
 
-unsigned long long g_CPacketCreateCount = 0;
-unsigned long long g_CPacketDeleteCount = 0;
-
+unsigned long long g_CPacketCreateCount;
+unsigned long long g_CPacketDeleteCount;
+unsigned long long g_CPacketReleaseCount;
+unsigned long long g_CPacketAllocCount;
 
 CPacket::CPacket()
 {

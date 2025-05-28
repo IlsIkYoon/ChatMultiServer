@@ -1,7 +1,7 @@
 #include "ContentsResource.h"
 #include "Sector.h"
 #include "Msg/Message.h"
-#include "ContentsFunc.h"
+#include "ContentsThread/ContentsFunc.h"
 
 std::list<Player*> Sector[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
 int sectorXRange = dfRANGE_MOVE_RIGHT / SECTOR_RATIO;
