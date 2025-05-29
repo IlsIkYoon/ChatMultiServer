@@ -34,7 +34,6 @@ void PrintString()
 
 void CLanServer::_OnMessage(char* message, ULONG64 ID)
 {
-	//여기서 이제 JobQ에 넣어주기만 할 것임
 	int QIndex;
 	ULONG64 localID = GetID(ID);
 	QIndex = GetIndex(ID) % CContentsThreadManager::threadCount;
@@ -49,6 +48,7 @@ void CLanServer::_OnMessage(char* message, ULONG64 ID)
 		Profiler p("g_ContentsJobQ_Enque");
 
 		CContentsThreadManager::contentsJobQ[QIndex].Enqueue(EnqueMessage);
+		SetEvent(CContentsThreadManager::hEvent_contentsJobQ[QIndex]);
 	}
 }
 
@@ -253,6 +253,10 @@ void TimeOutCheck()
 
 		if (g_PlayerArr[i]._timeOut < deadLine)
 		{
+			if (g_PlayerArr[i]._timeOut == 0)
+			{
+				continue;
+			}
 			ntServer->DisconnectSession(g_PlayerArr[i].GetID());
 			InterlockedIncrement(&g_HeartBeatOverCount);
 			

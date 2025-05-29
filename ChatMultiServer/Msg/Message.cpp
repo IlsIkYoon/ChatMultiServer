@@ -38,12 +38,27 @@ void MsgSectorBroadCasting(void (*Func)(ULONG64 srcID, ULONG64 destID, char* Pac
 {
 	Player* pSrc = (Player*)_src;
 
-	typename std::list<Player*>::iterator pit = Sector[0][0].begin();
+	typename std::list<Player*>::iterator pit; // = Sector[0][0].begin();
 	int SectorX;
 	int SectorY;
 
 	SectorX = pSrc->GetX() / SECTOR_RATIO;
 	SectorY = pSrc->GetY() / SECTOR_RATIO;
+
+	//섹터 락을 전부 잡고 나서 시작
+
+	for (int i = -1; i < 2; i++)
+	{
+		for (int j = -1; j < 2; j++)
+		{
+			if (SectorX + i < 0 || SectorX + i >= sectorXRange) continue;
+			if (SectorY + j < 0 || SectorY + j >= sectorYRange) continue;
+
+
+			SectorLock[SectorX + i][SectorY + j].lock();
+		}
+	}
+
 
 
 	for (int i = -1; i < 2; i++)
@@ -81,6 +96,20 @@ void MsgSectorBroadCasting(void (*Func)(ULONG64 srcID, ULONG64 destID, char* Pac
 			*/
 		}
 	}
+
+
+	for (int i = -1; i < 2; i++)
+	{
+		for (int j = -1; j < 2; j++)
+		{
+			if (SectorX + i < 0 || SectorX + i >= sectorXRange) continue;
+			if (SectorY + j < 0 || SectorY + j >= sectorYRange) continue;
+
+
+			SectorLock[SectorX + i][SectorY + j].unlock();
+		}
+	}
+
 
 }
 

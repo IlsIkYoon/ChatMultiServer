@@ -1000,17 +1000,8 @@ bool NetWorkManager::RecvCompletionRoutine(Session* _session)
 			break;
 		}
 
+		SBuf = CPacket::Alloc();
 
-		{
-#ifdef __PROFILE__
-			Profiler p("ALLOC CPACKET");
-#endif
-
-			SBuf = CPacket::Alloc();
-
-		}
-
-		//처리할 패킷이 없을 때까지 반복
 
 		if (_DequePacket(SBuf, _session) == false)
 		{

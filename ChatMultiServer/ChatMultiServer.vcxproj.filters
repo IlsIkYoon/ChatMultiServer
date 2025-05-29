@@ -42,7 +42,10 @@
     <ClCompile Include="Player\PlayerManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Log\Mornitoring.cpp">
+    <ClCompile Include="Log\Monitoring.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentsThread\TickThread.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,7 +80,10 @@
     <ClInclude Include="Msg\CommonProtocol.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Log\Mornitoring.h">
+    <ClInclude Include="Log\Monitoring.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentsThread\TickThread.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,10 +2,11 @@
 #include "ContentsThreadManager.h"
 #include "ContentsFunc.h"
 #include "Sector/Sector.h"
-
+#include "TickThread.h"
 
 long CContentsThreadManager::threadIndex;
 LFreeQ<CPacket*>* CContentsThreadManager::contentsJobQ;
+HANDLE* CContentsThreadManager::hEvent_contentsJobQ;
 int CContentsThreadManager::threadCount;
 int CContentsThreadManager::playerCount;
 CPlayerManager* CContentsThreadManager::playerList;
@@ -55,13 +56,19 @@ bool CContentsThreadManager::ReadConfig()
 bool CContentsThreadManager::ContentsThreadInit()
 {
 	contentsJobQ = new LFreeQ<CPacket*>[threadCount];
+	hEvent_contentsJobQ = new HANDLE[threadCount];
 	contentsThreadArr = new HANDLE[threadCount];
 	playerList = new CPlayerManager(playerCount);
+	
+	
 
 	for (int i = 0; i < threadCount; i++)
 	{
+		hEvent_contentsJobQ[i] = CreateEvent(NULL, true, false, NULL);
 		contentsThreadArr[i] = (HANDLE)_beginthreadex(NULL, 0, ContentsThreadFunc, NULL, NULL, NULL);
 	}
+
+	tickThread = (HANDLE)_beginthreadex(NULL, 0, TickThread, NULL, NULL, NULL);
 
 	return true;
 }
@@ -81,45 +88,30 @@ unsigned int CContentsThreadManager::ContentsThreadFunc(void*)
 	long myIndex;
 	myIndex = InterlockedIncrement(&threadIndex) - 1;
 
-	InitContentsResource(); //todo//멀티쓰레드에 맞게 수정해야함
-
-	DWORD startTime = timeGetTime();
-
-	DWORD dwUpdateTick = startTime - FrameSec;
-	t_sec = startTime / 1000;
-
-	t_prevFrameTime = startTime - FrameSec;// 초기 값 설정
-
-	printf("Thread 생성 : %d\n", GetCurrentThreadId());
 	while (1)
 	{
-		DWORD currentTime = timeGetTime();
-		DWORD deltaTime = currentTime - t_prevFrameTime;
-		DWORD deltaCount = deltaTime / FrameSec;
-		t_fixedDeltaTime = deltaCount * FrameSec;
 
 		while (contentsJobQ[myIndex].GetSize() != 0)
 		{
-			HandleContentJob(myIndex);//todo//멀티쓰레드로 수정
+			HandleContentJob(myIndex);
 		}
-
-		UpdateContentsLogic(myIndex, t_fixedDeltaTime); //멀티 쓰레드로 수정
-
-		ntManager->EnqueSendRequest();
-		//send에 대한 고민은 좀 필요
 		
 
-		DWORD logicTime = timeGetTime() - currentTime;
+		ResetEvent(hEvent_contentsJobQ[myIndex]);
 
-		if (logicTime < FrameSec)
+		if (contentsJobQ[myIndex].GetSize() != 0)
 		{
-
-			Sleep(FrameSec - logicTime);
+			continue;
 		}
 
-		t_frame++;
+		WaitForSingleObject(hEvent_contentsJobQ[myIndex], INFINITE);
 
-		t_prevFrameTime += t_fixedDeltaTime;
+
+		//이게 아예 없어짐//
+		UpdateContentsLogic(myIndex, t_fixedDeltaTime); //멀티 쓰레드로 수정
+		
+
+
 	}
 
 
@@ -155,4 +147,12 @@ void CContentsThreadManager::UpdateContentsLogic(long myIndex, DWORD deltaTime)
 
 
 
+}
+
+
+
+bool CContentsThreadManager::End()
+{
+
+	return true;
 }

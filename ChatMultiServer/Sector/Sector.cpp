@@ -13,8 +13,6 @@ extern CLanServer* ntServer;
 
 bool SyncSector(ULONG64 UserId, int beforeX, int beforeY)
 {
-	//todo//섹터 락 필요
-
 
 	int playerIndex = ntServer->GetIndex(UserId);
 	int playerX = g_PlayerArr[playerIndex].GetX();
@@ -26,7 +24,8 @@ bool SyncSector(ULONG64 UserId, int beforeX, int beforeY)
 	int SectorX = playerX / SECTOR_RATIO;
 	int SectorY = playerY / SECTOR_RATIO;
 	
-	SectorLock[beforeSectorX][beforeSectorY].lock();
+	SectorLockByIndexOrder(beforeSectorX, beforeSectorY, SectorX, SectorY);
+
 	size_t debugSize = Sector[beforeSectorX][beforeSectorY].size();
 	Sector[beforeSectorX][beforeSectorY].remove(&g_PlayerArr[playerIndex]);
 	if (debugSize == Sector[beforeSectorX][beforeSectorY].size())
@@ -34,11 +33,10 @@ bool SyncSector(ULONG64 UserId, int beforeX, int beforeY)
 		__debugbreak();
 		return false;
 	}
-	SectorLock[beforeSectorX][beforeSectorY].unlock();
 
-	SectorLock[SectorX][SectorY].lock();
 	Sector[SectorX][SectorY].push_back(&g_PlayerArr[playerIndex]);
-	SectorLock[SectorX][SectorY].unlock();
+
+	SectorUnlockByIndexOrder(beforeSectorX, beforeSectorY, SectorX, SectorY);
 
 	return true;
 }
@@ -70,5 +68,66 @@ bool CheckSector(ULONG64 UserId)
 	SectorLock[localX / SECTOR_RATIO][localY / SECTOR_RATIO].unlock();
 
 #endif
+	return true;
+}
+
+
+
+bool SectorLockByIndexOrder(int beforeX, int beforeY, int currentX, int currentY)
+{
+	//X를 기준으로 정렬
+	int firstX;
+	int firstY;
+	int secondX;
+	int secondY;
+
+	if (beforeX < currentX)
+	{
+		firstX = beforeX;
+		firstY = beforeY;
+		secondX = currentX;
+		secondY = currentY;
+	}
+	else {
+		firstX = currentX;
+		firstY = currentY;
+		secondX = beforeX;
+		secondY = beforeY;
+
+	}
+
+	SectorLock[firstX][firstY].lock();
+	SectorLock[secondX][secondY].lock();
+	return true;
+}
+
+
+bool SectorUnlockByIndexOrder(int beforeX, int beforeY, int currentX, int currentY)
+{
+
+	//X를 기준으로 먼저 정렬 후에 Y를 기준으로 정렬
+	int firstX;
+	int firstY;
+	int secondX;
+	int secondY;
+
+	if (beforeX < currentX)
+	{
+		firstX = beforeX;
+		firstY = beforeY;
+		secondX = currentX;
+		secondY = currentY;
+	}
+	else {
+		firstX = currentX;
+		firstY = currentY;
+		secondX = beforeX;
+		secondY = beforeY;
+
+	}
+
+
+	SectorLock[firstX][firstY].unlock();
+	SectorLock[secondX][secondY].unlock();
 	return true;
 }
