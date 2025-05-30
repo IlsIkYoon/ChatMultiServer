@@ -64,7 +64,7 @@ bool CContentsThreadManager::ContentsThreadInit()
 
 	for (int i = 0; i < threadCount; i++)
 	{
-		hEvent_contentsJobQ[i] = CreateEvent(NULL, true, false, NULL);
+		hEvent_contentsJobQ[i] = CreateEvent(NULL, false, false, NULL);
 		contentsThreadArr[i] = (HANDLE)_beginthreadex(NULL, 0, ContentsThreadFunc, NULL, NULL, NULL);
 	}
 
@@ -96,13 +96,6 @@ unsigned int CContentsThreadManager::ContentsThreadFunc(void*)
 			HandleContentJob(myIndex);
 		}
 		
-
-		ResetEvent(hEvent_contentsJobQ[myIndex]);
-
-		if (contentsJobQ[myIndex].GetSize() != 0)
-		{
-			continue;
-		}
 
 		WaitForSingleObject(hEvent_contentsJobQ[myIndex], INFINITE);
 

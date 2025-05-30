@@ -7,7 +7,7 @@ CLanServer* ntServer;
 CContentsThreadManager* contentsManager;
 bool ChatMultiServer()
 {
-	CMornitor serverMornitor;
+	CMonitor serverMornitor;
 	procademy::CCrashDump dump;
 	ntServer = new CLanServer;
 	contentsManager = new CContentsThreadManager(ntServer);

@@ -13,7 +13,7 @@ extern thread_local DWORD t_sec;
 
 unsigned int TickThread(void*)
 {
-	CMornitor serverMornitor;
+	CMonitor serverMornitor;
 
 	DWORD startTime = timeGetTime();
 
@@ -46,11 +46,21 @@ unsigned int TickThread(void*)
 
 		if (t_frame >= FrameRate)
 		{
-
-			if (serverMornitor.CheckInput() == false)
+			char retval;
+			retval = serverMornitor.CheckInput();
+			switch (retval)
 			{
+			case static_cast<char>(en_InputType::en_ProcessExit):
+				//todo//서버 종료 요청 실행
+				break;
+			case static_cast<char>(en_InputType::en_SaveProfiler):
+				//todo//모든 쓰레드가 프로파일러를 저장할 수 있게 하기
+				//방법 마련..
+				break;
+			default:
 				break;
 			}
+			
 			serverMornitor.ConsolPrint();
 			t_frame == 0;
 			t_sec++;
