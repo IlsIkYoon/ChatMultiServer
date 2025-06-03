@@ -6,9 +6,14 @@
 #define PLAYER_MAXCOUNT 100
 
 
-#define NetWorkProtocol 0xa9
+#define NetWorkProtocol 0x77
+
+
+
 
 #define SECTOR_RATIO 100 //100분의 1 비율 6400에서 나눠서 떨어지는 수를 하는게 좋다
+#define SECTOR_MAX 50 
+
 #define FrameRate 25
 #define FrameSec (1000 / FrameRate)
 #define FrameError 20

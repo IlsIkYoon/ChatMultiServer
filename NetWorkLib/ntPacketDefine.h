@@ -6,8 +6,8 @@
 // 네트워크 프로토콜 헤더
 //-------------------------------------------------------
 
-#define NETWORK_PROTOCOL_CODE 0x89
-#define STICKYKEY 0xa9
+#define NETWORK_PROTOCOL_CODE 0x77
+#define STICKYKEY 0x32
 
 
 struct ServerHeader

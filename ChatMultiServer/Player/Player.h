@@ -17,7 +17,7 @@ public:
 
 	enum class STATUS
 	{
-		IDLE = 0, SESSION, PLAYER
+		IDLE = 0, SESSION, PENDING_SECTOR , PLAYER
 	};
 
 	DWORD _timeOut;
@@ -30,6 +30,7 @@ public:
 	short sectorY;
 	BYTE _direction;
 	unsigned long long accountNo;
+	unsigned long long _sessionID;
 	WCHAR nickname[20];
 	WCHAR ID[20];
 

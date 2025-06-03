@@ -10,8 +10,6 @@
 
 LFreeQ<CPacket*> g_ContentsJobQ[CONTENTS_THREADCOUNT];
 
-extern Player* g_PlayerArr;
-
 extern std::list<Player*> Sector[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
 extern std::mutex SectorLock[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
 
@@ -21,6 +19,7 @@ extern CLanServer* ntServer;
 
 extern unsigned long long g_HeartBeatOverCount;
 
+extern CContentsThreadManager* contentsManager;
 
 void PrintString()
 {
@@ -37,18 +36,14 @@ void CLanServer::_OnMessage(CPacket* message, ULONG64 sessionID)
 {
 	unsigned short playerIndex;
 	WORD contentsType;
+	Player* localPlayerList;
+	bool retval;
+
 	*message >> contentsType;
 	playerIndex = GetIndex(sessionID);
+	localPlayerList = contentsManager->playerList->playerArr;
 
-	
-	if (g_PlayerArr[playerIndex]._status != static_cast<BYTE>(Player::STATUS::PLAYER)
-		&& contentsType != en_PACKET_CS_CHAT_REQ_LOGIN)
-	{
-		ntServer->DisconnectSession(sessionID);
-		return;
-	}
-
-	g_PlayerArr[playerIndex]._timeOut = timeGetTime();
+	localPlayerList[playerIndex]._timeOut = timeGetTime();
 
 	switch (contentsType)
 	{
@@ -88,8 +83,11 @@ void CLanServer::_OnAccept(ULONG64 sessionID)
 {
 	unsigned short playerIndex = GetIndex(sessionID);
 
-	g_PlayerArr[playerIndex]._status = static_cast<unsigned short>(Player::STATUS::SESSION);
-	g_PlayerArr[playerIndex]._timeOut = timeGetTime(); 
+	Player* localPlayerList = contentsManager->playerList->playerArr;
+
+	localPlayerList[playerIndex]._status = static_cast<unsigned short>(Player::STATUS::SESSION);
+	localPlayerList[playerIndex]._sessionID = sessionID;
+	localPlayerList[playerIndex]._timeOut = timeGetTime();
 
 }
 void CLanServer::_OnSend(ULONG64 ID)
@@ -102,28 +100,30 @@ void CLanServer::_OnDisConnect(ULONG64 sessionID)
 
 	unsigned short playerIndex = GetIndex(sessionID);
 
+	Player* localPlayerList = contentsManager->playerList->playerArr;
 
-	if (g_PlayerArr[playerIndex].GetID() != sessionID)
+
+	if (localPlayerList[playerIndex].GetID() != sessionID)
 	{
 		return;
 	}
 
-	if (g_PlayerArr[playerIndex]._status < static_cast<BYTE>(Player::STATUS::PLAYER))
+	if (localPlayerList[playerIndex]._status < static_cast<BYTE>(Player::STATUS::PLAYER))
 	{
-		g_PlayerArr[playerIndex]._status = static_cast<BYTE>(Player::STATUS::IDLE);
+		localPlayerList[playerIndex]._status = static_cast<BYTE>(Player::STATUS::IDLE);
 		return;
 	}
 
 	CheckSector(sessionID);
 
-	int SectorX = g_PlayerArr[playerIndex].GetX();
-	int SectorY = g_PlayerArr[playerIndex].GetY();
+	int SectorX = localPlayerList[playerIndex].GetX();
+	int SectorY = localPlayerList[playerIndex].GetY();
 
 	SectorLock[SectorX][SectorY].lock();
-	Sector[SectorX][SectorY].remove(&g_PlayerArr[playerIndex]);
+	Sector[SectorX][SectorY].remove(&localPlayerList[playerIndex]);
 	SectorLock[SectorX][SectorY].unlock();
 
-	g_PlayerArr[playerIndex].Clear();
+	localPlayerList[playerIndex].Clear();
 }
 
 CLanServer::CLanServer()
@@ -224,41 +224,32 @@ bool HandleContentJob(long myIndex)
 	return true;
 }
 
-
-
-
-
-bool InitContentsResource()
-{
-	g_PlayerArr = new Player[ntServer->GetSessionCount()];
-
-	return true;
-}
-
-
-
-
 void TimeOutCheck()
 {
 	DWORD deadLine = timeGetTime() - dfNETWORK_PACKET_RECV_TIMEOUT;
 
 	int sessionCount;
 	sessionCount = ntServer->GetSessionCount();
+	Player* localPlayerList;
+
+	localPlayerList = contentsManager->playerList->playerArr;
+
+	
 
 	for (int i = 0; i < sessionCount; i++)
 	{
-		if (g_PlayerArr[i]._status == static_cast<BYTE>(Player::STATUS::IDLE))
+		if (localPlayerList[i]._status == static_cast<BYTE>(Player::STATUS::IDLE))
 		{
 			continue;
 		}
 
-		if (g_PlayerArr[i]._timeOut < deadLine)
+		if (localPlayerList[i]._timeOut < deadLine)
 		{
-			if (g_PlayerArr[i]._timeOut == 0)
+			if (localPlayerList[i]._timeOut == 0)
 			{
 				continue;
 			}
-			ntServer->DisconnectSession(g_PlayerArr[i].GetID());
+			ntServer->DisconnectSession(localPlayerList[i].GetID());
 			InterlockedIncrement(&g_HeartBeatOverCount);
 			
 		}

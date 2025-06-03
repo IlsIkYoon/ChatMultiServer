@@ -4,6 +4,7 @@
 #include "Sector/Sector.h"
 #include "ContentsThread/ContentsFunc.h"
 #include "Msg/Message.h"
+#include "ContentsThread/ContentsThreadManager.h"
 //-----------------------------------------
 // 플레이어 카운팅을 위한 변수
 //-----------------------------------------
@@ -16,12 +17,13 @@ long long g_playerCount;
 unsigned long long g_PlayerID;
 
 extern std::stack<int> g_playerIndexStack;
-Player* g_PlayerArr;
 
 extern std::list<Player*> Sector[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
 extern std::mutex SectorLock[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
-extern CLanServer* ntServer;
 
+
+extern CLanServer* ntServer;
+extern CContentsThreadManager contentsManager;
 //-----------------------------------------
 // Session은 여유가 있는데 Player가 맥스일때 들어가는 대기열
 // 로비 서버가 없는 게임 서버라면 혹시 몰라서 있는 대기열임
@@ -157,7 +159,6 @@ bool Player::MoveStart(BYTE Direction, int x, int y) {
 	int newSectorX = x / SECTOR_RATIO;
 	int newSectorY = y / SECTOR_RATIO;
 
-	//섹터 동기화
 	if ((newSectorX != oldSectorX) || (newSectorY != oldSectorY))
 	{
 		SyncSector(accountNo, oldX, oldY);
@@ -213,18 +214,13 @@ void Player::Init(ULONG64 sessionID)
 
 	_move = false;
 	accountNo = sessionID;
-	_status = static_cast<BYTE>(STATUS::PLAYER);
+	_status = static_cast<BYTE>(STATUS::PENDING_SECTOR);
 	_timeOut = timeGetTime();
-
-	SectorLock[sectorX / SECTOR_RATIO][sectorY / SECTOR_RATIO].lock();
-	Sector[sectorX / SECTOR_RATIO][sectorY / SECTOR_RATIO].push_back(this);
-	SectorLock[sectorX / SECTOR_RATIO][sectorY / SECTOR_RATIO].unlock();
-
 }
 
 bool Player::isAlive()
 {
-	if (_status == static_cast<BYTE>(STATUS::PLAYER))
+	if (_status != static_cast<BYTE>(STATUS::IDLE))
 	{
 		return true;
 	}
@@ -243,7 +239,11 @@ unsigned long long Player::GetID()
 
 void EnqueueWaitingPlayerQ(ULONG64 id)
 {
-	g_PlayerArr[ntServer->GetIndex(id)]._status = static_cast<BYTE>(Player::STATUS::SESSION);
+	Player* localPlayerList;
+
+	localPlayerList = contentsManager.playerList->playerArr;
+
+	localPlayerList[ntServer->GetIndex(id)]._status = static_cast<BYTE>(Player::STATUS::SESSION);
 	g_WaitingPlayerAcceptQ.push(id);
 
 	//실제 게임이라면 여기에 대기열로 입장시키는 메세지 전송 로직이 들어가야함
@@ -253,23 +253,28 @@ bool DequeueWaitingPlayerQ()
 {
 	ULONG64 playerID;
 	unsigned short playerIndex;
+	Player* localPlayerList;
+
+	localPlayerList = contentsManager.playerList->playerArr;
+
+
 	while (g_WaitingPlayerAcceptQ.size() != 0)
 	{
 		playerID = g_WaitingPlayerAcceptQ.front();
 		g_WaitingPlayerAcceptQ.pop();
 		playerIndex = ntServer->GetIndex(playerID);
-		if (g_PlayerArr[playerIndex]._status == static_cast<BYTE>(Player::STATUS::IDLE))
+		if (localPlayerList[playerIndex]._status == static_cast<BYTE>(Player::STATUS::IDLE))
 		{
 			continue;
 		}
-		else if (g_PlayerArr[playerIndex]._status == static_cast<BYTE>(Player::STATUS::PLAYER))
+		else if (localPlayerList[playerIndex]._status == static_cast<BYTE>(Player::STATUS::PLAYER))
 		{
 			__debugbreak();
 			continue;
 		}
 		else
 		{
-			g_PlayerArr[playerIndex].Init(playerID);
+			localPlayerList[playerIndex].Init(playerID);
 			SendLoginResPacket(playerID);
 			return true;
 		}

@@ -2,34 +2,40 @@
 #include "Sector.h"
 #include "Msg/Message.h"
 #include "ContentsThread/ContentsFunc.h"
+#include "ContentsThread/ContentsThreadManager.h"
 
 std::list<Player*> Sector[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
 std::mutex SectorLock[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
 int sectorXRange = dfRANGE_MOVE_RIGHT / SECTOR_RATIO;
 int sectorYRange = dfRANGE_MOVE_BOTTOM / SECTOR_RATIO;
 
-extern Player* g_PlayerArr;
 extern CLanServer* ntServer;
+extern CContentsThreadManager contentsManager;
 
 bool SyncSector(ULONG64 UserId, int oldSectorX, int oldSectorY)
 {
+	Player* localPlayerList;
+	int playerIndex;
+	int currentSectorX;
+	int currentSectorY;
 
-	int playerIndex = ntServer->GetIndex(UserId);
-	int currentSectorX = g_PlayerArr[playerIndex].GetX();
-	int currentSectorY = g_PlayerArr[playerIndex].GetY();
+	localPlayerList = contentsManager.playerList->playerArr;
 
+	playerIndex = ntServer->GetIndex(UserId);
+	currentSectorX = localPlayerList[playerIndex].GetX();
+	currentSectorY = localPlayerList[playerIndex].GetY();
 	
 	SectorLockByIndexOrder(oldSectorX, oldSectorY, currentSectorX, currentSectorY);
 
 	size_t debugSize = Sector[oldSectorX][oldSectorY].size();
-	Sector[oldSectorX][oldSectorY].remove(&g_PlayerArr[playerIndex]);
+	Sector[oldSectorX][oldSectorY].remove(&localPlayerList[playerIndex]);
 	if (debugSize == Sector[oldSectorX][oldSectorY].size())
 	{
 		__debugbreak();
 		return false;
 	}
 
-	Sector[currentSectorX][currentSectorY].push_back(&g_PlayerArr[playerIndex]);
+	Sector[currentSectorX][currentSectorY].push_back(&localPlayerList[playerIndex]);
 
 	SectorUnlockByIndexOrder(oldSectorX, oldSectorY, currentSectorX, currentSectorY);
 
@@ -44,17 +50,20 @@ bool SyncSector(ULONG64 UserId, int oldSectorX, int oldSectorY)
 bool CheckSector(ULONG64 UserId)
 {
 #ifdef __DEBUG__
-	int playerIndex = ntServer->GetIndex(UserId);
+	Player* localPlayerList;
+	int playerIndex;
 	int localX;
 	int localY;
 
-	localX = g_PlayerArr[playerIndex].GetX();
-	localY = g_PlayerArr[playerIndex].GetY();
+	localPlayerList = contentsManager.playerList->playerArr;
+	playerIndex = ntServer->GetIndex(UserId);
+	localX = localPlayerList[playerIndex].GetX();
+	localY = localPlayerList[playerIndex].GetY();
 
 	SectorLock[localX / SECTOR_RATIO][localY / SECTOR_RATIO].lock();
 	auto searchIt = std::find(Sector[localX / SECTOR_RATIO][localY / SECTOR_RATIO].begin(),
 		Sector[localX / SECTOR_RATIO][localY / SECTOR_RATIO].end(),
-		&g_PlayerArr[playerIndex]);
+		&localPlayerList[playerIndex]);
 	if (searchIt == Sector[localX / SECTOR_RATIO][localY / SECTOR_RATIO].end())
 	{
 		__debugbreak();

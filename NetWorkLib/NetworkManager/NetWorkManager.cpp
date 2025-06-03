@@ -629,6 +629,7 @@ void NetWorkManager::_DisconnectSession(Session* _session)
 }
 bool NetWorkManager::DisconnectSession(ULONG64 playerID)
 {
+	__debugbreak();
 	RequestSessionAbort(playerID);
 	return true;
 }
