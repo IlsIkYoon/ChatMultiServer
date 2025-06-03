@@ -300,7 +300,10 @@ int CPacket::_ClientDecodePacket()
 		//페이로드가 아직 다 안 온 상황
 		return static_cast<int>(ErrorCode::INCOMPLETE_DATA_PACKET);
 	}
-
+	if (payloadSize > PAYLOAD_MAX)
+	{
+		return static_cast<int>(ErrorCode::INVALID_DATA_PACKET);
+	}
 
 
 
