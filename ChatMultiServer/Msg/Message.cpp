@@ -4,6 +4,7 @@
 #include "ContentsPacket.h"
 #include "Player/Player.h"
 #include "ContentsThread/ContentsFunc.h"
+#include "CommonProtocol.h"
 //-----------------------------------------
 // 출력을 위한 메세지 카운팅
 //-----------------------------------------
@@ -34,9 +35,9 @@ extern CLanServer* ntServer;
 
 
 
-void MsgSectorBroadCasting(void (*Func)(ULONG64 srcID, ULONG64 destID, char* Packet), char* _src, char* Packet, bool SendMe)
+void MsgSectorBroadCasting(void (*Func)(ULONG64 srcID, ULONG64 destID, CPacket* Packet), Player* _src, CPacket* Packet, bool SendMe)
 {
-	Player* pSrc = (Player*)_src;
+	Player* pSrc = _src;
 
 	typename std::list<Player*>::iterator pit; // = Sector[0][0].begin();
 	int SectorX;
@@ -113,7 +114,7 @@ void MsgSectorBroadCasting(void (*Func)(ULONG64 srcID, ULONG64 destID, char* Pac
 
 }
 
-bool HandleMoveStartMsg(char* payLoad, ULONG64 id)
+bool HandleMoveStartMsg(CPacket* payLoad, ULONG64 id)
 {
 	InterlockedIncrement(&g_MoveStartCount);
 	int playerIndex = ntServer->GetIndex(id);
@@ -147,7 +148,7 @@ bool HandleMoveStartMsg(char* payLoad, ULONG64 id)
 
 	return true;
 }
-bool HandleMoveStopMsg(char* payLoad, ULONG64 id)
+bool HandleMoveStopMsg(CPacket* payLoad, ULONG64 id)
 {
 	InterlockedIncrement(&g_MoveStopCount);
 	int playerIndex;
@@ -185,7 +186,7 @@ bool HandleMoveStopMsg(char* payLoad, ULONG64 id)
 
 	return true;
 }
-bool HandleLocalChatMsg(char* payLoad, ULONG64 id)
+bool HandleLocalChatMsg(CPacket* payLoad, ULONG64 id)
 {
 	InterlockedIncrement(&g_LocalChatCount);
 	int playerIndex;
@@ -217,7 +218,7 @@ bool HandleLocalChatMsg(char* payLoad, ULONG64 id)
 	msg->MoveFront(chatMessageLen);
 
 
-	MsgSectorBroadCasting(ContentsSendPacket, (char*) & g_PlayerArr[playerIndex],(char*)sendMsg, false);
+	MsgSectorBroadCasting(ContentsSendPacket, & g_PlayerArr[playerIndex],sendMsg, false);
 	sendMsg->DecrementUseCount();
 
 	return true;
@@ -257,7 +258,7 @@ bool HandleChatEndMsg(ULONG64 id)
 
 	sendMsg->PutData((char*)&packetHeader, sizeof(packetHeader));
 
-	ntServer->SendPacket(id, (char*)sendMsg);
+	ntServer->SendPacket(id, sendMsg);
 	sendMsg->DecrementUseCount();
 
 	return true;
@@ -282,7 +283,7 @@ bool HandleCreatePlayer(ULONG64 id)
 
 	g_PlayerArr[playerIndex].Init(id);
 
-	ContentsSendCreatePlayerPacket(id);
+	SendLoginResPacket(id);
 
 	
 
@@ -297,9 +298,9 @@ bool HandleDeletePlayer(ULONG64 id)
 
 	if (g_PlayerArr[playerIndex].GetID() != id || g_PlayerArr[playerIndex].isAlive() == false)
 	{
-		if (g_PlayerArr[playerIndex]._status == static_cast<BYTE>(Player::STATUS::WAIT_CREATE))
+		if (g_PlayerArr[playerIndex]._status == static_cast<BYTE>(Player::STATUS::SESSION))
 		{
-			g_PlayerArr[playerIndex]._status = static_cast<BYTE>(Player::STATUS::DELETED);
+			g_PlayerArr[playerIndex]._status = static_cast<BYTE>(Player::STATUS::IDLE);
 		}
 		else
 		{
@@ -338,7 +339,7 @@ bool HandleDeletePlayer(ULONG64 id)
 
 
 
-void ContentsSendPacket(ULONG64 srcID, ULONG64 destID, char* packet)
+void ContentsSendPacket(ULONG64 srcID, ULONG64 destID, CPacket* packet)
 {
 
 	ntServer->SendPacket(destID, packet);
@@ -354,41 +355,186 @@ void SendMoveStopCompleteMessage(ULONG64 destID)
 	packetHeader.size = 0;
 	sendMsg->PutData((char*)&packetHeader, sizeof(packetHeader));
 	
-	ntServer->SendPacket(destID, (char*)sendMsg);
+	ntServer->SendPacket(destID, sendMsg);
 	sendMsg->DecrementUseCount();
 
 }
 
 
 
-void ContentsSendCreatePlayerPacket(ULONG64 id)
+void SendLoginResPacket(ULONG64 sessionID)
 {
-	int playerIndex = ntServer->GetIndex(id);
+	int playerIndex = ntServer->GetIndex(sessionID);
 
-	stHeader PacketHeader;
 	CPacket* sendMsg;
-	unsigned long long characterKey;
-	int x;
-	int y;
 
-	characterKey = id;
-	x = g_PlayerArr[playerIndex].GetX();
-	y = g_PlayerArr[playerIndex].GetY();
-
-	PacketHeader.type = stPacket_Chat_Client_CreateCharacter;
-	PacketHeader.size = sizeof(characterKey) + sizeof(x) + sizeof(y);
+	WORD Type;
+	BYTE Status;	//0 : 실패 1: 성공
+	INT64 AccountNo;
+	Type = en_PACKET_CS_CHAT_RES_LOGIN;
+	Status = 1;
+	AccountNo = g_PlayerArr[playerIndex].accountNo;
 
 	sendMsg = CPacket::Alloc();
+	*sendMsg << Type;
+	*sendMsg << Status;
+	*sendMsg << AccountNo;
 
-	sendMsg->PutData((char*)&PacketHeader, sizeof(PacketHeader));
-	*sendMsg << characterKey;
-	*sendMsg << x;
-	*sendMsg << y;
+	ntServer->SendPacket(sessionID, sendMsg);
 
-	ntServer->SendPacket(id, (char*)sendMsg);
 	sendMsg->DecrementUseCount();
 
 	InterlockedIncrement(&g_PlayerLogInCount);
 	InterlockedIncrement(&g_TotalPlayerCreate);
 
+}
+
+
+bool HandleLoginMessage(CPacket* message, ULONG64 sessionID)
+{
+	//char tokenRetval;
+	DWORD playerIndex;
+
+	//------------------------------------
+	// 메세지 페이로드
+	//------------------------------------
+	INT64 AccountNo; //캐릭터 키
+	WCHAR ID[20]; //null포함
+	WCHAR Nickname[20]; //null포함
+	char SessionKey[64]; //인증 토큰
+	
+	InterlockedIncrement(&g_CreateMsgCount);
+
+	*message >> AccountNo;
+	message->PopFrontData(sizeof(WCHAR) * 20, (char*)ID);
+	message->PopFrontData(sizeof(WCHAR) * 20, (char*)Nickname);
+	message->PopFrontData(sizeof(char) * 64, SessionKey);
+
+	//tokenRetval = CheckLoginToken(AccountNo, SessionKey); -> 로그인 서버에서 보내준 토큰 자료구조를 검색해서 키값에 맞는 토큰인지 확인
+	//이후 tokenRetval에 따른 로직분기 
+
+	//LoadCharacterDataOnLogin(AccountNo, userId); 
+	//토큰이 유효하다면 DB에서 캐릭터 데이터 긁어오기 요청 후 긁어온 뒤에 결과에 따라 Login_res 메세지 전송
+
+	playerIndex = NetWorkManager::GetIndex(sessionID);
+	g_PlayerArr[playerIndex].Init(sessionID);
+	g_PlayerArr->accountNo = AccountNo;
+	wcsncpy(g_PlayerArr[playerIndex].ID, ID, 20);
+	wcsncpy(g_PlayerArr[playerIndex].nickname, Nickname, 20);
+
+	SendLoginResPacket(sessionID);
+
+	return true;
+}
+
+
+bool HandleSectorMoveMessage(CPacket* message, ULONG64 sessionID)
+{
+	//플레이어의 섹터 정보를 변경 시켜주고 
+	//섹터 이동에 따른 섹터 처리를 함
+
+	DWORD playerIndex;
+	WORD oldSectorX;
+	WORD oldSectorY;
+	//-------------------------------
+	// 메세지 페이로드
+	//-------------------------------
+	INT64 AccountNo;
+	WORD SectorX;
+	WORD SectorY;
+
+	*message >> AccountNo;
+	*message >> SectorX;
+	*message >> SectorY;
+
+	playerIndex = NetWorkManager::GetIndex(sessionID);
+
+	oldSectorX = g_PlayerArr[playerIndex].sectorX;
+	oldSectorY = g_PlayerArr[playerIndex].sectorY;
+
+	g_PlayerArr[playerIndex].sectorX = SectorX;
+	g_PlayerArr[playerIndex].sectorY = SectorY;
+
+	SyncSector(sessionID, oldSectorX, oldSectorY);
+
+	SendSectorMoveResPacket(sessionID);
+
+
+	return true;
+}
+
+bool HandleChatMessage(CPacket* message, ULONG64 sessionID)
+{
+	DWORD playerIndex;
+
+	INT64 AccountNo;
+	WORD MessageLen;
+	WCHAR* Message; //null 미포함 // messageLen / 2길이
+
+	*message >> AccountNo;
+	*message >> MessageLen;
+
+	Message = new WCHAR[MessageLen / 2];
+	message->PopFrontData(MessageLen / 2, (char*)Message);
+
+	playerIndex = NetWorkManager::GetIndex(sessionID);
+
+	WORD Type;
+	//INT64 AccountNo;
+	WCHAR ID[20];
+	WCHAR Nickname[20];
+	//WORD MessageLen;
+	//WCHAR* Message;
+
+	Type = en_PACKET_CS_CHAT_RES_MESSAGE;
+	wcsncpy(ID, g_PlayerArr[playerIndex].ID, 20);
+	wcsncpy(Nickname, g_PlayerArr[playerIndex].nickname, 20);
+
+	CPacket* sendMsg;
+	sendMsg = CPacket::Alloc();
+
+	*sendMsg << Type;
+	*sendMsg << AccountNo;
+	sendMsg->PutData((char*)ID, sizeof(WCHAR) * 20);
+	sendMsg->PutData((char*)Nickname, sizeof(WCHAR) * 20);
+	*sendMsg << MessageLen;
+	sendMsg->PutData((char*)Message, MessageLen);
+
+
+	MsgSectorBroadCasting(ContentsSendPacket, &g_PlayerArr[playerIndex], sendMsg, true);
+
+
+
+	return true;
+}
+
+
+void SendSectorMoveResPacket(ULONG64 sessionID)
+{
+	int playerIndex = NetWorkManager::GetIndex(sessionID);
+
+	CPacket* sendMsg;
+
+	WORD Type;
+	INT64 AccountNo;
+	WORD SectorX;
+	WORD SectorY;
+
+	Type = en_PACKET_CS_CHAT_RES_SECTOR_MOVE;
+	AccountNo = g_PlayerArr[playerIndex].accountNo;
+	SectorX = g_PlayerArr[playerIndex].sectorX;
+	SectorY = g_PlayerArr[playerIndex].sectorY;
+
+	sendMsg = CPacket::Alloc();
+	*sendMsg << Type;
+	*sendMsg << AccountNo;
+	*sendMsg << SectorX;
+	*sendMsg << SectorY;
+
+
+	ntServer->SendPacket(sessionID, sendMsg);
+
+	sendMsg->DecrementUseCount();
+
+	//todo//메세지 카운팅 
 }

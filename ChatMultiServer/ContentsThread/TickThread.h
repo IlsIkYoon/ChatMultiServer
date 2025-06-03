@@ -6,9 +6,6 @@ enum class en_InputType
 	en_NoInput = 0,
 	en_ProcessExit,
 	en_SaveProfiler,
-
-
-
 };
 
 

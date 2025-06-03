@@ -62,7 +62,10 @@ unsigned int TickThread(void*)
 			}
 			
 			serverMornitor.ConsolPrint();
-			t_frame == 0;
+
+			TimeOutCheck();
+
+			t_frame = 0;
 			t_sec++;
 		}
 

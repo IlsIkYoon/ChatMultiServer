@@ -8,7 +8,7 @@
 #ifdef __LOGDEBUG__
 extern CRITICAL_SECTION g_Lock;
 #endif
-//
+
 int g_concurrentCount;
 int g_workerThreadCount;
 int g_maxSessionCount;
@@ -541,10 +541,10 @@ void NetWorkManager::_RecvBufRestorePacket(Session* _session, char* _packet, int
 
 
 
-bool NetWorkManager::SendPacket(ULONG64 playerId, char* buf)
+bool NetWorkManager::SendPacket(ULONG64 playerId, CPacket* buf)
 {
 
-	CPacket* sendPacket = (CPacket*)buf;
+	CPacket* sendPacket = buf;
 
 	ULONG64 localID = GetID(playerId);
 	unsigned short localIndex = GetIndex(playerId);
@@ -876,6 +876,7 @@ bool NetWorkManager::RequestSessionAbort(ULONG64 playerID)
 		std::string logString;
 		logString = std::format("CancelIoEx Failed || Session ID : {}", _session->_ID.GetID());
 		EnqueLog(logString);
+		DecrementSessionIoCount(_session);
 		return false;
 	}
 
@@ -1010,7 +1011,7 @@ bool NetWorkManager::RecvCompletionRoutine(Session* _session)
 				__debugbreak();
 			}
 			SBuf->DecrementUseCount();
-			//todo//
+
 			if (_session->_recvBuffer == nullptr)
 			{
 				__debugbreak();
@@ -1021,7 +1022,7 @@ bool NetWorkManager::RecvCompletionRoutine(Session* _session)
 
 
 		{
-			_OnMessage((char*)SBuf, _session->_ID._ulong64);
+			_OnMessage(SBuf, _session->_ID._ulong64);
 
 			if (SBuf->_usageCount != 1)
 			{

@@ -5,6 +5,7 @@
 #include "Msg/Message.h"
 #include "Sector/Sector.h"
 #include "ContentsThread/ContentsThreadManager.h"
+#include "Msg/CommonProtocol.h"
 
 
 LFreeQ<CPacket*> g_ContentsJobQ[CONTENTS_THREADCOUNT];
@@ -32,23 +33,45 @@ void PrintString()
 
 
 
-void CLanServer::_OnMessage(char* message, ULONG64 ID)
+void CLanServer::_OnMessage(CPacket* message, ULONG64 sessionID)
 {
-	int QIndex;
-	ULONG64 localID = GetID(ID);
-	QIndex = GetIndex(ID) % CContentsThreadManager::threadCount;
+	unsigned short playerIndex;
+	WORD contentsType;
+	*message >> contentsType;
+	playerIndex = GetIndex(sessionID);
+
 	
-	CPacket* localMessage = (CPacket*)message;
-	CPacket* EnqueMessage = CPacket::Alloc();
-
-	//ID를 넣고 데이터를 넣는 중
-	EnqueMessage->operator<<(ID);
-	EnqueMessage->PutData(localMessage->GetDataPtr(), localMessage->GetDataSize());
+	if (g_PlayerArr[playerIndex]._status != static_cast<BYTE>(Player::STATUS::PLAYER)
+		&& contentsType != en_PACKET_CS_CHAT_REQ_LOGIN)
 	{
-		Profiler p("g_ContentsJobQ_Enque");
+		ntServer->DisconnectSession(sessionID);
+		return;
+	}
 
-		CContentsThreadManager::contentsJobQ[QIndex].Enqueue(EnqueMessage);
-		SetEvent(CContentsThreadManager::hEvent_contentsJobQ[QIndex]);
+	g_PlayerArr[playerIndex]._timeOut = timeGetTime();
+
+	switch (contentsType)
+	{
+	case en_PACKET_CS_CHAT_REQ_LOGIN:
+		HandleLoginMessage(message, sessionID);
+		break;
+
+	case en_PACKET_CS_CHAT_REQ_SECTOR_MOVE:
+		HandleSectorMoveMessage(message, sessionID);
+		break;
+
+	case en_PACKET_CS_CHAT_REQ_MESSAGE:
+		HandleChatMessage(message, sessionID);
+		break;
+
+	case en_PACKET_CS_CHAT_REQ_HEARTBEAT:
+		break;
+
+	default:
+		ntServer->DisconnectSession(sessionID);
+		__debugbreak(); 
+		break;
+
 	}
 }
 
@@ -61,32 +84,12 @@ void ShutDownAllThread()
 
 }
 
-void CLanServer::_OnAccept(ULONG64 ID)
+void CLanServer::_OnAccept(ULONG64 sessionID)
 {
-	unsigned int enqueResult;
-	CPacket* CreatePlayerMsg;
-	stHeader msgHeader;
-	int QIndex;
+	unsigned short playerIndex = GetIndex(sessionID);
 
-	//플레이어 카운트가 맥스인지를 확인하고
-	//맥스라면 큐에 넣어줌
-
-	QIndex = NetWorkManager::GetIndex(ID) % CContentsThreadManager::threadCount;
-
-	msgHeader.type = stJob_CreatePlayer;
-	msgHeader.size = 0;
-	
-	CreatePlayerMsg = CPacket::Alloc();
-
-	*CreatePlayerMsg << ID;
-	CreatePlayerMsg->PutData((char*)&msgHeader, sizeof(msgHeader));
-	{
-
-		Profiler p("g_ContentsJobQ_Enque");
-		CContentsThreadManager::contentsJobQ[QIndex].Enqueue(CreatePlayerMsg);
-	}
-
-	InterlockedIncrement64(&g_playerCount);
+	g_PlayerArr[playerIndex]._status = static_cast<unsigned short>(Player::STATUS::SESSION);
+	g_PlayerArr[playerIndex]._timeOut = timeGetTime(); 
 
 }
 void CLanServer::_OnSend(ULONG64 ID)
@@ -94,34 +97,33 @@ void CLanServer::_OnSend(ULONG64 ID)
 	//할 일 없음
 	return;
 }
-void CLanServer::_OnDisConnect(ULONG64 ID)
+void CLanServer::_OnDisConnect(ULONG64 sessionID)
 {
-	
-	CPacket* DeletePlayerMsg;
-	stHeader msgHeader;
-	int QIndex;
-	QIndex = GetIndex(ID) % CContentsThreadManager::threadCount;
 
-	DeletePlayerMsg = CPacket::Alloc();
-	msgHeader.type = stJob_DeletePlayer;
-	msgHeader.size = 0;
+	unsigned short playerIndex = GetIndex(sessionID);
 
-	*DeletePlayerMsg << ID;
-	DeletePlayerMsg->PutData((char*)&msgHeader, sizeof(msgHeader));
 
+	if (g_PlayerArr[playerIndex].GetID() != sessionID)
 	{
-		Profiler p("g_ContentsJobQ_Enque");
-
-		CContentsThreadManager::contentsJobQ[QIndex].Enqueue(DeletePlayerMsg);
+		return;
 	}
 
+	if (g_PlayerArr[playerIndex]._status < static_cast<BYTE>(Player::STATUS::PLAYER))
+	{
+		g_PlayerArr[playerIndex]._status = static_cast<BYTE>(Player::STATUS::IDLE);
+		return;
+	}
 
-	//todo//여기서 대기 큐에 있던 애가 있으면 생성에 대한 절차를 해줌
+	CheckSector(sessionID);
 
+	int SectorX = g_PlayerArr[playerIndex].GetX();
+	int SectorY = g_PlayerArr[playerIndex].GetY();
 
+	SectorLock[SectorX][SectorY].lock();
+	Sector[SectorX][SectorY].remove(&g_PlayerArr[playerIndex]);
+	SectorLock[SectorX][SectorY].unlock();
 
-
-	InterlockedDecrement64(&g_playerCount);
+	g_PlayerArr[playerIndex].Clear();
 }
 
 CLanServer::CLanServer()
@@ -131,7 +133,6 @@ CLanServer::CLanServer()
 
 bool HandleContentJob(long myIndex)
 {
-	unsigned int dequeResult;
 	CPacket* JobMessage;
 	stHeader contentsHeader;
 	CPacket* msgPayload;
@@ -180,15 +181,15 @@ bool HandleContentJob(long myIndex)
 		switch (contentsHeader.type)
 		{
 		case stPacket_Client_Chat_MoveStart:
-			HandleMoveStartMsg((char*)msgPayload, userId);
+			HandleMoveStartMsg(msgPayload, userId);
 			break;
 
 		case stPacket_Client_Chat_MoveStop:
-			HandleMoveStopMsg((char*)msgPayload, userId);
+			HandleMoveStopMsg(msgPayload, userId);
 			break;
 
 		case stPacket_Client_Chat_LocalChat:
-			HandleLocalChatMsg((char*)msgPayload, userId);
+			HandleLocalChatMsg(msgPayload, userId);
 			break;
 
 		case stPacket_Client_Chat_HeartBeat:
@@ -246,7 +247,7 @@ void TimeOutCheck()
 
 	for (int i = 0; i < sessionCount; i++)
 	{
-		if (g_PlayerArr[i].isAlive() == false)
+		if (g_PlayerArr[i]._status == static_cast<BYTE>(Player::STATUS::IDLE))
 		{
 			continue;
 		}

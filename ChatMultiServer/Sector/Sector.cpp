@@ -11,32 +11,27 @@ int sectorYRange = dfRANGE_MOVE_BOTTOM / SECTOR_RATIO;
 extern Player* g_PlayerArr;
 extern CLanServer* ntServer;
 
-bool SyncSector(ULONG64 UserId, int beforeX, int beforeY)
+bool SyncSector(ULONG64 UserId, int oldSectorX, int oldSectorY)
 {
 
 	int playerIndex = ntServer->GetIndex(UserId);
-	int playerX = g_PlayerArr[playerIndex].GetX();
-	int playerY = g_PlayerArr[playerIndex].GetY();
+	int currentSectorX = g_PlayerArr[playerIndex].GetX();
+	int currentSectorY = g_PlayerArr[playerIndex].GetY();
 
-	int beforeSectorX = beforeX / SECTOR_RATIO;
-	int beforeSectorY = beforeY / SECTOR_RATIO;
-
-	int SectorX = playerX / SECTOR_RATIO;
-	int SectorY = playerY / SECTOR_RATIO;
 	
-	SectorLockByIndexOrder(beforeSectorX, beforeSectorY, SectorX, SectorY);
+	SectorLockByIndexOrder(oldSectorX, oldSectorY, currentSectorX, currentSectorY);
 
-	size_t debugSize = Sector[beforeSectorX][beforeSectorY].size();
-	Sector[beforeSectorX][beforeSectorY].remove(&g_PlayerArr[playerIndex]);
-	if (debugSize == Sector[beforeSectorX][beforeSectorY].size())
+	size_t debugSize = Sector[oldSectorX][oldSectorY].size();
+	Sector[oldSectorX][oldSectorY].remove(&g_PlayerArr[playerIndex]);
+	if (debugSize == Sector[oldSectorX][oldSectorY].size())
 	{
 		__debugbreak();
 		return false;
 	}
 
-	Sector[SectorX][SectorY].push_back(&g_PlayerArr[playerIndex]);
+	Sector[currentSectorX][currentSectorY].push_back(&g_PlayerArr[playerIndex]);
 
-	SectorUnlockByIndexOrder(beforeSectorX, beforeSectorY, SectorX, SectorY);
+	SectorUnlockByIndexOrder(oldSectorX, oldSectorY, currentSectorX, currentSectorY);
 
 	return true;
 }

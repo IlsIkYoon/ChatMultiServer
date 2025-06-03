@@ -12,30 +12,26 @@ extern unsigned long long g_PlayerID;
 extern std::stack<int> g_playerIndexStack;
 
 
-
-class Player;
-
-extern Player* PlayerArr;
-
 class Player {
 public:
 
 	enum class STATUS
 	{
-		DELETED = 0, WAIT_CREATE, ALIVE
+		IDLE = 0, SESSION, PLAYER
 	};
 
 	DWORD _timeOut;
 	BYTE _status;
 
 
-private:
+public:
 	bool _move;
-	short _x;
-	short _y;
+	short sectorX;
+	short sectorY;
 	BYTE _direction;
-	unsigned long long _ID;
-
+	unsigned long long accountNo;
+	WCHAR nickname[20];
+	WCHAR ID[20];
 
 
 
@@ -44,11 +40,11 @@ public:
 	Player()
 	{
 		_move = false;
-		_status = static_cast<BYTE>(STATUS::DELETED);
+		_status = static_cast<BYTE>(STATUS::IDLE);
 		_direction = 0;
-		_x = 0;
-		_y = 0;
-		_ID = 0;
+		sectorX = 0;
+		sectorY = 0;
+		accountNo = 0;
 		_timeOut = 0;
 	}
 	
@@ -84,15 +80,15 @@ public:
 	unsigned long long GetID();
 	void SetID(ULONG64 id)
 	{
-		_ID = id;
+		accountNo = id;
 	}
 	inline short GetX()
 	{
-		return _x;
+		return sectorX;
 	}
 	inline short GetY()
 	{
-		return _y;
+		return sectorY;
 	}
 
 };

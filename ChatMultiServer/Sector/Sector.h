@@ -4,7 +4,8 @@
 
 
 
-bool SyncSector(ULONG64 UserId, int oldX, int oldY);
+bool SyncSector(ULONG64 UserId, int oldSectorX, int oldSectorY);
+
 
 
 

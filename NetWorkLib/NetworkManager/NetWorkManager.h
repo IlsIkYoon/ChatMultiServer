@@ -122,8 +122,8 @@ private:
 	//--------------------------------------------
 	bool SendToAllSessions();
 	//--------------------------------------------
-	// Session의 recvBuf(rBuf)에서 네트워크 헤더와 그 페이로드를 뽑아서
-	// sBuf에 삽입하고 리턴. //todo//네트워크 헤더는 빼고 넣어줘야 하나 ? 
+	// Session의 recvBuf(rBuf)에서 네트워크 헤더 길이에 맞는 페이로드를 뽑아서
+	// sBuf에 삽입하고 리턴.
 	//--------------------------------------------
 	bool _DequePacket(CPacket* sBuf, Session* _session);
 	//--------------------------------------------
@@ -188,7 +188,7 @@ public:
 	// 컨텐츠에서 다른 세션에 메세지를 보낼때 쓸 함수
 	// 핸들러 함수 등록 안 되면 실패 반환
 	//---------------------------------------------
-	bool SendPacket(ULONG64 playerId, char* buf);
+	bool SendPacket(ULONG64 playerId, CPacket* buf);
 	//---------------------------------------------
 	// 컨텐츠에서 세션 삭제 요청 함수
 	//---------------------------------------------
@@ -202,7 +202,7 @@ public:
 	// 핸들러 함수
 	// 가상함수로 상속받아서 정의해서 사용
 	//--------------------------------------------
-	virtual void _OnMessage(char* SBuf, ULONG64 ID) = 0;
+	virtual void _OnMessage(CPacket* SBuf, ULONG64 ID) = 0;
 	virtual void _OnAccept(ULONG64 ID) = 0;
 	virtual void _OnDisConnect(ULONG64 ID) = 0;
 	virtual void _OnSend(ULONG64 ID) = 0;

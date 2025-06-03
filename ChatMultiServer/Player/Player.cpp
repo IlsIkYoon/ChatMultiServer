@@ -32,13 +32,13 @@ std::queue<ULONG64> g_WaitingPlayerAcceptQ;
 bool Player::Move(DWORD fixedDeltaTime) {
 	if (_move == false) return false;
 
-	if (_x >= dfRANGE_MOVE_RIGHT || _x < dfRANGE_MOVE_LEFT || _y >= dfRANGE_MOVE_BOTTOM || _y < dfRANGE_MOVE_TOP) return false;
+	if (sectorX >= dfRANGE_MOVE_RIGHT || sectorX < dfRANGE_MOVE_LEFT || sectorY >= dfRANGE_MOVE_BOTTOM || sectorY < dfRANGE_MOVE_TOP) return false;
 
 
 	short deltaX;
 	short deltaY;
-	int oldX = _x;
-	int oldY = _y;
+	int oldX = sectorX;
+	int oldY = sectorY;
 
 	deltaX = ((short)fixedDeltaTime / FrameSec) * dfSPEED_PLAYER_X;
 	deltaY = ((short)fixedDeltaTime / FrameSec) * dfSPEED_PLAYER_Y;
@@ -48,17 +48,17 @@ bool Player::Move(DWORD fixedDeltaTime) {
 	switch (_direction) {
 	case dfPACKET_MOVE_DIR_LL:
 	{
-		if (_x - deltaX < dfRANGE_MOVE_LEFT) return false;
-		_x -= deltaX;;
+		if (sectorX - deltaX < dfRANGE_MOVE_LEFT) return false;
+		sectorX -= deltaX;;
 
 	}
 	break;
 
 	case dfPACKET_MOVE_DIR_LU:
 	{
-		if (_x - deltaX < dfRANGE_MOVE_LEFT || _y - deltaY < dfRANGE_MOVE_TOP) return false;
-		_x -= deltaX;
-		_y -= deltaY;
+		if (sectorX - deltaX < dfRANGE_MOVE_LEFT || sectorY - deltaY < dfRANGE_MOVE_TOP) return false;
+		sectorX -= deltaX;
+		sectorY -= deltaY;
 
 	}
 
@@ -66,8 +66,8 @@ bool Player::Move(DWORD fixedDeltaTime) {
 
 	case dfPACKET_MOVE_DIR_UU:
 	{
-		if (_y - deltaY < dfRANGE_MOVE_TOP) return false;
-		_y -= deltaY;
+		if (sectorY - deltaY < dfRANGE_MOVE_TOP) return false;
+		sectorY -= deltaY;
 
 
 	}
@@ -76,9 +76,9 @@ bool Player::Move(DWORD fixedDeltaTime) {
 
 	case dfPACKET_MOVE_DIR_RU:
 	{
-		if (_x + deltaX >= dfRANGE_MOVE_RIGHT || _y - deltaY < dfRANGE_MOVE_TOP) return false;
-		_x += deltaX;
-		_y -= deltaY;
+		if (sectorX + deltaX >= dfRANGE_MOVE_RIGHT || sectorY - deltaY < dfRANGE_MOVE_TOP) return false;
+		sectorX += deltaX;
+		sectorY -= deltaY;
 
 
 	}
@@ -86,8 +86,8 @@ bool Player::Move(DWORD fixedDeltaTime) {
 
 	case dfPACKET_MOVE_DIR_RR:
 	{
-		if (_x + deltaX >= dfRANGE_MOVE_RIGHT) return false;
-		_x += deltaX;
+		if (sectorX + deltaX >= dfRANGE_MOVE_RIGHT) return false;
+		sectorX += deltaX;
 
 
 	}
@@ -95,9 +95,9 @@ bool Player::Move(DWORD fixedDeltaTime) {
 
 	case dfPACKET_MOVE_DIR_RD:
 	{
-		if (_x + deltaX >= dfRANGE_MOVE_RIGHT || _y + deltaY >= dfRANGE_MOVE_BOTTOM) return false;
-		_x += deltaX;
-		_y += deltaY;
+		if (sectorX + deltaX >= dfRANGE_MOVE_RIGHT || sectorY + deltaY >= dfRANGE_MOVE_BOTTOM) return false;
+		sectorX += deltaX;
+		sectorY += deltaY;
 
 
 	}
@@ -105,8 +105,8 @@ bool Player::Move(DWORD fixedDeltaTime) {
 
 	case dfPACKET_MOVE_DIR_DD:
 	{
-		if (_y + deltaY >= dfRANGE_MOVE_BOTTOM) return false;
-		_y += deltaY;
+		if (sectorY + deltaY >= dfRANGE_MOVE_BOTTOM) return false;
+		sectorY += deltaY;
 
 
 	}
@@ -114,9 +114,9 @@ bool Player::Move(DWORD fixedDeltaTime) {
 
 	case dfPACKET_MOVE_DIR_LD:
 	{
-		if (_x - deltaX < dfRANGE_MOVE_LEFT || _y + deltaY >= dfRANGE_MOVE_BOTTOM) return false;
-		_x -= deltaX;
-		_y += deltaY;
+		if (sectorX - deltaX < dfRANGE_MOVE_LEFT || sectorY + deltaY >= dfRANGE_MOVE_BOTTOM) return false;
+		sectorX -= deltaX;
+		sectorY += deltaY;
 
 
 	}
@@ -128,13 +128,13 @@ bool Player::Move(DWORD fixedDeltaTime) {
 
 
 
-	if ((_x / SECTOR_RATIO == oldX / SECTOR_RATIO) && (_y / SECTOR_RATIO == oldY / SECTOR_RATIO))
+	if ((sectorX / SECTOR_RATIO == oldX / SECTOR_RATIO) && (sectorY / SECTOR_RATIO == oldY / SECTOR_RATIO))
 	{
 		return true;
 	}
 
 
-	SyncSector(_ID, oldX, oldY);
+	SyncSector(accountNo, oldX, oldY);
 
 	return true;
 }
@@ -143,15 +143,15 @@ bool Player::Move(DWORD fixedDeltaTime) {
 
 bool Player::MoveStart(BYTE Direction, int x, int y) {
 
-	int oldX = _x;
-	int oldY = _y;
+	int oldX = sectorX;
+	int oldY = sectorY;
 
 	int oldSectorX = oldX / SECTOR_RATIO;
 	int oldSectorY = oldY / SECTOR_RATIO;
 
 	_direction = Direction;
-	_x = x;
-	_y = y;
+	sectorX = x;
+	sectorY = y;
 	_move = true;
 
 	int newSectorX = x / SECTOR_RATIO;
@@ -160,7 +160,7 @@ bool Player::MoveStart(BYTE Direction, int x, int y) {
 	//섹터 동기화
 	if ((newSectorX != oldSectorX) || (newSectorY != oldSectorY))
 	{
-		SyncSector(_ID, oldX, oldY);
+		SyncSector(accountNo, oldX, oldY);
 	}
 
 
@@ -171,8 +171,8 @@ bool Player::MoveStart(BYTE Direction, int x, int y) {
 
 void Player::MoveStop(BYTE Dir, int x, int y)
 {
-	int oldX = _x;
-	int oldY = _y;
+	int oldX = sectorX;
+	int oldY = sectorY;
 
 	int oldSectorX = oldX / SECTOR_RATIO;
 	int oldSectorY = oldY / SECTOR_RATIO;
@@ -180,8 +180,8 @@ void Player::MoveStop(BYTE Dir, int x, int y)
 
 
 	_direction = Dir;
-	_x = x;
-	_y = y;
+	sectorX = x;
+	sectorY = y;
 
 	_move = false;
 
@@ -191,7 +191,7 @@ void Player::MoveStop(BYTE Dir, int x, int y)
 	//섹터 동기화
 	if ((newSectorX != oldSectorX) || (newSectorY != oldSectorY))
 	{
-		SyncSector(_ID, oldX, oldY);
+		SyncSector(accountNo, oldX, oldY);
 	}
 
 
@@ -199,32 +199,32 @@ void Player::MoveStop(BYTE Dir, int x, int y)
 
 void Player::Clear()
 {
-	_status = static_cast<BYTE>(STATUS::DELETED);
+	_status = static_cast<BYTE>(STATUS::IDLE);
 
 }
 
 void Player::Init(ULONG64 sessionID)
 {
 
-	_x = rand() % 6400;
-	_y = rand() % 6400;
+	sectorX = (rand() % 6400) / SECTOR_RATIO;
+	sectorY = (rand() % 6400) / SECTOR_RATIO;
 	_direction = (rand() % 2) * 4; //LL == 0, RR == 4
 
 
 	_move = false;
-	_ID = sessionID;
-	_status = static_cast<BYTE>(STATUS::ALIVE);
+	accountNo = sessionID;
+	_status = static_cast<BYTE>(STATUS::PLAYER);
 	_timeOut = timeGetTime();
 
-	SectorLock[_x / SECTOR_RATIO][_y / SECTOR_RATIO].lock();
-	Sector[_x / SECTOR_RATIO][_y / SECTOR_RATIO].push_back(this);
-	SectorLock[_x / SECTOR_RATIO][_y / SECTOR_RATIO].unlock();
+	SectorLock[sectorX / SECTOR_RATIO][sectorY / SECTOR_RATIO].lock();
+	Sector[sectorX / SECTOR_RATIO][sectorY / SECTOR_RATIO].push_back(this);
+	SectorLock[sectorX / SECTOR_RATIO][sectorY / SECTOR_RATIO].unlock();
 
 }
 
 bool Player::isAlive()
 {
-	if (_status == static_cast<BYTE>(STATUS::ALIVE))
+	if (_status == static_cast<BYTE>(STATUS::PLAYER))
 	{
 		return true;
 	}
@@ -235,7 +235,7 @@ bool Player::isAlive()
 
 unsigned long long Player::GetID()
 {
-	return _ID;
+	return accountNo;
 }
 
 
@@ -243,7 +243,7 @@ unsigned long long Player::GetID()
 
 void EnqueueWaitingPlayerQ(ULONG64 id)
 {
-	g_PlayerArr[ntServer->GetIndex(id)]._status = static_cast<BYTE>(Player::STATUS::WAIT_CREATE);
+	g_PlayerArr[ntServer->GetIndex(id)]._status = static_cast<BYTE>(Player::STATUS::SESSION);
 	g_WaitingPlayerAcceptQ.push(id);
 
 	//실제 게임이라면 여기에 대기열로 입장시키는 메세지 전송 로직이 들어가야함
@@ -258,11 +258,11 @@ bool DequeueWaitingPlayerQ()
 		playerID = g_WaitingPlayerAcceptQ.front();
 		g_WaitingPlayerAcceptQ.pop();
 		playerIndex = ntServer->GetIndex(playerID);
-		if (g_PlayerArr[playerIndex]._status == static_cast<BYTE>(Player::STATUS::DELETED))
+		if (g_PlayerArr[playerIndex]._status == static_cast<BYTE>(Player::STATUS::IDLE))
 		{
 			continue;
 		}
-		else if (g_PlayerArr[playerIndex]._status == static_cast<BYTE>(Player::STATUS::ALIVE))
+		else if (g_PlayerArr[playerIndex]._status == static_cast<BYTE>(Player::STATUS::PLAYER))
 		{
 			__debugbreak();
 			continue;
@@ -270,7 +270,7 @@ bool DequeueWaitingPlayerQ()
 		else
 		{
 			g_PlayerArr[playerIndex].Init(playerID);
-			ContentsSendCreatePlayerPacket(playerID);
+			SendLoginResPacket(playerID);
 			return true;
 		}
 

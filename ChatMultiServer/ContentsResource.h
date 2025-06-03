@@ -59,3 +59,13 @@
 #define dfPACKET_MOVE_DIR_RD					5
 #define dfPACKET_MOVE_DIR_DD					6
 #define dfPACKET_MOVE_DIR_LD					7
+
+
+
+
+struct KeyTokenTimeNode
+{
+	unsigned long long characterKey;
+	char Token[64];
+	DWORD time;
+};
