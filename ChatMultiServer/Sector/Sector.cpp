@@ -5,7 +5,7 @@
 #include "ContentsThread/ContentsThreadManager.h"
 
 std::list<Player*> Sector[SECTOR_MAX][SECTOR_MAX];
-std::mutex SectorLock[SECTOR_MAX][SECTOR_MAX];
+std::recursive_mutex SectorLock[SECTOR_MAX][SECTOR_MAX];
 int sectorXRange = SECTOR_MAX;
 int sectorYRange = SECTOR_MAX;
 
@@ -24,6 +24,12 @@ bool SyncSector(ULONG64 UserId, int oldSectorX, int oldSectorY)
 	playerIndex = ntServer->GetIndex(UserId);
 	currentSectorX = localPlayerList[playerIndex].sectorX;
 	currentSectorY = localPlayerList[playerIndex].sectorY;
+
+	if (currentSectorX == oldSectorX && currentSectorY == oldSectorY)
+	{
+		return false;
+	}
+
 	
 	SectorLockByIndexOrder(oldSectorX, oldSectorY, currentSectorX, currentSectorY);
 
@@ -60,16 +66,18 @@ bool CheckSector(ULONG64 UserId)
 	localX = localPlayerList[playerIndex].sectorX;
 	localY = localPlayerList[playerIndex].sectorY;
 
-	SectorLock[localX][localY].lock();
-	auto searchIt = std::find(Sector[localX][localY].begin(),
-		Sector[localX][localY].end(),
-		&localPlayerList[playerIndex]);
-	if (searchIt == Sector[localX][localY].end())
 	{
-		__debugbreak();
-		return false;
+		std::lock_guard guard(SectorLock[localX][localY]);
+		auto searchIt = std::find(Sector[localX][localY].begin(),
+			Sector[localX][localY].end(),
+			&localPlayerList[playerIndex]);
+		if (searchIt == Sector[localX][localY].end())
+		{
+			__debugbreak();
+			return false;
+		}
+	
 	}
-	SectorLock[localX][localY].unlock();
 
 #endif
 	return true;

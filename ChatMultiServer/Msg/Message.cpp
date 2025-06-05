@@ -20,7 +20,7 @@ extern long long g_playerCount;
 extern unsigned long long g_PlayerLogOut;
 
 extern std::list<Player*> Sector[SECTOR_MAX][SECTOR_MAX];
-extern std::mutex SectorLock[SECTOR_MAX][SECTOR_MAX];
+extern std::recursive_mutex SectorLock[SECTOR_MAX][SECTOR_MAX];
 extern int sectorXRange;
 extern int sectorYRange;
 
@@ -44,83 +44,86 @@ void MsgSectorBroadCasting(void (*Func)(ULONG64 srcID, ULONG64 destID, CPacket* 
 	SectorY = pSrc->sectorY;
 
 	//섹터 락을 전부 잡고 나서 시작
-
-	for (int i = -1; i < 2; i++)
 	{
-		for (int j = -1; j < 2; j++)
+
+
+		for (int i = -1; i < 2; i++)
 		{
-			if (SectorX + i < 0 || SectorX + i >= sectorXRange) continue;
-			if (SectorY + j < 0 || SectorY + j >= sectorYRange) continue;
-
-
-			SectorLock[SectorX + i][SectorY + j].lock();
-		}
-	}
-
-
-
-	for (int i = -1; i < 2; i++)
-	{
-		for (int j = -1; j < 2; j++)
-		{
-			if (SectorX + i < 0 || SectorX + i >= sectorXRange) continue;
-			if (SectorY + j < 0 || SectorY + j >= sectorYRange) continue;
-
-			for (pit = Sector[SectorX + i][SectorY + j].begin(); pit != Sector[SectorX + i][SectorY + j].end(); pit++)
+			for (int j = -1; j < 2; j++)
 			{
-				if ((*pit)->_sessionID == pSrc->_sessionID && SendMe == false)
-				{
-					__debugbreak();
-					continue;
-				}
-				if ((*pit)->isAlive() == false)
-				{
-					__debugbreak();
-					continue;
-				}
-				if ((*pit)->_status < static_cast<BYTE>(Player::STATUS::PLAYER))
-				{
-					__debugbreak();
-				}
+				if (SectorX + i < 0 || SectorX + i >= sectorXRange) continue;
+				if (SectorY + j < 0 || SectorY + j >= sectorYRange) continue;
 
-				Func(pSrc->_sessionID, (*pit)->_sessionID, Packet);
-
+				
+				SectorLock[SectorX + i][SectorY + j].lock();
 			}
-			/*
-			for (auto* it : Sector[SectorX + i][SectorY + j])
-			{
-				if (it->GetID() == pSrc->GetID() && SendMe == false)
-				{
-					continue;
-				}
-				if (it->isAlive() == false) continue;
-
-				Func(pSrc->GetID(), it->GetID(), Packet);
-
-			}
-			*/
 		}
-	}
 
-
-	for (int i = -1; i < 2; i++)
-	{
-		for (int j = -1; j < 2; j++)
+		for (int i = -1; i < 2; i++)
 		{
-			if (SectorX + i < 0 || SectorX + i >= sectorXRange) continue;
-			if (SectorY + j < 0 || SectorY + j >= sectorYRange) continue;
+			for (int j = -1; j < 2; j++)
+			{
+				if (SectorX + i < 0 || SectorX + i >= sectorXRange) continue;
+				if (SectorY + j < 0 || SectorY + j >= sectorYRange) continue;
+
+				for (pit = Sector[SectorX + i][SectorY + j].begin(); pit != Sector[SectorX + i][SectorY + j].end(); pit++)
+				{
+					if ((*pit)->_sessionID == pSrc->_sessionID && SendMe == false)
+					{
+						__debugbreak();
+						continue;
+					}
+					if ((*pit)->isAlive() == false)
+					{
+						__debugbreak();
+						continue;
+					}
+					if ((*pit)->_status < static_cast<BYTE>(Player::STATUS::PLAYER))
+					{
+						__debugbreak();
+					}
+
+					Func(pSrc->_sessionID, (*pit)->_sessionID, Packet);
+
+				}
+				/*
+				for (auto* it : Sector[SectorX + i][SectorY + j])
+				{
+					if (it->GetID() == pSrc->GetID() && SendMe == false)
+					{
+						continue;
+					}
+					if (it->isAlive() == false) continue;
+
+					Func(pSrc->GetID(), it->GetID(), Packet);
+
+				}
+				*/
+			}
+		}
 
 
-			SectorLock[SectorX + i][SectorY + j].unlock();
+		for (int i = -1; i < 2; i++)
+		{
+			for (int j = -1; j < 2; j++)
+			{
+				if (SectorX + i < 0 || SectorX + i >= sectorXRange) continue;
+				if (SectorY + j < 0 || SectorY + j >= sectorYRange) continue;
+
+
+				SectorLock[SectorX + i][SectorY + j].unlock();
+			}
 		}
 	}
-
 
 }
 
 void ContentsSendPacket(ULONG64 srcID, ULONG64 destID, CPacket* packet)
 {
-
+	if (srcID == destID)
+	{
+		InterlockedIncrement(&g_mychatResMsgCnt);
+	}
 	ntServer->SendPacket(destID, packet);
 
 }
@@ -289,15 +292,15 @@ bool HandleSectorMoveMessage(CPacket* message, ULONG64 sessionID)
 	if (localPlayerList[playerIndex]._status == static_cast<BYTE>(Player::STATUS::PENDING_SECTOR))
 	{
 		//섹터 첫 배치 작업
+		localPlayerList[playerIndex]._status = static_cast<BYTE>(Player::STATUS::PLAYER); //섹터 배치로 플레이어 승격
 		localPlayerList[playerIndex].sectorX = SectorX;
 		localPlayerList[playerIndex].sectorY = SectorY;
 
-		SectorLock[SectorX][SectorY].lock();
+		{
+			std::lock_guard guard(SectorLock[SectorX][SectorY]);
+			Sector[SectorX][SectorY].push_back(&localPlayerList[playerIndex]);
+		}
 
-		Sector[SectorX][SectorY].push_back(&localPlayerList[playerIndex]);
-		SectorLock[SectorX][SectorY].unlock();
-
-		localPlayerList[playerIndex]._status = static_cast<BYTE>(Player::STATUS::PLAYER); //섹터 배치로 플레이어 승격
 	}
 	else 
 	{
@@ -310,6 +313,7 @@ bool HandleSectorMoveMessage(CPacket* message, ULONG64 sessionID)
 		localPlayerList[playerIndex].sectorY = SectorY;
 
 		SyncSector(sessionID, oldSectorX, oldSectorY);
+
 	}
 	SendSectorMoveResPacket(sessionID);
 
@@ -332,6 +336,11 @@ bool HandleChatMessage(CPacket* message, ULONG64 sessionID)
 	*message >> MessageLen;
 
 	Message = new WCHAR[MessageLen / 2];
+
+	if (message->GetDataSize() != MessageLen)
+	{
+		__debugbreak();
+	}
 	message->PopFrontData(MessageLen, (char*)Message);
 
 	playerIndex = NetWorkManager::GetIndex(sessionID);
@@ -340,8 +349,8 @@ bool HandleChatMessage(CPacket* message, ULONG64 sessionID)
 	//Res메세지 페이로드
 	WORD Type;
 	//INT64 AccountNo;
-	WCHAR ID[20];
-	WCHAR Nickname[20];
+	WCHAR ID[20] = { 0 };
+	WCHAR Nickname[20] = { 0 };
 	//WORD MessageLen;
 	//WCHAR* Message;
 
@@ -349,19 +358,20 @@ bool HandleChatMessage(CPacket* message, ULONG64 sessionID)
 	wcsncpy_s(ID, localPlayerList[playerIndex].ID, 20);
 	wcsncpy_s(Nickname, localPlayerList[playerIndex].nickname, 20);
 
-	CPacket* commonData; //공용 데이터용 보관 장소
-	commonData = CPacket::Alloc();
+	CPacket* sendMsg; //공용 데이터용 보관 장소
+	sendMsg = CPacket::Alloc();
 
-	*commonData << AccountNo;
-	commonData->PutData((char*)ID, sizeof(WCHAR) * 20);
-	commonData->PutData((char*)Nickname, sizeof(WCHAR) * 20);
-	*commonData << MessageLen;
-	commonData->PutData((char*)Message, MessageLen);
+	*sendMsg << Type;
+	*sendMsg << AccountNo;
+	sendMsg->PutData((char*)ID, sizeof(WCHAR) * 20);
+	sendMsg->PutData((char*)Nickname, sizeof(WCHAR) * 20);
+	*sendMsg << MessageLen;
+	sendMsg->PutData((char*)Message, MessageLen);
 
 
-	MsgSectorBroadCasting(SendChatResPacket, &localPlayerList[playerIndex], commonData, true);
+	MsgSectorBroadCasting(ContentsSendPacket, &localPlayerList[playerIndex], sendMsg, true);
 
-	commonData->DecrementUseCount();
+	sendMsg->DecrementUseCount();
 
 	delete[] Message;
 

@@ -565,6 +565,7 @@ bool NetWorkManager::SendPacket(ULONG64 playerId, CPacket* buf)
 	ULONG64 CurrentId = _session->_ID._ulong64;
 	if (CurrentId != playerId)
 	{
+		__debugbreak();
 		DecrementSessionIoCount(_session);
 		sendPacket->DecrementUseCount();
 		return false;
