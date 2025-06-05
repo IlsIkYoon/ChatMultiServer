@@ -34,8 +34,6 @@ void PrintString();
 void ShutDownAllThread();
 
 
-bool HandleContentJob(long myIndex);
-
 //----------------------------------------------
 // 컨텐츠에서 사용하는 리소스 초기화
 // 컨텐츠 배열 메모리 할당 + 스택에 인덱스 값들 push

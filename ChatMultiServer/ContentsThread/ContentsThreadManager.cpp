@@ -91,10 +91,6 @@ unsigned int CContentsThreadManager::ContentsThreadFunc(void*)
 	while (1)
 	{
 
-		while (contentsJobQ[myIndex].GetSize() != 0)
-		{
-			HandleContentJob(myIndex);
-		}
 		
 
 		WaitForSingleObject(hEvent_contentsJobQ[myIndex], INFINITE);

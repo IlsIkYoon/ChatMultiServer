@@ -18,8 +18,8 @@ unsigned long long g_PlayerID;
 
 extern std::stack<int> g_playerIndexStack;
 
-extern std::list<Player*> Sector[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
-extern std::mutex SectorLock[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
+extern std::list<Player*> Sector[SECTOR_MAX][SECTOR_MAX];
+extern std::mutex SectorLock[SECTOR_MAX][SECTOR_MAX];
 
 
 extern CLanServer* ntServer;
@@ -207,8 +207,8 @@ void Player::Clear()
 void Player::Init(ULONG64 sessionID)
 {
 
-	sectorX = (rand() % 6400) / SECTOR_RATIO;
-	sectorY = (rand() % 6400) / SECTOR_RATIO;
+	sectorX = 0;
+	sectorY = 0;
 	_direction = (rand() % 2) * 4; //LL == 0, RR == 4
 
 

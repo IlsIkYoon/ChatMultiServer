@@ -4,10 +4,10 @@
 #include "ContentsThread/ContentsFunc.h"
 #include "ContentsThread/ContentsThreadManager.h"
 
-std::list<Player*> Sector[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
-std::mutex SectorLock[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
-int sectorXRange = dfRANGE_MOVE_RIGHT / SECTOR_RATIO;
-int sectorYRange = dfRANGE_MOVE_BOTTOM / SECTOR_RATIO;
+std::list<Player*> Sector[SECTOR_MAX][SECTOR_MAX];
+std::mutex SectorLock[SECTOR_MAX][SECTOR_MAX];
+int sectorXRange = SECTOR_MAX;
+int sectorYRange = SECTOR_MAX;
 
 extern CLanServer* ntServer;
 extern CContentsThreadManager contentsManager;
@@ -22,8 +22,8 @@ bool SyncSector(ULONG64 UserId, int oldSectorX, int oldSectorY)
 	localPlayerList = contentsManager.playerList->playerArr;
 
 	playerIndex = ntServer->GetIndex(UserId);
-	currentSectorX = localPlayerList[playerIndex].GetX();
-	currentSectorY = localPlayerList[playerIndex].GetY();
+	currentSectorX = localPlayerList[playerIndex].sectorX;
+	currentSectorY = localPlayerList[playerIndex].sectorY;
 	
 	SectorLockByIndexOrder(oldSectorX, oldSectorY, currentSectorX, currentSectorY);
 
@@ -57,19 +57,19 @@ bool CheckSector(ULONG64 UserId)
 
 	localPlayerList = contentsManager.playerList->playerArr;
 	playerIndex = ntServer->GetIndex(UserId);
-	localX = localPlayerList[playerIndex].GetX();
-	localY = localPlayerList[playerIndex].GetY();
+	localX = localPlayerList[playerIndex].sectorX;
+	localY = localPlayerList[playerIndex].sectorY;
 
-	SectorLock[localX / SECTOR_RATIO][localY / SECTOR_RATIO].lock();
-	auto searchIt = std::find(Sector[localX / SECTOR_RATIO][localY / SECTOR_RATIO].begin(),
-		Sector[localX / SECTOR_RATIO][localY / SECTOR_RATIO].end(),
+	SectorLock[localX][localY].lock();
+	auto searchIt = std::find(Sector[localX][localY].begin(),
+		Sector[localX][localY].end(),
 		&localPlayerList[playerIndex]);
-	if (searchIt == Sector[localX / SECTOR_RATIO][localY / SECTOR_RATIO].end())
+	if (searchIt == Sector[localX][localY].end())
 	{
 		__debugbreak();
 		return false;
 	}
-	SectorLock[localX / SECTOR_RATIO][localY / SECTOR_RATIO].unlock();
+	SectorLock[localX][localY].unlock();
 
 #endif
 	return true;
