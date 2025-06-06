@@ -7,16 +7,6 @@
 extern unsigned long long g_SessionTotalCreateCount;
 extern unsigned long long g_LoginSessionCount;
 
-//todo// SendFlag 수정하기
-enum class SendFlag
-{
-	OFF_SendFlag = 0x00,
-	On_SendFlag = 0x01,
-	ON_EnqueFlag = 0x02,
-
-
-};
-
 struct Session
 {
 
@@ -110,9 +100,6 @@ struct Session
 
 class SessionManager
 {
-	//매니저에서 할 일 
-	// todo//SessionList 배열 개수 , Config파일 읽어서 동적할당 해주는 식으로 변경
-	//
 	Session* _sessionList;
 	int _sessionMaxCount;
 	LFreeStack<unsigned short> _indexStack;

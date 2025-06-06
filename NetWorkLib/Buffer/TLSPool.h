@@ -175,7 +175,7 @@ public:
 
 		unsigned long long localCount;
 
-		newNode = (Node*)_LFMemoryPool.Alloc(); //todo//16바이트 제대로 할당하는지 체크
+		newNode = (Node*)_LFMemoryPool.Alloc(); 
 		newNode->_data = pData;
 		localCount = InterlockedIncrement(&_count);
 		exchangeNode = (Node*)((ULONG_PTR)newNode | (localCount << (64 - 17))); //상위 17비트는 0일 거라는 가정 하에 진행
@@ -268,7 +268,6 @@ public:
 
 	}
 
-	//todo// 정상 작동 확인을 위한 소멸자 코드
 	~TMemoryPool()
 	{
 		

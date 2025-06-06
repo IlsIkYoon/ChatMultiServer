@@ -55,7 +55,7 @@ public:
 	// 로그 관리를 하는 매니저
 	// 내부에서 로그 쓰레드 생성 및 큐에 있는 로그를 파일에 출력하는 역할
 	//---------------------------------------------
-	LogManager _log;
+	static LogManager _log;
 
 
 	SOCKET _listenSocket;
@@ -159,6 +159,7 @@ private:
 	bool IncrementSessionIoCount(Session* _session);
 	//--------------------------------------------
 	// Session의 IOCount를 내리고 0이면 삭제하는 함수
+	// 여기서 삭제가 진행되면 false 반환
 	//--------------------------------------------
 	bool DecrementSessionIoCount(Session* _session);
 	//--------------------------------------------

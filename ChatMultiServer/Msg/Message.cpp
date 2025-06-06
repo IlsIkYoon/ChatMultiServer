@@ -34,14 +34,12 @@ extern CContentsThreadManager contentsManager;
 
 void MsgSectorBroadCasting(void (*Func)(ULONG64 srcID, ULONG64 destID, CPacket* Packet), Player* _src, CPacket* Packet, bool SendMe)
 {
-	Player* pSrc = _src;
-
-	typename std::list<Player*>::iterator pit; // = Sector[0][0].begin();
+	
 	int SectorX;
 	int SectorY;
 
-	SectorX = pSrc->sectorX;
-	SectorY = pSrc->sectorY;
+	SectorX = _src->sectorX;
+	SectorY = _src->sectorY;
 
 	//섹터 락을 전부 잡고 나서 시작
 	{
@@ -66,9 +64,9 @@ void MsgSectorBroadCasting(void (*Func)(ULONG64 srcID, ULONG64 destID, CPacket* 
 				if (SectorX + i < 0 || SectorX + i >= sectorXRange) continue;
 				if (SectorY + j < 0 || SectorY + j >= sectorYRange) continue;
 
-				for (pit = Sector[SectorX + i][SectorY + j].begin(); pit != Sector[SectorX + i][SectorY + j].end(); pit++)
+				for (auto pit = Sector[SectorX + i][SectorY + j].begin(); pit != Sector[SectorX + i][SectorY + j].end();)
 				{
-					if ((*pit)->_sessionID == pSrc->_sessionID && SendMe == false)
+					if ((*pit)->_sessionID == _src->_sessionID && SendMe == false)
 					{
 						__debugbreak();
 						continue;
@@ -83,7 +81,12 @@ void MsgSectorBroadCasting(void (*Func)(ULONG64 srcID, ULONG64 destID, CPacket* 
 						__debugbreak();
 					}
 
-					Func(pSrc->_sessionID, (*pit)->_sessionID, Packet);
+
+					auto next_pit = std::next(pit);
+
+					Func(_src->_sessionID, (*pit)->_sessionID, Packet);
+
+					pit = next_pit;
 
 				}
 				/*

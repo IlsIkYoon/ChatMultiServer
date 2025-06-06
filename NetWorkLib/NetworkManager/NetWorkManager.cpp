@@ -27,6 +27,9 @@ unsigned long long* g_pSendTps;
 
 unsigned long g_threadIndex;
 
+
+LogManager NetWorkManager::_log;
+
 NetWorkManager::NetWorkManager()
 {
 	_exitThreadEvent = CreateEvent(NULL, true, false, NULL);
@@ -544,6 +547,8 @@ void NetWorkManager::_RecvBufRestorePacket(Session* _session, char* _packet, int
 bool NetWorkManager::SendPacket(ULONG64 playerId, CPacket* buf)
 {
 
+	bool retval;
+
 	CPacket* sendPacket = buf;
 
 	ULONG64 localID = GetID(playerId);
@@ -575,7 +580,9 @@ bool NetWorkManager::SendPacket(ULONG64 playerId, CPacket* buf)
 
 	_sessionList->GetSession(localIndex)._sendBuffer.Enqueue(sendPacket);
 
+
 	DecrementSessionIoCount(_session);
+
 
 	 return true;
 }
@@ -781,7 +788,7 @@ bool NetWorkManager::SendToAllSessions()
 		playerId = targetSession->_ID._ulong64;
 
 		 releaseFlag = targetSession->_releaseIOFlag._struct.releaseFlag;
-		if (releaseFlag == 0x01) //todo//
+		if (releaseFlag == 0x01) 
 		{
 			continue;
 		}
@@ -997,7 +1004,10 @@ bool NetWorkManager::RecvCompletionRoutine(Session* _session)
 		}
 		else if (decodeRetval == static_cast<int>(CPacket::ErrorCode::INVALID_DATA_PACKET))
 		{
-			__debugbreak();
+			std::string errorMsg;
+			errorMsg = std::format("Packet Decode Error !!! SessionID [{}]", GetID(_session->_ID._ulong64));
+			_log.EnqueLog(errorMsg.c_str());
+
 			DecrementSessionIoCount(_session);
 			disconnected = true;
 			break;
@@ -1038,8 +1048,6 @@ bool NetWorkManager::RecvCompletionRoutine(Session* _session)
 		return true;
 	}
 
-
-	//todo//
 	if (_session->_recvBuffer == nullptr)
 	{
 		__debugbreak();

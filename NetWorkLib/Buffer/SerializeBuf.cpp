@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "SerializeBuf.h"
+#include "NetworkManager/NetWorkManager.h"
 
 
 unsigned long long g_CPacketCreateCount;
@@ -338,10 +339,6 @@ int CPacket::_ClientDecodePacket()
 		return static_cast<int>(ErrorCode::SUCCESS);
 	}
 
-
-	//todo//체크섬 오류에 대한 로그 남기고 리턴 (연결 끊게 됨)
-
-	__debugbreak();
 	return static_cast<int>(ErrorCode::INVALID_DATA_PACKET);
 }
 
