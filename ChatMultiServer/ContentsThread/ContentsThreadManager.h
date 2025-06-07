@@ -7,7 +7,7 @@ class CContentsThreadManager
 {
 public:
 	static int threadCount;
-	static int playerCount;
+	static int playerMaxCount;
 	HANDLE* contentsThreadArr;
 	HANDLE tickThread;
 

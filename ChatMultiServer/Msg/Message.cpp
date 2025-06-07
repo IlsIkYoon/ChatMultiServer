@@ -9,11 +9,10 @@
 //-----------------------------------------
 // 출력을 위한 메세지 카운팅
 //-----------------------------------------
-unsigned long long g_loginResMsgCnt;
-unsigned long long g_sectorMoveResMsgCnt;
-unsigned long long g_chatResMsgCnt;
-unsigned long long g_mychatResMsgCnt;
 
+extern unsigned long long g_loginMsgCnt;
+extern unsigned long long g_sectorMoveMsgCnt;
+extern unsigned long long g_chatMsgCnt;
 
 extern std::stack<int> g_playerIndexStack;
 extern long long g_playerCount;
@@ -125,7 +124,7 @@ void ContentsSendPacket(ULONG64 srcID, ULONG64 destID, CPacket* packet)
 {
 	if (srcID == destID)
 	{
-		InterlockedIncrement(&g_mychatResMsgCnt);
+		InterlockedDecrement(&g_chatMsgCnt);
 	}
 	ntServer->SendPacket(destID, packet);
 
@@ -139,7 +138,7 @@ void SendChatResPacket(ULONG64 srcID, ULONG64 destID, CPacket* packet)
 
 	if (srcID == destID)
 	{
-		InterlockedIncrement(&g_mychatResMsgCnt);
+		InterlockedDecrement(&g_chatMsgCnt);
 	}
 
 	//-----------------------------
@@ -161,7 +160,6 @@ void SendChatResPacket(ULONG64 srcID, ULONG64 destID, CPacket* packet)
 
 	ntServer->SendPacket(destID, sendMsg);
 	sendMsg->DecrementUseCount();
-	InterlockedIncrement(&g_chatResMsgCnt);
 }
 
 void SendLoginResPacket(ULONG64 sessionID)
@@ -192,7 +190,7 @@ void SendLoginResPacket(ULONG64 sessionID)
 
 	InterlockedIncrement(&g_PlayerLogInCount);
 	InterlockedIncrement(&g_TotalPlayerCreate);
-	InterlockedIncrement(&g_loginResMsgCnt);
+	InterlockedDecrement(&g_loginMsgCnt);
 
 }
 
@@ -417,6 +415,6 @@ void SendSectorMoveResPacket(ULONG64 sessionID)
 	ntServer->SendPacket(sessionID, sendMsg);
 
 	sendMsg->DecrementUseCount();
-	InterlockedIncrement(&g_sectorMoveResMsgCnt);
+	InterlockedDecrement(&g_sectorMoveMsgCnt);
 
 }

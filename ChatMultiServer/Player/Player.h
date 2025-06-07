@@ -47,6 +47,10 @@ public:
 		sectorY = 0;
 		accountNo = 0;
 		_timeOut = 0;
+		_sessionID = 0;
+		ZeroMemory((char*)ID, sizeof(WCHAR) * 20);
+		ZeroMemory((char*)nickname, sizeof(WCHAR) * 20);
+
 	}
 	
 	//------------------------------------------------------

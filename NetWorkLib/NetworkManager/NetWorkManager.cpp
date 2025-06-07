@@ -326,6 +326,12 @@ void NetWorkManager::AcceptThread()
 
 }
 
+
+
+thread_local DWORD t_MyIndex;
+
+
+
 void NetWorkManager::IOCP_WorkerThread()
 {
 	_log.EnqueLog("IOCP_WORKER Thread Made Success");
@@ -343,7 +349,7 @@ void NetWorkManager::IOCP_WorkerThread()
 	Session* _session;
 
 
-	unsigned long myIndex = InterlockedIncrement(&g_threadIndex) - 1;
+	t_MyIndex = InterlockedIncrement(&g_threadIndex) - 1;
 	
 
 	while (1)
@@ -365,15 +371,12 @@ void NetWorkManager::IOCP_WorkerThread()
 		{
 			
 			_session->_recvBuffer->MoveRear(recvdBytes);
-			g_pRecvTps[myIndex] += (unsigned long long)recvdBytes;
 
 			RecvCompletionRoutine(_session);
 		}
 
 		else if ((ULONG_PTR)recvdOverLapped == (ULONG_PTR)&_session->_sendOverLapped) //Send에 대한 완료 통지
 		{
-			g_pSendTps[myIndex] += (unsigned long long)recvdBytes;
-
 			SendCompletionRoutine(_session);
 		}
 		else if (recvdOverLapped == SENDREQUEST)
@@ -955,6 +958,7 @@ bool NetWorkManager::SendCompletionRoutine(Session* _session)
 
 		if (retNode->_usageCount == 0) __debugbreak();
 
+		g_pSendTps[t_MyIndex]++;
 
 		retNode->DecrementUseCount();
 	}
@@ -1013,6 +1017,8 @@ bool NetWorkManager::RecvCompletionRoutine(Session* _session)
 			break;
 		}
 
+		g_pRecvTps[t_MyIndex]++;
+
 		SBuf = CPacket::Alloc();
 
 
@@ -1042,6 +1048,8 @@ bool NetWorkManager::RecvCompletionRoutine(Session* _session)
 			}
 			SBuf->DecrementUseCount();
 		}
+
+
 	}
 	if (disconnected == true)
 	{

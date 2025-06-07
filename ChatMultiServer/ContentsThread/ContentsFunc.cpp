@@ -72,10 +72,6 @@ void CLanServer::_OnMessage(CPacket* message, ULONG64 sessionID)
 	case en_PACKET_CS_CHAT_REQ_MESSAGE:
 		InterlockedIncrement(&g_chatMsgCnt);
 		HandleChatMessage(message, sessionID);
-		if (g_chatMsgCnt % 1000 == 0)
-		{
-		//	__debugbreak();
-		}
 		break;
 
 	case en_PACKET_CS_CHAT_REQ_HEARTBEAT:

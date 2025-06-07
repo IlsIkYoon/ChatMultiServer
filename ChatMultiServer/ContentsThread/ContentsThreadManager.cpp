@@ -8,7 +8,7 @@ long CContentsThreadManager::threadIndex;
 LFreeQ<CPacket*>* CContentsThreadManager::contentsJobQ;
 HANDLE* CContentsThreadManager::hEvent_contentsJobQ;
 int CContentsThreadManager::threadCount;
-int CContentsThreadManager::playerCount;
+int CContentsThreadManager::playerMaxCount;
 CPlayerManager* CContentsThreadManager::playerList;
 NetWorkManager* CContentsThreadManager::ntManager;
 CCharacterKeyManager* CContentsThreadManager::keyList;
@@ -17,9 +17,10 @@ CContentsThreadManager::CContentsThreadManager(NetWorkManager* ntLib)
 {
 	ntManager = ntLib;
 	threadIndex = 0;
-	playerCount = PLAYER_MAXCOUNT; //default 값, 실제 값은 Parser로 읽어서 쓸 예정
+	playerMaxCount = PLAYER_MAXCOUNT; //default 값, 실제 값은 Parser로 읽어서 쓸 예정
 	threadCount = CONTENTS_THREADCOUNT;
 	contentsThreadArr = nullptr;
+	tickThread = NULL;
 }
 
 CContentsThreadManager::~CContentsThreadManager()
@@ -47,7 +48,7 @@ bool CContentsThreadManager::ReadConfig()
 		__debugbreak();
 	}
 
-	txParser.SearchData("PlayerMaxCount", &playerCount);
+	txParser.SearchData("PlayerMaxCount", &playerMaxCount);
 	txParser.SearchData("ThreadCount", &threadCount);
 
 	return true;
@@ -58,8 +59,8 @@ bool CContentsThreadManager::ContentsThreadInit()
 	contentsJobQ = new LFreeQ<CPacket*>[threadCount];
 	hEvent_contentsJobQ = new HANDLE[threadCount];
 	contentsThreadArr = new HANDLE[threadCount];
-	playerList = new CPlayerManager(playerCount);
-	keyList = new CCharacterKeyManager(playerCount);
+	playerList = new CPlayerManager(playerMaxCount);
+	keyList = new CCharacterKeyManager(playerMaxCount);
 	
 	
 
@@ -116,7 +117,7 @@ unsigned int CContentsThreadManager::ContentsThreadFunc(void*)
 void CContentsThreadManager::UpdateContentsLogic(long myIndex, DWORD deltaTime)
 {
 
-	for (int i = 0; i < playerCount; i++)
+	for (int i = 0; i < playerMaxCount; i++)
 	{
 		if (i % threadCount != myIndex)
 		{
