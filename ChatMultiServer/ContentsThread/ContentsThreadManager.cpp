@@ -11,7 +11,7 @@ int CContentsThreadManager::threadCount;
 int CContentsThreadManager::playerCount;
 CPlayerManager* CContentsThreadManager::playerList;
 NetWorkManager* CContentsThreadManager::ntManager;
-
+CCharacterKeyManager* CContentsThreadManager::keyList;
 
 CContentsThreadManager::CContentsThreadManager(NetWorkManager* ntLib)
 {
@@ -59,6 +59,7 @@ bool CContentsThreadManager::ContentsThreadInit()
 	hEvent_contentsJobQ = new HANDLE[threadCount];
 	contentsThreadArr = new HANDLE[threadCount];
 	playerList = new CPlayerManager(playerCount);
+	keyList = new CCharacterKeyManager(playerCount);
 	
 	
 

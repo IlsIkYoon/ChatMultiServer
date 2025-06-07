@@ -2,6 +2,8 @@
 
 #include "NetWorkLib_Unified.h"
 
+#include <unordered_set>
+
 #define CONTENTS_THREADCOUNT 1
 #define PLAYER_MAXCOUNT 100
 

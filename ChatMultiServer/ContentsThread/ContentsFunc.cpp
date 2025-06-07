@@ -163,6 +163,7 @@ void CLanServer::_OnDisConnect(ULONG64 sessionID)
 		Sector[SectorX][SectorY].remove(&localPlayerList[playerIndex]);
 	}
 
+	contentsManager->keyList->DeleteID(localPlayerList[playerIndex].accountNo);
 	localPlayerList[playerIndex].Clear();
 
 

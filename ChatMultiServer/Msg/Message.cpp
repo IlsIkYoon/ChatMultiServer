@@ -235,6 +235,12 @@ bool HandleLoginMessage(CPacket* message, ULONG64 sessionID)
 	//LoadCharacterDataOnLogin(AccountNo, userId); 
 	//토큰이 유효하다면 DB에서 캐릭터 데이터 긁어오기 요청 후 긁어온 뒤에 결과에 따라 Login_res 메세지 전송
 
+	if (contentsManager.keyList->InsertID(AccountNo) == false)
+	{
+		ntServer->DisconnectSession(sessionID);
+		return false;
+	}
+
 	localPlayerList[playerIndex].Init(sessionID);
 	localPlayerList[playerIndex].accountNo = AccountNo;
 	wcsncpy_s(localPlayerList[playerIndex].ID, ID, 20);

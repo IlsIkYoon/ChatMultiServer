@@ -1,6 +1,6 @@
 #pragma once
 #include "Player/PlayerManager.h"
-
+#include "Player/CharacterKeyManager.h"
 
 
 class CContentsThreadManager
@@ -16,6 +16,8 @@ public:
 
 
 	static CPlayerManager* playerList;
+	static CCharacterKeyManager* keyList;
+
 
 	CContentsThreadManager() = delete;
 	CContentsThreadManager(NetWorkManager* ntLib);

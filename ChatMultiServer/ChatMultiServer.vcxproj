@@ -196,6 +196,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Msg\Message.cpp" />
     <ClCompile Include="Player\Player.cpp" />
+    <ClCompile Include="Player\CharacterKeyManager.cpp" />
     <ClCompile Include="Player\PlayerManager.cpp" />
     <ClCompile Include="Sector\Sector.cpp" />
   </ItemGroup>
@@ -210,6 +211,7 @@
     <ClInclude Include="Msg\ContentsPacket.h" />
     <ClInclude Include="Msg\Message.h" />
     <ClInclude Include="Player\Player.h" />
+    <ClInclude Include="Player\CharacterKeyManager.h" />
     <ClInclude Include="Player\PlayerManager.h" />
     <ClInclude Include="Sector\Sector.h" />
   </ItemGroup>
