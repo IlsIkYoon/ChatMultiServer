@@ -1,0 +1,536 @@
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 15632
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 26048
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 3120
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 9756
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 17240
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 15436
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 9240
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 688
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 23412
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 22956
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 4456
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 15632
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 26048
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 3120
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 9756
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 17240
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 15436
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 9240
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 688
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 23412
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 22956
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 4456
+FileName||lessValue||maxValue||count||total||average
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+---------------------------------
+THREADID,18776
+FileName||lessValue||maxValue||count||total||average
+---------------------------------
+---------------------------------
+THREADID,19372
+FileName||lessValue||maxValue||count||total||average
+---------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 23016 || Time : 13:28:52
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 13616 || Time : 13:28:52
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 29532 || Time : 13:28:52
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 4248 || Time : 13:28:52
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 26232 || Time : 13:28:52
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 5012 || Time : 13:28:52
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 10052 || Time : 13:28:52
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 1072 || Time : 13:28:52
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 14316 || Time : 13:28:52
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 19204 || Time : 13:28:52
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 10824 || Time : 13:28:52
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+---------------------------------
+THREADID,3544
+FileName||lessValue||maxValue||count||total||average
+---------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 1072 || Time : 13:33:37
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 276 || Time : 13:33:37
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 16556 || Time : 13:33:37
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 22208 || Time : 13:33:37
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 21616 || Time : 13:33:37
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 14012 || Time : 13:33:37
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 7316 || Time : 13:33:37
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 9480 || Time : 13:33:37
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+WSA SEND       ||1.50        s||18345.12    s||65857     ||1484448.17  s||22.50       s
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 2744 || Time : 13:33:37
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+WSA SEND       ||1.33        s||26372.62    s||70669     ||1618607.54  s||22.88       s
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 25716 || Time : 13:33:37
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+WSA SEND       ||1.42        s||19160.67    s||79280     ||1969329.21  s||24.83       s
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 24024 || Time : 13:33:37
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+WSA SEND       ||1.25        s||19349.21    s||95431     ||2447994.21  s||25.62       s
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 15412 || Time : 13:38:30
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 8528 || Time : 13:38:30
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 19708 || Time : 13:38:30
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 25352 || Time : 13:38:30
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 20040 || Time : 13:38:30
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 28708 || Time : 13:38:30
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+Consol Print   ||19905.67  ||54103.17  ||6         ||243615.96 ||40602.62  
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 8504 || Time : 13:38:30
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 30668 || Time : 13:38:30
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+HandleLoginMessage||1.46      ||5210.42   ||4055      ||21889.54  ||5.38      
+HandleSectorMoveMessage||0.83      ||6703.21   ||22064     ||88470.67  ||4.00      
+HandleChatMessage||4.33      ||9108.54   ||56711     ||732261.00 ||12.88     
+WSA SEND       ||1.46      ||23946.17  ||111193    ||2550404.21||22.92     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 2772 || Time : 13:38:30
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+HandleLoginMessage||1.38      ||1708.25   ||3530      ||15136.75  ||4.25      
+HandleSectorMoveMessage||0.88      ||18451.08  ||16760     ||76946.38  ||4.58      
+HandleChatMessage||4.54      ||12181.58  ||43255     ||606093.54 ||14.00     
+WSA SEND       ||1.17      ||26450.88  ||134386    ||3152368.62||23.42     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 20928 || Time : 13:38:30
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+HandleLoginMessage||1.33      ||1975.25   ||3202      ||14928.62  ||4.62      
+HandleSectorMoveMessage||0.96      ||5217.83   ||17320     ||63440.79  ||3.62      
+HandleChatMessage||4.21      ||9653.33   ||44187     ||613529.79 ||13.88     
+WSA SEND       ||1.29      ||20691.79  ||120823    ||2783919.17||23.00     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 6448 || Time : 13:38:30
+FileName       ||lessValue   ||maxValue    ||count     ||total       ||average     
+HandleLoginMessage||1.21      ||1758.92   ||3766      ||15845.21  ||4.17      
+HandleSectorMoveMessage||0.75      ||7254.38   ||17797     ||65060.83  ||3.62      
+HandleChatMessage||4.08      ||7014.79   ||44948     ||582171.96 ||12.92     
+WSA SEND       ||1.33      ||25736.46  ||109623    ||2583196.21||23.54     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 6588 || Time : 13:41:31
+FileName                ||lessValue   ||maxValue    ||count       ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 13640 || Time : 13:41:31
+FileName                ||lessValue   ||maxValue    ||count       ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 19032 || Time : 13:41:31
+FileName                ||lessValue   ||maxValue    ||count       ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 22164 || Time : 13:41:31
+FileName                ||lessValue   ||maxValue    ||count       ||total       ||average     
+HandleLoginMessage      ||1.46        ||481.75      ||6592        ||26886.42    ||4.04        
+HandleSectorMoveMessage ||0.88        ||5591.46     ||38246       ||138458.67   ||3.58        
+HandleChatMessage       ||4.12        ||13581.08    ||100772      ||1347692.29  ||13.33       
+WSA SEND                ||1.25        ||20556.83    ||236654      ||5570372.38  ||23.50       
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 26908 || Time : 13:41:31
+FileName                ||lessValue   ||maxValue    ||count       ||total       ||average     
+HandleLoginMessage      ||1.46        ||1778.96     ||6637        ||29761.33    ||4.46        
+HandleSectorMoveMessage ||0.79        ||9544.62     ||35257       ||155350.75   ||4.38        
+HandleChatMessage       ||4.62        ||11857.33    ||91432       ||1226649.12  ||13.38       
+WSA SEND                ||1.25        ||22996.62    ||234117      ||5808960.92  ||24.79       
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 17340 || Time : 13:41:31
+FileName                ||lessValue   ||maxValue    ||count       ||total       ||average     
+HandleLoginMessage      ||1.50        ||2342.54     ||7408        ||35947.50    ||4.83        
+HandleSectorMoveMessage ||0.79        ||4024.00     ||39871       ||142398.25   ||3.54        
+HandleChatMessage       ||4.50        ||24314.38    ||105956      ||1397947.46  ||13.17       
+WSA SEND                ||1.25        ||35192.42    ||239493      ||5772971.04  ||24.08       
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 24144 || Time : 13:41:31
+FileName                ||lessValue   ||maxValue    ||count       ||total       ||average     
+HandleLoginMessage      ||1.50        ||1732.88     ||6778        ||28796.67    ||4.21        
+HandleSectorMoveMessage ||0.79        ||4972.96     ||37108       ||131607.88   ||3.54        
+HandleChatMessage       ||4.50        ||17545.04    ||96700       ||1303262.75  ||13.46       
+WSA SEND                ||1.33        ||23829.25    ||235828      ||5906381.50  ||25.04       
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 13540 || Time : 13:41:31
+FileName                ||lessValue   ||maxValue    ||count       ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 28044 || Time : 13:41:31
+FileName                ||lessValue   ||maxValue    ||count       ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 19948 || Time : 13:41:31
+FileName                ||lessValue   ||maxValue    ||count       ||total       ||average     
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 21888 || Time : 13:41:31
+FileName                ||lessValue   ||maxValue    ||count       ||total       ||average     
+Consol Print            ||13745.96    ||185202.50   ||13          ||894242.88   ||68787.88    
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 30652 || Time : 13:44:05
+                FileName||   lessValue||    maxValue||       count||       total||     average
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 2432 || Time : 13:44:05
+                FileName||   lessValue||    maxValue||       count||       total||     average
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 6332 || Time : 13:44:05
+                FileName||   lessValue||    maxValue||       count||       total||     average
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 4228 || Time : 13:44:05
+                FileName||   lessValue||    maxValue||       count||       total||     average
+      HandleLoginMessage||        1.46||      486.54||        3370||    14038.08||        4.12
+ HandleSectorMoveMessage||        1.04||     5409.04||       15207||    60098.83||        3.92
+       HandleChatMessage||        4.33||    13716.96||       38735||   556212.88||       14.33
+                WSA SEND||        1.21||    18032.25||      102180||  2564895.00||       25.08
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 10456 || Time : 13:44:05
+                FileName||   lessValue||    maxValue||       count||       total||     average
+      HandleLoginMessage||        1.50||     1760.58||        3964||    17553.75||        4.42
+ HandleSectorMoveMessage||        1.08||     4387.67||       16655||    64023.50||        3.83
+       HandleChatMessage||        4.33||    19532.75||       42461||   582502.04||       13.71
+                WSA SEND||        1.25||    26869.46||       98163||  2339351.17||       23.79
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 10432 || Time : 13:44:05
+                FileName||   lessValue||    maxValue||       count||       total||     average
+      HandleLoginMessage||        1.50||      718.58||        2655||    13965.04||        5.25
+ HandleSectorMoveMessage||        1.08||     3590.17||       13497||    52888.88||        3.92
+       HandleChatMessage||        4.62||     9404.67||       33952||   467583.29||       13.75
+                WSA SEND||        1.25||    30939.04||       82965||  2164913.83||       26.08
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 9204 || Time : 13:44:05
+                FileName||   lessValue||    maxValue||       count||       total||     average
+      HandleLoginMessage||        1.42||     4572.42||        3239||    17764.33||        5.46
+ HandleSectorMoveMessage||        1.00||     2889.08||       15942||    56663.50||        3.54
+       HandleChatMessage||        4.42||     9046.71||       39228||   516380.17||       13.12
+                WSA SEND||        1.29||    19261.88||       90640||  2338641.50||       25.79
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 7128 || Time : 13:44:05
+                FileName||   lessValue||    maxValue||       count||       total||     average
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 7196 || Time : 13:44:05
+                FileName||   lessValue||    maxValue||       count||       total||     average
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 9264 || Time : 13:44:05
+                FileName||   lessValue||    maxValue||       count||       total||     average
+            Consol Print||    10634.04||    74304.75||           5||   183140.62||    36628.12
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 26084 || Time : 13:44:05
+                FileName||   lessValue||    maxValue||       count||       total||     average
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 2520 || Time : 13:50:11
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 19548 || Time : 13:50:11
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 1484 || Time : 13:50:11
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 2240 || Time : 13:50:11
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+HandleLoginMessage      ||        1.38||     5205.50||        2302||    16245.79||        7.04
+HandleSectorMoveMessage ||        0.96||     5126.79||       11556||    51758.00||        4.46
+HandleChatMessage       ||        4.38||     7604.38||       30161||   384875.54||       12.75
+WSA SEND                ||        1.33||    20604.17||       51792||  1098956.21||       21.21
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 24920 || Time : 13:50:11
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+HandleLoginMessage      ||        1.46||     4893.92||        2620||    20259.62||        7.71
+HandleSectorMoveMessage ||        0.83||      309.00||       11242||    36242.08||        3.21
+HandleChatMessage       ||        4.33||    17032.79||       28408||   390811.17||       13.75
+WSA SEND                ||        1.04||    25317.00||       80334||  1768748.54||       22.00
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 14140 || Time : 13:50:11
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+HandleLoginMessage      ||        1.38||     1891.58||        2649||    14094.42||        5.29
+HandleSectorMoveMessage ||        1.00||     5820.67||       12259||    56733.75||        4.62
+HandleChatMessage       ||        4.08||    12959.92||       30078||   404981.67||       13.46
+WSA SEND                ||        1.29||    34046.50||       73991||  1701332.08||       22.96
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 24988 || Time : 13:50:11
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+HandleLoginMessage      ||        1.46||     1914.46||        2149||    14251.92||        6.62
+HandleSectorMoveMessage ||        1.04||     7103.33||       11008||    44412.50||        4.00
+HandleChatMessage       ||        4.38||    13128.17||       27134||   364476.71||       13.42
+WSA SEND                ||        0.92||    36383.54||       81076||  2100246.04||       25.88
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 9872 || Time : 13:50:11
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 4972 || Time : 13:50:11
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 10264 || Time : 13:50:11
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 22476 || Time : 13:50:11
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+Consol Print            ||     8752.75||    64384.17||           4||   180140.96||    45035.21
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 3936 || Time : 13:56:35
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+HandleLoginMessage      ||        1.46||     2277.17||        2806||    16347.75||        5.79
+HandleSectorMoveMessage ||        0.79||      628.79||       10956||    36342.21||        3.29
+HandleChatMessage       ||        4.58||     8406.42||       28262||   373737.79||       13.21
+WSA SEND                ||        1.33||    33869.29||       83695||  2202722.08||       26.29
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 9040 || Time : 13:56:35
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+HandleLoginMessage      ||        1.42||     2138.21||        2918||    14123.42||        4.83
+HandleSectorMoveMessage ||        1.00||     1152.33||       13140||    42239.71||        3.21
+HandleChatMessage       ||        4.67||     7559.38||       30973||   390984.58||       12.58
+WSA SEND                ||        1.33||    17976.00||       61626||  1399879.71||       22.71
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 14248 || Time : 13:56:35
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+HandleLoginMessage      ||        1.46||     2025.25||        2545||    13251.21||        5.17
+HandleSectorMoveMessage ||        1.00||     2379.96||       11505||    40820.17||        3.54
+HandleChatMessage       ||        4.21||     7419.42||       27050||   342959.79||       12.67
+WSA SEND                ||        1.04||    21237.79||       65689||  1612514.88||       24.54
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 18044 || Time : 13:56:35
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+HandleLoginMessage      ||        1.50||      494.50||        1891||     7362.38||        3.88
+HandleSectorMoveMessage ||        0.96||     2381.12||       11276||    40956.04||        3.62
+HandleChatMessage       ||        4.50||     3758.88||       30286||   364788.12||       12.04
+WSA SEND                ||        1.25||    44683.46||       54414||  1440867.88||       26.46
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 8320 || Time : 13:56:35
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+Consol Print            ||    22494.92||    75055.33||           4||   205618.79||    51404.67
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 3936 || Time : 13:56:35
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+HandleLoginMessage      ||        1.46||    12542.88||       20784||   107450.50||        5.17
+HandleSectorMoveMessage ||        0.75||    17809.04||      122324||   494084.79||        4.00
+HandleChatMessage       ||        4.33||    19114.00||      325706||  4837740.42||       14.83
+WSA SEND                ||        1.25||    46009.96||      871750|| 23356850.79||       26.79
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 9040 || Time : 13:56:35
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+HandleLoginMessage      ||        1.42||     2138.21||       21784||    90984.33||        4.17
+HandleSectorMoveMessage ||        0.88||    14431.21||      123345||   476927.71||        3.83
+HandleChatMessage       ||        4.46||    14732.42||      327610||  4821845.79||       14.71
+WSA SEND                ||        1.29||    51046.42||      786537|| 20984796.21||       26.67
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 14248 || Time : 13:56:35
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+HandleLoginMessage      ||        1.46||     3058.33||       20594||    95459.71||        4.62
+HandleSectorMoveMessage ||        0.88||    11266.42||      122850||   475068.46||        3.83
+HandleChatMessage       ||        4.21||    23560.21||      324761||  4814998.12||       14.79
+WSA SEND                ||        1.04||    37757.17||      811722|| 21599153.71||       26.58
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 18044 || Time : 13:56:35
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+HandleLoginMessage      ||        1.50||    13959.88||       20363||   104796.00||        5.12
+HandleSectorMoveMessage ||        0.79||    18964.33||      123797||   495008.79||        3.96
+HandleChatMessage       ||        4.50||    18545.71||      331550||  4727996.08||       14.25
+WSA SEND                ||        1.25||    44683.46||      767988|| 20655702.67||       26.88
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+Save-WriteProfle || THREADID : 8320 || Time : 13:56:35
+FileName                ||   lessValue||    maxValue||       count||       total||     average
+Consol Print            ||    18294.46||   184803.17||          45||  3406006.67||    75689.00
+-----------------------------------------------------------------------
+---------------------------------
+THREADID,29224
+FileName||lessValue||maxValue||count||total||average
+---------------------------------

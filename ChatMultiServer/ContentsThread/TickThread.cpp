@@ -54,14 +54,16 @@ unsigned int TickThread(void*)
 				//todo//서버 종료 요청 실행
 				break;
 			case static_cast<char>(en_InputType::en_SaveProfiler):
-				//todo//모든 쓰레드가 프로파일러를 저장할 수 있게 하기
-				//방법 마련..
+				WriteAllProfileData();
 				break;
 			default:
 				break;
 			}
 			
-			serverMornitor.ConsolPrint();
+			{
+				Profiler p("Consol Print");
+				serverMornitor.ConsolPrint();
+			}
 
 			TimeOutCheck();
 

@@ -100,6 +100,23 @@ bool SectorLockByIndexOrder(int beforeX, int beforeY, int currentX, int currentY
 		secondX = currentX;
 		secondY = currentY;
 	}
+	else if (beforeX == currentX)
+	{
+		if (beforeY < currentY)
+		{
+			firstX = beforeX;
+			firstY = beforeY;
+			secondX = currentX;
+			secondY = currentY;
+		}
+		else
+		{
+			firstX = currentX;
+			firstY = currentY;
+			secondX = beforeX;
+			secondY = beforeY;
+		}
+	}
 	else {
 		firstX = currentX;
 		firstY = currentY;
@@ -129,6 +146,23 @@ bool SectorUnlockByIndexOrder(int beforeX, int beforeY, int currentX, int curren
 		firstY = beforeY;
 		secondX = currentX;
 		secondY = currentY;
+	}
+	else if (beforeX == currentX)
+	{
+		if (beforeY < currentY)
+		{
+			firstX = beforeX;
+			firstY = beforeY;
+			secondX = currentX;
+			secondY = currentY;
+		}
+		else
+		{
+			firstX = currentX;
+			firstY = currentY;
+			secondX = beforeX;
+			secondY = beforeY;
+		}
 	}
 	else {
 		firstX = currentX;

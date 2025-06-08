@@ -469,12 +469,9 @@ bool NetWorkManager::_SendPost(Session* _session)
 		_session->sendCount++;
 	}
 	
-	
 	{
-#ifdef __PROFILE__
 		Profiler p("WSA SEND");
-#endif
-	sendRet = WSASend(_session->_socket, buf, (DWORD)sendSize, NULL, NULL, &_session->_sendOverLapped, NULL);
+		sendRet = WSASend(_session->_socket, buf, (DWORD)sendSize, NULL, NULL, &_session->_sendOverLapped, NULL);
 	}
 
 	if (sendRet != 0 && GetLastError() != WSA_IO_PENDING)

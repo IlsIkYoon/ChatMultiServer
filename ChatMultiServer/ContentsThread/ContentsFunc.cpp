@@ -60,18 +60,27 @@ void CLanServer::_OnMessage(CPacket* message, ULONG64 sessionID)
 	switch (contentsType)
 	{
 	case en_PACKET_CS_CHAT_REQ_LOGIN:
+	{
 		InterlockedIncrement(&g_loginMsgCnt);
+		Profiler p("HandleLoginMessage");
 		HandleLoginMessage(message, sessionID);
+	}
 		break;
 
 	case en_PACKET_CS_CHAT_REQ_SECTOR_MOVE:
+	{
 		InterlockedIncrement(&g_sectorMoveMsgCnt);
+		Profiler p("HandleSectorMoveMessage");
 		HandleSectorMoveMessage(message, sessionID);
+	}
 		break;
 
 	case en_PACKET_CS_CHAT_REQ_MESSAGE:
+	{
 		InterlockedIncrement(&g_chatMsgCnt);
+		Profiler p("HandleChatMessage");
 		HandleChatMessage(message, sessionID);
+	}
 		break;
 
 	case en_PACKET_CS_CHAT_REQ_HEARTBEAT:
