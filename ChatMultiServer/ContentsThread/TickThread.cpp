@@ -6,10 +6,10 @@
 extern CLanServer* ntServer;
 
 
-extern thread_local DWORD t_prevFrameTime;
-extern thread_local DWORD t_fixedDeltaTime;
-extern thread_local DWORD t_frame;
-extern thread_local DWORD t_sec;
+thread_local DWORD t_prevFrameTime;
+thread_local DWORD t_fixedDeltaTime;
+thread_local DWORD t_frame;
+thread_local DWORD t_sec;
 
 unsigned int TickThread(void*)
 {
@@ -21,6 +21,8 @@ unsigned int TickThread(void*)
 	t_sec = startTime / 1000;
 
 	t_prevFrameTime = startTime - FrameSec;// 초기 값 설정
+
+	t_sec = 0;
 
 	while (1)
 	{

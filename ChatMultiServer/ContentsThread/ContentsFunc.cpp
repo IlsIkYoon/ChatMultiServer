@@ -31,20 +31,6 @@ extern unsigned long long g_TotalPlayerCreate;
 extern unsigned long long g_PlayerLogInCount;
 extern unsigned long long g_PlayerLogOut;
 
-
-
-
-void PrintString()
-{
-
-}
-
-
-
-
-
-
-
 void CLanServer::_OnMessage(CPacket* message, ULONG64 sessionID)
 {
 	unsigned short playerIndex;
