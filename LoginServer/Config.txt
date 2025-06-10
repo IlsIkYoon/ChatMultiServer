@@ -2,5 +2,5 @@
 
 ConcurrentCount = 3;
 WorkerThreadCount = 4;
-PortNum = 12001;
+PortNum = 30000;
 SessionCount = 10000;

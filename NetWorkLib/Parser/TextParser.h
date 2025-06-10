@@ -109,7 +109,7 @@ public:
 							i++;
 						}
 						numBuf[i] = NULL;
-						*targetBuf = atoi(numBuf);// stoi가 안된다면 다른 방법 시도 근데 왜 안돼
+						*targetBuf = atoi(numBuf);
 
 						delete[] dataKey;
 						return true;

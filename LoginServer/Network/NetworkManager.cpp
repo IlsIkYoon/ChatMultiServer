@@ -13,11 +13,11 @@ void CWanServer::_OnAccept(ULONG64 ID)
 	g_ContentsManager->InitUser(ID);
 
 }
-void CWanServer_OnDisConnect(ULONG64 ID)
+void CWanServer::_OnDisConnect(ULONG64 ID)
 {
 	g_ContentsManager->DeleteUser(ID);
 }
-void CWanServer_OnSend(ULONG64 ID)
+void CWanServer::_OnSend(ULONG64 ID)
 {
 	//할 일 없음
 }

@@ -1,14 +1,11 @@
 #include "LoginServer.h"
-
+#include "Resource/LoginServerResource.h"
 
 
 int main()
 {
-	bool serverRetval;
 
-	serverRetval = LoginServer();
-
-	if (serverRetval == false)
+	if (LoginServer() == false)
 	{
 		printf("Server Error!!!!!!!!!\n");
 	}

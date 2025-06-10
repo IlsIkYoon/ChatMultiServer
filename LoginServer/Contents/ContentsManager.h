@@ -3,14 +3,24 @@
 #include "Resource/LoginServerResource.h"
 #include "User/User.h"
 #include "Network/NetworkManager.h"
-
+#include "Connector/DBConnector.h"
+#include "Connector/RedisConnector.h"
 
 class CContentsManager
 {
 public:
 	CUserManager* userManager;
 	CWanServer* networkManager;
+	CDBConnector* DBConnector;
+	CRedisConnector* RedisConnector;
+
+
 	std::thread tickThread;
+
+	WCHAR gameServerIP[16];
+	unsigned short gameServerPort;
+	WCHAR chatServerIP[16];
+	unsigned short chatServerPort;
 
 public:
 	CContentsManager() = delete;
@@ -25,13 +35,19 @@ public:
 	bool InitUser(unsigned long long sessionID);
 	bool DeleteUser(unsigned long long sessionID);
 
+	DWORD GetCurrentUser();
 
 	//-------------------------------------------
 	// 皋技瘤 贸府 牢磐其捞胶
 	//-------------------------------------------
 	bool HandleContentsMessage(CPacket* message, ULONG64 ID);
 
+	//皋技瘤 贸府何
 	bool HandleLoginREQMsg(CPacket* message, ULONG64 ID);
+	
+	//皋技瘤 傈价何
+	bool MsgSetServerAddr(CPacket* message);
+
 
 
 
