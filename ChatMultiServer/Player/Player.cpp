@@ -22,7 +22,7 @@ extern std::list<Player*> Sector[SECTOR_MAX][SECTOR_MAX];
 extern std::recursive_mutex SectorLock[SECTOR_MAX][SECTOR_MAX];
 
 
-extern CLanServer* ntServer;
+extern CLanServer* networkServer;
 extern CContentsThreadManager contentsManager;
 //-----------------------------------------
 // Session은 여유가 있는데 Player가 맥스일때 들어가는 대기열
@@ -243,7 +243,7 @@ void EnqueueWaitingPlayerQ(ULONG64 id)
 
 	localPlayerList = contentsManager.playerList->playerArr;
 
-	localPlayerList[ntServer->GetIndex(id)]._status = static_cast<BYTE>(Player::STATUS::SESSION);
+	localPlayerList[networkServer->GetIndex(id)]._status = static_cast<BYTE>(Player::STATUS::SESSION);
 	g_WaitingPlayerAcceptQ.push(id);
 
 	//실제 게임이라면 여기에 대기열로 입장시키는 메세지 전송 로직이 들어가야함
@@ -262,7 +262,7 @@ bool DequeueWaitingPlayerQ()
 	{
 		playerID = g_WaitingPlayerAcceptQ.front();
 		g_WaitingPlayerAcceptQ.pop();
-		playerIndex = ntServer->GetIndex(playerID);
+		playerIndex = networkServer->GetIndex(playerID);
 		if (localPlayerList[playerIndex]._status == static_cast<BYTE>(Player::STATUS::IDLE))
 		{
 			continue;

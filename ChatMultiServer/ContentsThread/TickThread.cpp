@@ -3,7 +3,7 @@
 #include "Log/Monitoring.h"
 #include "ContentsFunc.h"
 
-extern CLanServer* ntServer;
+extern CLanServer* networkServer;
 
 
 thread_local DWORD t_prevFrameTime;
@@ -32,7 +32,7 @@ unsigned int TickThread(void*)
 		t_fixedDeltaTime = deltaCount * FrameSec;
 
 
-		ntServer->EnqueSendRequest();
+		networkServer->EnqueSendRequest();
 
 
 		DWORD logicTime = timeGetTime() - currentTime;

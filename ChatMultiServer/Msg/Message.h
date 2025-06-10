@@ -34,6 +34,9 @@ bool HandleChatMessage(CPacket* message, ULONG64 sessionID);
 //------------------------------------------------------
 void SendMoveStopCompleteMessage(ULONG64 destID);
 
-
+//------------------------------------------------------
+// 문자열에 NULL문자가 포함되어 있는지 체크해주는 함수
+//------------------------------------------------------
+bool CheckNullChar(WCHAR* message, DWORD len);
 
 

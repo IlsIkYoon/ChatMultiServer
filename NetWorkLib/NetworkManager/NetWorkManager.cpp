@@ -347,7 +347,7 @@ void NetWorkManager::IOCP_WorkerThread()
 	bool GQCS_ret;
 	bool errorCheck;
 	Session* _session;
-
+	bool completionRetval;
 
 	t_MyIndex = InterlockedIncrement(&g_threadIndex) - 1;
 	
@@ -366,13 +366,17 @@ void NetWorkManager::IOCP_WorkerThread()
 		_session = nullptr;
 		_session = (Session*)recvdKey;
 
-
 		if ((ULONG_PTR)recvdOverLapped == (ULONG_PTR)&_session->_recvOverLapped) //Recv에 대한 완료 통지
 		{
-			
+
 			_session->_recvBuffer->MoveRear(recvdBytes);
 
-			RecvCompletionRoutine(_session);
+			completionRetval = RecvCompletionRoutine(_session);
+
+			if (completionRetval == false)
+			{
+				continue;
+			}
 		}
 
 		else if ((ULONG_PTR)recvdOverLapped == (ULONG_PTR)&_session->_sendOverLapped) //Send에 대한 완료 통지
@@ -637,7 +641,6 @@ void NetWorkManager::_DisconnectSession(Session* _session)
 }
 bool NetWorkManager::DisconnectSession(ULONG64 playerID)
 {
-	__debugbreak();
 	RequestSessionAbort(playerID);
 	return true;
 }
@@ -874,6 +877,7 @@ bool NetWorkManager::RequestSessionAbort(ULONG64 playerID)
 	if (_session->_ID._ulong64 != playerID)
 	{
 		DecrementSessionIoCount(_session);
+		__debugbreak();
 		return false;
 	}
 
@@ -926,17 +930,22 @@ bool NetWorkManager::IncrementSessionIoCount(Session* _session)
 }
 bool NetWorkManager::DecrementSessionIoCount(Session* _session)
 {
+	DWORD localIOCount = *_session->_releaseIOFlag.GetIoCountPtr();
+
 	long retval;
+
 	retval = InterlockedDecrement(_session->_releaseIOFlag.GetIoCountPtr());
 	if (retval == 0)
 	{
 		_DisconnectSession(_session);
 		return false;
 	}
+	//*
 	else if (retval < 0)
 	{
 		__debugbreak();
 	}
+	//*/
 
 	return true;
 }
@@ -1050,7 +1059,7 @@ bool NetWorkManager::RecvCompletionRoutine(Session* _session)
 	}
 	if (disconnected == true)
 	{
-		return true;
+		return false;
 	}
 
 	if (_session->_recvBuffer == nullptr)
@@ -1068,6 +1077,7 @@ bool NetWorkManager::RecvCompletionRoutine(Session* _session)
 			== static_cast<long>(Session::Status::MarkForDeletion))
 		{
 			RequestSessionAbort(_session->_ID._ulong64);
+			//여기도 리턴값 줘야 하나 고민
 		}
 	}
 

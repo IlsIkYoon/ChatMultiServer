@@ -13,6 +13,7 @@ bool CCharacterKeyManager::InsertID(ULONG64 characterKey)
 	}
 	if (_Key_uSet.size() >= _playerMaxCount)
 	{
+		__debugbreak();
 		auto logMsg = std::format("PlayerCount Full [{}]", characterKey);
 
 		NetWorkManager::_log.EnqueLog(logMsg.c_str());

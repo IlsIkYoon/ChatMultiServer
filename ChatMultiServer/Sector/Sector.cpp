@@ -9,7 +9,7 @@ std::recursive_mutex SectorLock[SECTOR_MAX][SECTOR_MAX];
 int sectorXRange = SECTOR_MAX;
 int sectorYRange = SECTOR_MAX;
 
-extern CLanServer* ntServer;
+extern CLanServer* networkServer;
 extern CContentsThreadManager contentsManager;
 
 bool SyncSector(ULONG64 UserId, int oldSectorX, int oldSectorY)
@@ -21,7 +21,7 @@ bool SyncSector(ULONG64 UserId, int oldSectorX, int oldSectorY)
 
 	localPlayerList = contentsManager.playerList->playerArr;
 
-	playerIndex = ntServer->GetIndex(UserId);
+	playerIndex = networkServer->GetIndex(UserId);
 	currentSectorX = localPlayerList[playerIndex].sectorX;
 	currentSectorY = localPlayerList[playerIndex].sectorY;
 
@@ -62,7 +62,7 @@ bool CheckSector(ULONG64 UserId)
 	int localY;
 
 	localPlayerList = contentsManager.playerList->playerArr;
-	playerIndex = ntServer->GetIndex(UserId);
+	playerIndex = networkServer->GetIndex(UserId);
 	localX = localPlayerList[playerIndex].sectorX;
 	localY = localPlayerList[playerIndex].sectorY;
 

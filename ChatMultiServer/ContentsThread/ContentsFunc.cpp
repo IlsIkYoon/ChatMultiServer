@@ -6,7 +6,13 @@
 #include "Sector/Sector.h"
 #include "ContentsThread/ContentsThreadManager.h"
 #include "Msg/CommonProtocol.h"
-
+//-------------------------------------
+// 에러 메세지 종료에 대한 카운트
+//-------------------------------------
+extern unsigned long long g_ErrorSectorSize;
+extern unsigned long long g_ErrorNetworkLen;
+extern unsigned long long g_ErrorChatMsgLen;
+extern unsigned long long g_ErrorPacketType;
 
 LFreeQ<CPacket*> g_ContentsJobQ[CONTENTS_THREADCOUNT];
 
@@ -15,7 +21,7 @@ extern std::recursive_mutex SectorLock[SECTOR_MAX][SECTOR_MAX];
 
 extern long long g_playerCount;
 
-extern CLanServer* ntServer;
+extern CLanServer* networkServer;
 
 extern unsigned long long g_HeartBeatOverCount;
 
@@ -73,8 +79,8 @@ void CLanServer::_OnMessage(CPacket* message, ULONG64 sessionID)
 		break;
 
 	default:
-		ntServer->DisconnectSession(sessionID);
-		__debugbreak(); 
+		InterlockedIncrement(&g_ErrorPacketType);
+		networkServer->DisconnectSession(sessionID);
 		break;
 
 	}
@@ -172,7 +178,7 @@ void TimeOutCheck()
 	DWORD deadLine = timeGetTime() - dfNETWORK_PACKET_RECV_TIMEOUT;
 
 	int sessionCount;
-	sessionCount = ntServer->GetSessionCount();
+	sessionCount = networkServer->GetSessionCount();
 	Player* localPlayerList;
 
 	localPlayerList = contentsManager->playerList->playerArr;
@@ -192,7 +198,7 @@ void TimeOutCheck()
 			{
 				continue;
 			}
-			ntServer->DisconnectSession(localPlayerList[i].GetID());
+			networkServer->DisconnectSession(localPlayerList[i].GetID());
 			InterlockedIncrement(&g_HeartBeatOverCount);
 			
 		}

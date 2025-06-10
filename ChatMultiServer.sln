@@ -15,6 +15,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DummyClient", "DummyClient\
 		{1B020BEF-E3AE-45CC-B47E-FD4BD5724462} = {1B020BEF-E3AE-45CC-B47E-FD4BD5724462}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoginServer", "LoginServer\LoginServer.vcxproj", "{FEE821D4-D397-4D80-BF9F-C0D38B4B1C0A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1B020BEF-E3AE-45CC-B47E-FD4BD5724462} = {1B020BEF-E3AE-45CC-B47E-FD4BD5724462}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -61,6 +66,18 @@ Global
 		{510CE750-4DE9-4ED3-964F-62AB22C9944F}.Release|x64.Build.0 = Release|x64
 		{510CE750-4DE9-4ED3-964F-62AB22C9944F}.Release|x86.ActiveCfg = Release|Win32
 		{510CE750-4DE9-4ED3-964F-62AB22C9944F}.Release|x86.Build.0 = Release|Win32
+		{FEE821D4-D397-4D80-BF9F-C0D38B4B1C0A}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{FEE821D4-D397-4D80-BF9F-C0D38B4B1C0A}.Debug|ARM64.Build.0 = Debug|ARM64
+		{FEE821D4-D397-4D80-BF9F-C0D38B4B1C0A}.Debug|x64.ActiveCfg = Debug|x64
+		{FEE821D4-D397-4D80-BF9F-C0D38B4B1C0A}.Debug|x64.Build.0 = Debug|x64
+		{FEE821D4-D397-4D80-BF9F-C0D38B4B1C0A}.Debug|x86.ActiveCfg = Debug|Win32
+		{FEE821D4-D397-4D80-BF9F-C0D38B4B1C0A}.Debug|x86.Build.0 = Debug|Win32
+		{FEE821D4-D397-4D80-BF9F-C0D38B4B1C0A}.Release|ARM64.ActiveCfg = Release|ARM64
+		{FEE821D4-D397-4D80-BF9F-C0D38B4B1C0A}.Release|ARM64.Build.0 = Release|ARM64
+		{FEE821D4-D397-4D80-BF9F-C0D38B4B1C0A}.Release|x64.ActiveCfg = Release|x64
+		{FEE821D4-D397-4D80-BF9F-C0D38B4B1C0A}.Release|x64.Build.0 = Release|x64
+		{FEE821D4-D397-4D80-BF9F-C0D38B4B1C0A}.Release|x86.ActiveCfg = Release|Win32
+		{FEE821D4-D397-4D80-BF9F-C0D38B4B1C0A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

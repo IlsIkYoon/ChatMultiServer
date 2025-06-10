@@ -3,14 +3,14 @@
 #include "ContentsThread/ContentsFunc.h"
 #include "ContentsThread//ContentsThreadManager.h"
 #include "Log/Monitoring.h"
-CLanServer* ntServer;
+CLanServer* networkServer;
 CContentsThreadManager* contentsManager;
 bool ChatMultiServer()
 {
 	CMonitor serverMornitor;
 	procademy::CCrashDump dump;
-	ntServer = new CLanServer;
-	contentsManager = new CContentsThreadManager(ntServer);
+	networkServer = new CLanServer;
+	contentsManager = new CContentsThreadManager(networkServer);
 	contentsManager->Start();
 	//ContentsThreadManager 인스턴스 생성
 
