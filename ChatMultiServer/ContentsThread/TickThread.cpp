@@ -23,6 +23,7 @@ unsigned int TickThread(void*)
 	t_prevFrameTime = startTime - FrameSec;// 초기 값 설정
 
 	t_sec = 0;
+	unsigned long long sendProb = 0;
 
 	while (1)
 	{
@@ -32,7 +33,12 @@ unsigned int TickThread(void*)
 		t_fixedDeltaTime = deltaCount * FrameSec;
 
 
-		networkServer->EnqueSendRequest();
+		sendProb++;
+
+		if (sendProb % 2 == 0) 
+		{
+			networkServer->EnqueSendRequest();
+		}
 
 
 		DWORD logicTime = timeGetTime() - currentTime;
@@ -63,7 +69,7 @@ unsigned int TickThread(void*)
 			}
 			
 			{
-				Profiler p("Consol Print");
+				//Profiler p("Consol Print");
 				serverMornitor.ConsolPrint();
 			}
 

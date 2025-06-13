@@ -383,8 +383,10 @@ void NetWorkManager::IOCP_WorkerThread()
 		{
 			SendCompletionRoutine(_session);
 		}
+
 		else if (recvdOverLapped == SENDREQUEST)
 		{
+			//Profiler p("SendtoAllSession");
 			SendToAllSessions();
 			continue;
 		}
@@ -473,8 +475,16 @@ bool NetWorkManager::_SendPost(Session* _session)
 		_session->sendCount++;
 	}
 	
+	if (_session->sendCount > 1000)
 	{
-		Profiler p("WSA SEND");
+		__debugbreak();
+		DisconnectSession(_session->_ID._ulong64);
+		delete[] buf;
+		return false;
+	}
+
+	{
+	//	Profiler p("WSA SEND");
 		sendRet = WSASend(_session->_socket, buf, (DWORD)sendSize, NULL, NULL, &_session->_sendOverLapped, NULL);
 	}
 
@@ -976,16 +986,20 @@ bool NetWorkManager::SendCompletionRoutine(Session* _session)
 		//내가 바꾸지도 않았는데 sendflag가 바뀌어 있는 상황
 		__debugbreak();
 	}
+	/*
+	* 
 	if (_session->_status == static_cast<long>(Session::Status::Active))
 	{
 		_TrySendPost(_session);
-		if (InterlockedCompareExchange(&_session->_status, static_cast<long>(Session::Status::Active), static_cast<long>(Session::Status::Active))
-			== static_cast<long>(Session::Status::MarkForDeletion))
-		{
-			RequestSessionAbort(_session->_ID._ulong64);
-		}
-	}
 
+	}
+	*/
+
+	if (InterlockedCompareExchange(&_session->_status, static_cast<long>(Session::Status::Active), static_cast<long>(Session::Status::Active))
+		== static_cast<long>(Session::Status::MarkForDeletion))
+	{
+		RequestSessionAbort(_session->_ID._ulong64);
+	}
 
 
 	return true;

@@ -54,7 +54,7 @@ void CLanServer::_OnMessage(CPacket* message, ULONG64 sessionID)
 	case en_PACKET_CS_CHAT_REQ_LOGIN:
 	{
 		InterlockedIncrement(&g_loginMsgCnt);
-		Profiler p("HandleLoginMessage");
+		//Profiler p("HandleLoginMessage");
 		HandleLoginMessage(message, sessionID);
 	}
 		break;
@@ -62,7 +62,7 @@ void CLanServer::_OnMessage(CPacket* message, ULONG64 sessionID)
 	case en_PACKET_CS_CHAT_REQ_SECTOR_MOVE:
 	{
 		InterlockedIncrement(&g_sectorMoveMsgCnt);
-		Profiler p("HandleSectorMoveMessage");
+		//Profiler p("HandleSectorMoveMessage");
 		HandleSectorMoveMessage(message, sessionID);
 	}
 		break;
@@ -70,7 +70,7 @@ void CLanServer::_OnMessage(CPacket* message, ULONG64 sessionID)
 	case en_PACKET_CS_CHAT_REQ_MESSAGE:
 	{
 		InterlockedIncrement(&g_chatMsgCnt);
-		Profiler p("HandleChatMessage");
+		//Profiler p("HandleChatMessage");
 		HandleChatMessage(message, sessionID);
 	}
 		break;

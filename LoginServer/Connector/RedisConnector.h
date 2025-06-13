@@ -4,8 +4,11 @@
 
 class CRedisConnector
 {
+	cpp_redis::client redisClient;
+
 
 public:
+	CRedisConnector();
 
 	bool SetToken(CPacket* message, ULONG64 characterKey);
 };
