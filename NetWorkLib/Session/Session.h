@@ -7,6 +7,13 @@
 extern unsigned long long g_SessionTotalCreateCount;
 extern unsigned long long g_LoginSessionCount;
 
+enum class enSessionType
+{
+	en_IDLE = 0,
+	en_Client,
+	en_Server
+};
+
 struct Session
 {
 
@@ -77,6 +84,7 @@ struct Session
 	OVERLAPPED _sendOverLapped;
 	OVERLAPPED _recvOverLapped;
 
+	BYTE _type;
 	long _status;
 	unsigned long sendData;
 	unsigned long sendCount;

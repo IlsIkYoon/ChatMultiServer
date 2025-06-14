@@ -78,6 +78,7 @@ Session::Session()
 	_recvBuffer = nullptr;
 
 	_status = static_cast<long>(Session::Status::Active);
+	_type = static_cast<BYTE>(enSessionType::en_IDLE);
 	
 }
 
@@ -114,6 +115,7 @@ void Session::clear()
 	sendCount = 0;
 
 	InterlockedExchange(&_status, static_cast<long>(Session::Status::Active));
+	_type = static_cast<BYTE>(enSessionType::en_IDLE);
 }
 
 void Session::init()
