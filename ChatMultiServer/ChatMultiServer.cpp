@@ -18,6 +18,7 @@ bool ChatMultiServer()
 	//종료 대기
 	while (1)
 	{
+		Profiler p("Sleep 1000");
 		Sleep(1000);
 	}
 

@@ -336,10 +336,7 @@ void NetWorkManager::IOCP_WorkerThread()
 {
 	_log.EnqueLog("IOCP_WORKER Thread Made Success");
 
-#ifdef __PROFILE__
-	thread_local ProfilerMap localProfileMap;
-#endif
-
+#
 	DWORD recvdBytes;
 	ULONG_PTR recvdKey;
 	OVERLAPPED* recvdOverLapped;
@@ -386,7 +383,6 @@ void NetWorkManager::IOCP_WorkerThread()
 
 		else if (recvdOverLapped == SENDREQUEST)
 		{
-			//Profiler p("SendtoAllSession");
 			SendToAllSessions();
 			continue;
 		}
@@ -484,7 +480,7 @@ bool NetWorkManager::_SendPost(Session* _session)
 	}
 
 	{
-	//	Profiler p("WSA SEND");
+	
 		sendRet = WSASend(_session->_socket, buf, (DWORD)sendSize, NULL, NULL, &_session->_sendOverLapped, NULL);
 	}
 

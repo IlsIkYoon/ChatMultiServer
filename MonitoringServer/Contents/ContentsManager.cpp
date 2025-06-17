@@ -48,6 +48,7 @@ CContentsManager::CContentsManager(CLanServer* pNetworkManager)
 	networkManager = pNetworkManager;
 	agentManager = new CAgentManager(networkManager->_sessionMaxCount);
 	strcpy(clientLoginToken, "ajfw@!cv980dSZ[fje#@fdj123948djf");
+
 }
 
 

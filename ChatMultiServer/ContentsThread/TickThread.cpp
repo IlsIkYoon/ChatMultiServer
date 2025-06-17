@@ -69,7 +69,7 @@ unsigned int TickThread(void*)
 			}
 			
 			{
-				//Profiler p("Consol Print");
+
 				serverMornitor.ConsolPrint();
 			}
 

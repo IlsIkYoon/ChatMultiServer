@@ -47,10 +47,6 @@
 
 //#define __JOBQLOCKFREEQ_
 
-//--Profiler옵션--
-//#define __PROFILE__ //Profiler 사용 옵션
-//--------------------------------------------------------------------------
-
 
 #define DEFAULT_PORTNUM 12203 //config파일을 못 읽었을때 포트넘버인데 필요 없음
 #define DEFAULT_CONCURRENTCOUNT 3
