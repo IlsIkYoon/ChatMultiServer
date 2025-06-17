@@ -61,7 +61,7 @@ bool CRedisConnector::CheckToken(std::string Key, std::string Token)
 	std::promise<bool> retval;
 	std::future<bool> future = retval.get_future();
 
-	redisClient.get(Key, [&retval, Token](cpp_redis::reply pReply) {
+	redisClient.get(Key, [&retval, Key ,Token, this](cpp_redis::reply pReply) {
 		if (pReply.is_null() == true || Token != pReply.as_string())
 		{
 			retval.set_value(false);
@@ -69,6 +69,11 @@ bool CRedisConnector::CheckToken(std::string Key, std::string Token)
 		}
 
 		retval.set_value(true);
+
+		std::vector<std::string> delParam;
+		delParam.push_back(Key);
+
+		this->redisClient.del(delParam);
 
 		});
 	redisClient.sync_commit();

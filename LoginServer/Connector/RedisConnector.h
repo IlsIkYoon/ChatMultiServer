@@ -4,11 +4,11 @@
 
 class CRedisConnector
 {
+public:
 	cpp_redis::client redisClient;
 	std::string redisIP;
 	std::size_t redisPort;
 
-public:
 	CRedisConnector();
 	CRedisConnector(std::string pIP, std::size_t pPort);
 
