@@ -146,7 +146,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\Users\yun-ilsik\source\repos\ChatMultiServer\NetWorkLib;C:\Users\yun-ilsik\source\repos\ChatMultiServer\ChatMultiServer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\yun-ilsik\source\repos\ChatMultiServer\NetWorkLib;C:\Users\yun-ilsik\source\repos\ChatMultiServer\ChatMultiServer;C:\Users\yun-ilsik\source\repos\ChatMultiServer\x64\Release\RedisLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -155,7 +155,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\yun-ilsik\source\repos\ChatMultiServer\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\yun-ilsik\source\repos\ChatMultiServer\x64\Release;C:\Users\yun-ilsik\source\repos\ChatMultiServer\x64\Release\RedisLib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
@@ -188,6 +188,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ChatMultiServer.cpp" />
+    <ClCompile Include="Connector\RedisConnector.cpp" />
     <ClCompile Include="ContentsThread\ContentsFunc.cpp" />
     <ClCompile Include="ContentsResource.cpp" />
     <ClCompile Include="ContentsThread\ContentsThreadManager.cpp" />
@@ -202,6 +203,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChatMultiServer.h" />
+    <ClInclude Include="Connector\RedisConnector.h" />
     <ClInclude Include="ContentsThread\ContentsFunc.h" />
     <ClInclude Include="ContentsResource.h" />
     <ClInclude Include="ContentsThread\ContentsThreadManager.h" />

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "NetWorkLib_Unified.h"
+#include "cpp_redis/cpp_redis.h"
 
 #include <unordered_set>
 

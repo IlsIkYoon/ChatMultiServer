@@ -1,5 +1,5 @@
 #pragma once
-#include "Resource/LoginServerResource.h"
+#include "ContentsResource.h"
 
 
 class CRedisConnector

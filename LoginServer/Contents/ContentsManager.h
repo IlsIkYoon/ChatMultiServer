@@ -12,7 +12,6 @@ public:
 	CUserManager* userManager;
 	CWanServer* networkManager;
 	CDBConnector* DBConnector;
-	CRedisConnector* RedisConnector;
 
 
 	std::thread tickThread;

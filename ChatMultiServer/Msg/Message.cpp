@@ -6,6 +6,7 @@
 #include "ContentsThread/ContentsFunc.h"
 #include "CommonProtocol.h"
 #include "ContentsThread/ContentsThreadManager.h"
+#include "Connector/RedisConnector.h"
 //-----------------------------------------
 // 출력을 위한 메세지 카운팅
 //-----------------------------------------
@@ -221,7 +222,7 @@ bool HandleLoginMessage(CPacket* message, ULONG64 sessionID)
 	INT64 AccountNo; //캐릭터 키
 	WCHAR ID[20]; //null포함
 	WCHAR Nickname[20]; //null포함
-	char SessionKey[64]; //인증 토큰
+	char SessionKey[65]; //인증 토큰
 	
 	localPlayerList = contentsManager.playerList->playerArr;
 	playerIndex = NetWorkManager::GetIndex(sessionID);
@@ -244,9 +245,20 @@ bool HandleLoginMessage(CPacket* message, ULONG64 sessionID)
 	message->PopFrontData(sizeof(WCHAR) * 20, (char*)ID);
 	message->PopFrontData(sizeof(WCHAR) * 20, (char*)Nickname);
 	message->PopFrontData(sizeof(char) * 64, SessionKey);
+	SessionKey[64] = NULL;
 
-	//tokenRetval = CheckLoginToken(AccountNo, SessionKey); -> 로그인 서버에서 보내준 토큰 자료구조를 검색해서 키값에 맞는 토큰인지 확인
-	//이후 tokenRetval에 따른 로직분기 
+	std::string redisKey = std::to_string(AccountNo);
+	std::string redisToken = SessionKey;
+	bool tokenRetval;
+
+	tokenRetval = TLS_REDIS_CONNECTOR.CheckToken(redisKey, redisToken);
+	if (tokenRetval == false)
+	{
+		__debugbreak();
+		networkServer->DisconnectSession(sessionID);
+		//여기서 뭐 데이터를 보내줘야 했나 ?
+		return false;
+	}
 
 	//LoadCharacterDataOnLogin(AccountNo, userId); 
 	//토큰이 유효하다면 DB에서 캐릭터 데이터 긁어오기 요청 후 긁어온 뒤에 결과에 따라 Login_res 메세지 전송

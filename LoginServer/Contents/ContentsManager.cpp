@@ -4,6 +4,8 @@
 
 CContentsManager* g_ContentsManager;
 
+
+
 extern CMonitor g_Monitor;
 
 
@@ -13,7 +15,7 @@ CContentsManager::CContentsManager(CWanServer* pNetworkManager)
 	userManager = new CUserManager(pNetworkManager->_sessionMaxCount);
 	tickThread = std::thread([this]() {tickThreadFunc(); });
 	DBConnector = new CDBConnector;
-	RedisConnector = new CRedisConnector;
+	//RedisConnector = new CRedisConnector;
 
 	TextParser parser;
 	parser.GetData("LoginConfig.ini");
@@ -101,7 +103,7 @@ bool CContentsManager::HandleContentsMessage(CPacket* message, ULONG64 ID)
 bool CContentsManager::HandleLoginREQMsg(CPacket* message, ULONG64 ID)
 {
 	ULONG64 accountNo;
-	char platformToken[64]; //토큰
+	char platformToken[65]; //토큰
 	unsigned short userIndex;
 	User* user;
 	CPacket* sendMsg;
@@ -126,7 +128,7 @@ bool CContentsManager::HandleLoginREQMsg(CPacket* message, ULONG64 ID)
 
 	*message >> accountNo;
 	message->PopFrontData(64, platformToken);
-
+	platformToken[64] = NULL;
 	//로그인 과정
 	WORD sendType;
 	ULONG64 sendAccountNo;
@@ -145,8 +147,8 @@ bool CContentsManager::HandleLoginREQMsg(CPacket* message, ULONG64 ID)
 		__debugbreak();
 		//토큰 저장 없이 실패에 대한 메세지 반환해주는 함수
 	}
+	TLS_REDIS_CONNECTOR.SetToken(platformToken, sendAccountNo);
 
-	RedisConnector -> SetToken(platformToken, sendAccountNo);
 
 	MsgSetServerAddr(sendMsg);
 
@@ -176,6 +178,6 @@ DWORD CContentsManager::GetCurrentUser()
 }
 bool CContentsManager::SetToken(std::string Value, ULONG64 key)
 {
-	RedisConnector->SetToken(Value, key);
+	TLS_REDIS_CONNECTOR.SetToken(Value, key);
 	return true;
 }
