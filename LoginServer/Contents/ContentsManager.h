@@ -22,6 +22,9 @@ public:
 	WCHAR chatServerIP[16];
 	unsigned short chatServerPort;
 
+	std::string redisIP;
+	std::size_t redisPort;
+
 public:
 	CContentsManager() = delete;
 	CContentsManager(CWanServer* pNetworkManager);
@@ -49,7 +52,7 @@ public:
 	bool MsgSetServerAddr(CPacket* message);
 
 
-
+	bool SetToken(std::string Value, ULONG64 key);
 
 };
 

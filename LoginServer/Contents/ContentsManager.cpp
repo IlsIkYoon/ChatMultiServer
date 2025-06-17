@@ -38,6 +38,23 @@ void CContentsManager::tickThreadFunc()
 		g_Monitor.ConsolPrintAll();
 		networkManager->EnqueSendRequest();
 		Sleep(1000);
+
+		if (_kbhit())
+		{
+			char c = _getch();
+			ULONG64 key;
+			std::string value;
+			if (c == 'q' || c == 'Q')
+			{
+				std::cout << "Set key: ";
+				std::cin >> key;
+				std::cout << "\nValue : ";
+				std::cin >> value;
+
+				g_ContentsManager->SetToken(value, key);
+
+			}
+		}
 	}
 
 
@@ -84,7 +101,7 @@ bool CContentsManager::HandleContentsMessage(CPacket* message, ULONG64 ID)
 bool CContentsManager::HandleLoginREQMsg(CPacket* message, ULONG64 ID)
 {
 	ULONG64 accountNo;
-	char sessionKey[64]; //토큰
+	char platformToken[64]; //토큰
 	unsigned short userIndex;
 	User* user;
 	CPacket* sendMsg;
@@ -108,7 +125,7 @@ bool CContentsManager::HandleLoginREQMsg(CPacket* message, ULONG64 ID)
 	}
 
 	*message >> accountNo;
-	message->PopFrontData(64, sessionKey);
+	message->PopFrontData(64, platformToken);
 
 	//로그인 과정
 	WORD sendType;
@@ -122,13 +139,14 @@ bool CContentsManager::HandleLoginREQMsg(CPacket* message, ULONG64 ID)
 	*sendMsg << sendAccountNo;
 	
 	DBRetval = DBConnector->LoginDataRequest(sendMsg, sendAccountNo);
+
 	if (DBRetval == false)
 	{
 		__debugbreak();
 		//토큰 저장 없이 실패에 대한 메세지 반환해주는 함수
 	}
 
-	RedisConnector -> SetToken(sendMsg, sendAccountNo);
+	RedisConnector -> SetToken(platformToken, sendAccountNo);
 
 	MsgSetServerAddr(sendMsg);
 
@@ -155,4 +173,9 @@ bool CContentsManager::MsgSetServerAddr(CPacket* message)
 DWORD CContentsManager::GetCurrentUser()
 {
 	return userManager->currentUserCount;
+}
+bool CContentsManager::SetToken(std::string Value, ULONG64 key)
+{
+	RedisConnector->SetToken(Value, key);
+	return true;
 }

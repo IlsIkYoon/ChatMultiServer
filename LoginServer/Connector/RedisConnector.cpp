@@ -1,19 +1,34 @@
 #include "RedisConnector.h"
 
 
-bool CRedisConnector::SetToken(CPacket* message, ULONG64 characterKey)
+bool CRedisConnector::SetToken(char* token, ULONG64 characterKey)
 {
+
+	std::string redisKey;
+	std::string redisToken;
 	
-	//todo//Redis연동 후엔 여기에 토큰 넣는 과정 필요
+	redisKey = std::to_string(characterKey);
+	redisToken = token;
 
-	//char Token[64]
+	redisClient.set(redisKey, redisToken);
 
-	//MakeRandToken
+	redisClient.sync_commit();
 
-	//RedisConnector->SetToken(chracterkey, Token)
+	return true;
+}
 
-	//SetToken(message, 
+bool CRedisConnector::SetToken(std::string token, ULONG64 characterKey)
+{
 
+	std::string redisKey;
+	std::string redisToken;
+
+	redisKey = std::to_string(characterKey);
+	redisToken = token;
+
+	redisClient.set(redisKey, redisToken);
+
+	redisClient.sync_commit();
 
 	return true;
 }
@@ -21,4 +36,12 @@ bool CRedisConnector::SetToken(CPacket* message, ULONG64 characterKey)
 CRedisConnector::CRedisConnector()
 {
 	redisClient.connect(); // 루프백 연결
+}
+
+CRedisConnector::CRedisConnector(std::string pIP, std::size_t pPort)
+{
+	redisIP = pIP;
+	redisPort = pPort;
+
+	redisClient.connect(redisIP, redisPort, NULL, NULL, NULL, NULL);
 }
