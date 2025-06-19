@@ -14,7 +14,7 @@ CContentsManager::CContentsManager(CWanServer* pNetworkManager)
 	networkManager = pNetworkManager;
 	userManager = new CUserManager(pNetworkManager->_sessionMaxCount);
 	tickThread = std::thread([this]() {tickThreadFunc(); });
-	DBConnector = new CDBConnector;
+	DBConnector = new CDBManager;
 	//RedisConnector = new CRedisConnector;
 
 	TextParser parser;

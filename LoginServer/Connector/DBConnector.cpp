@@ -2,7 +2,7 @@
 #include "CommonProtocol.h"
 
 
-bool CDBConnector::LoginDataRequest(CPacket* message, ULONG64 characterKey)
+bool CDBManager::LoginDataRequest(CPacket* message, ULONG64 characterKey)
 {
 	//채워야 하는 데이터
 	//		BYTE	Status				// 0 (세션오류) / 1 (성공) ...  하단 defines 사용
@@ -24,6 +24,10 @@ bool CDBConnector::LoginDataRequest(CPacket* message, ULONG64 characterKey)
 	*message << Status;
 	message->PutData((char*)ID, sizeof(WCHAR) * 20);
 	message->PutData((char*)Nickname, sizeof(WCHAR) * 20);
+
+	//동기로 작동되는 DB작업하기
+	//패킷에 ID, Nickname넣어주기
+
 
 	return true;
 }

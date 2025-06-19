@@ -11,7 +11,7 @@ class CContentsManager
 public:
 	CUserManager* userManager;
 	CWanServer* networkManager;
-	CDBConnector* DBConnector;
+	CDBManager* DBConnector;
 
 
 	std::thread tickThread;
