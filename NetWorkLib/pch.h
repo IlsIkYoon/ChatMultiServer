@@ -47,9 +47,13 @@
 
 //#define __JOBQLOCKFREEQ_
 
-
-#define DEFAULT_PORTNUM 12203 //config파일을 못 읽었을때 포트넘버인데 필요 없음
-#define DEFAULT_CONCURRENTCOUNT 3
+//-----------------------------------------------
+// Contents에서 따로 Regist 안했을 시에 동작할 기본 값
+//-----------------------------------------------
+#define DEFAULT_PORTNUM 12203 
+#define DEFAULT_CONCURRENT_COUNT 3
+#define DEFAULT_WORKER_THREAD_COUNT 3
+#define DEFAULT_SESSION_MAX_COUNT 10000
 
 #define MAX_SESSION 300
 

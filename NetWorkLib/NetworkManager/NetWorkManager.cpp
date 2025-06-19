@@ -35,36 +35,17 @@ NetWorkManager::NetWorkManager()
 	_exitThreadEvent = CreateEvent(NULL, true, false, NULL);
 
 	_sendInProgress = 0;
-	_concurrentCount = 0;
+	_concurrentCount = DEFAULT_CONCURRENT_COUNT;
 	_hIOCP = NULL;
 	_listenSocket = NULL;
 	ZeroMemory(&_serverAddr, sizeof(_serverAddr));
-	_portNum = 0;
+	_portNum = DEFAULT_PORTNUM;
 	_sessionLoginCount = 0;
+	_workerThreadCount = DEFAULT_WORKER_THREAD_COUNT;
+	_sessionMaxCount = DEFAULT_SESSION_MAX_COUNT;
 
-
-	bool networkInit_retval;
-
-	_log.InitLogManager();
-
-	_ReadConfig();
-
-	networkInit_retval = _NetworkInit();
-	if (networkInit_retval == false)
-	{
-
-		_log.EnqueLog("NetWork Init Failed !!!");
-		_log.EnqueLog("Server off...");
-		__debugbreak();
-	}
-
-
-
-
-
-	_MakeNetWorkMainThread();
-
-
+	_workerThreadArr = nullptr;
+	_sessionList = nullptr;
 }
 
 NetWorkManager::~NetWorkManager()
@@ -196,48 +177,6 @@ bool NetWorkManager::_NetworkInit()
 #ifdef __LOGDEBUG__
 	InitializeCriticalSection(&g_Lock);
 #endif
-	return true;
-}
-
-
-
-bool NetWorkManager::_ReadConfig()
-{
-
-	if (txParser.GetData("Config.txt") == false)
-	{
-		//DefaultMode
-		_concurrentCount = DEFAULT_CONCURRENTCOUNT;
-		_portNum = DEFAULT_PORTNUM;
-
-		_log.EnqueLog("Read Config error", 0, __FILE__, __func__, __LINE__, GetLastError());
-
-		return false;
-	}
-
-	txParser.SearchData("ConcurrentCount", &_concurrentCount);
-	g_concurrentCount = _concurrentCount;
-
-	txParser.SearchData("PortNum", &_portNum);
-
-	txParser.SearchData("WorkerThreadCount", &_workerThreadCount);
-	g_workerThreadCount = _workerThreadCount;
-	g_pRecvTps = new unsigned long long[_workerThreadCount];
-	g_pSendTps = new unsigned long long[_workerThreadCount];
-
-	txParser.SearchData("SessionCount", &_sessionMaxCount);
-	g_maxSessionCount = _sessionMaxCount;
-
-	InitSessionList(_sessionMaxCount);
-	std::string _sessionListLog;
-	_sessionListLog = "SessionMaxCount : ";
-	_sessionListLog += std::to_string(_sessionMaxCount);
-	EnqueLog(_sessionListLog);
-
-	txParser.CloseData();
-
-	_log.EnqueLog("Read Config... success");
-
 	return true;
 }
 
@@ -557,8 +496,6 @@ void NetWorkManager::_RecvBufRestorePacket(Session* _session, char* _packet, int
 bool NetWorkManager::SendPacket(ULONG64 playerId, CPacket* buf)
 {
 
-	bool retval;
-
 	CPacket* sendPacket = buf;
 
 	ULONG64 localID = GetID(playerId);
@@ -750,7 +687,7 @@ void NetWorkManager::InitSessionList(int SessionCount)
 }
 
 
-int NetWorkManager::GetSessionCount()
+int NetWorkManager::GetSessionMaxCount()
 {
 	return _sessionMaxCount;
 }
@@ -791,6 +728,14 @@ bool NetWorkManager::SendToAllSessions()
 	ULONG64 CurrentId;
 	long releaseFlag;
 
+
+	if (InterlockedExchange(&_sendInProgress, static_cast<unsigned long>(SendStatus::InProgress)) 
+		!= static_cast<unsigned long>(SendStatus::Idle))
+	{
+		return false;
+	}
+
+
 	for (int i = 0; i < _sessionMaxCount; i++)
 	{
 		targetSession = &_sessionList->GetSession(i);
@@ -824,6 +769,9 @@ bool NetWorkManager::SendToAllSessions()
 
 	}
 
+
+	InterlockedExchange(&_sendInProgress, static_cast<unsigned long>(SendStatus::Idle));
+
 	return true;
 }
 
@@ -854,6 +802,7 @@ bool NetWorkManager::_TrySendPost(Session* _session)
 
 			_SendPost(_session);
 		}
+
 		break;
 	}
 	
@@ -1093,4 +1042,47 @@ bool NetWorkManager::RecvCompletionRoutine(Session* _session)
 
 
 	return true;
+}
+
+bool NetWorkManager::Start()
+{
+	bool networkInit_retval;
+
+	_log.InitLogManager();
+
+	g_pRecvTps = new unsigned long long[_workerThreadCount];
+	g_pSendTps = new unsigned long long[_workerThreadCount];
+
+	InitSessionList(_sessionMaxCount);
+	
+	networkInit_retval = _NetworkInit();
+	if (networkInit_retval == false)
+	{
+
+		_log.EnqueLog("NetWork Init Failed !!!");
+		_log.EnqueLog("Server off...");
+		__debugbreak();
+	}
+
+	_MakeNetWorkMainThread();
+
+	return true;
+}
+
+
+void NetWorkManager::RegistConcurrentCount(int pCount)
+{
+	_concurrentCount = pCount;
+}
+void NetWorkManager::RegistSessionMaxCoiunt(int pCount)
+{
+	_sessionMaxCount = pCount;
+}
+void NetWorkManager::RegistWorkerThreadCount(int pCount)
+{
+	_workerThreadCount = pCount;
+}
+void NetWorkManager::RegistPortNum(int pPortNum)
+{
+	_portNum = pPortNum;
 }

@@ -1,9 +1,6 @@
 #pragma once
 #include "Resource/LoginServerResource.h"
 
-#pragma comment(lib, "mysqlclient.lib")
-#pragma comment(lib, "libmysql.lib")
-
 #include "mysql.h"
 #include "errmsg.h"
 

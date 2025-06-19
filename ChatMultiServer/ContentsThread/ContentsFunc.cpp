@@ -175,7 +175,7 @@ void TimeOutCheck()
 	DWORD deadLine = timeGetTime() - dfNETWORK_PACKET_RECV_TIMEOUT;
 
 	int sessionCount;
-	sessionCount = networkServer->GetSessionCount();
+	sessionCount = networkServer->GetSessionMaxCount();
 	Player* localPlayerList;
 
 	localPlayerList = contentsManager->playerList->playerArr;

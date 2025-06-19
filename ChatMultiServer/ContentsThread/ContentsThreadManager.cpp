@@ -33,13 +33,29 @@ bool CContentsThreadManager::Start()
 bool CContentsThreadManager::ReadConfig()
 {
 	bool retval;
-	retval = txParser.GetData("ContentsConfig.txt");
+
+	int concurrentThreadcount;
+	int sessionMaxCount;
+	int workerThreadCount;
+	int portNum;
+
+	retval = txParser.GetData("ChatMultiServer_Config.txt");
 	if (retval == false)
 	{
 		__debugbreak();
 	}
 
 	txParser.SearchData("PlayerMaxCount", &playerMaxCount);
+	txParser.SearchData("ConcurrentCount", &concurrentThreadcount);
+	txParser.SearchData("WorkerThreadCount", &workerThreadCount);
+	txParser.SearchData("PortNum", &portNum);
+	txParser.SearchData("SessionCount", &sessionMaxCount);
+
+	ntManager->RegistConcurrentCount(concurrentThreadcount);
+	ntManager->RegistPortNum(portNum);
+	ntManager->RegistSessionMaxCoiunt(sessionMaxCount);
+	ntManager->RegistWorkerThreadCount(workerThreadCount);
+
 
 	return true;
 }

@@ -1,8 +1,0 @@
----------------------------------
-THREADID,28120
-FileName||lessValue||maxValue||count||total||average
----------------------------------
----------------------------------
-THREADID,21348
-FileName||lessValue||maxValue||count||total||average
----------------------------------

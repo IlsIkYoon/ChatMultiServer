@@ -18,7 +18,7 @@ class NetWorkManager
 {
 public:
 
-	bool _onfuncRegist;
+	
 	//--------------------------------------------
 	//network Session 관리를 위한 변수
 	//--------------------------------------------
@@ -64,11 +64,6 @@ public:
 
 
 public:
-
-
-	//--------------------------------------------
-	//변수 초기화 작업
-	//--------------------------------------------
 	NetWorkManager();
 
 	//--------------------------------------------
@@ -78,19 +73,7 @@ public:
 
 private:
 
-	//--------------------------------------------
-	// Network초기화
-	// 리슨 소켓 생성 및 IOCP생성
-	//--------------------------------------------
 	bool _NetworkInit();
-	//--------------------------------------------
-	//Config.txt파일 읽어서 변수 초기화 (textParser.h 이용)
-	//portNum, concurrentThread
-	//--------------------------------------------
-	bool _ReadConfig();
-	//-------------------------------------------
-	//워커 쓰레드를 생성해주는 함수
-	//-------------------------------------------
 	void _MakeNetWorkMainThread();
 	//--------------------------------------------
 	// 워커 쓰레드 생성 후 
@@ -100,9 +83,7 @@ private:
 	// 이후에 OnAccept 핸들러 함수 호출
 	//--------------------------------------------
 	void AcceptThread();
-	//--------------------------------------------
-	// 완료 통지에 대한 recv처리를 하고 OnMessage에 넘겨줌 
-	//--------------------------------------------
+
 	void IOCP_WorkerThread();
 	//--------------------------------------------
 	// WsaRecv함수 래핑. 오류 코드에 대한 예외처리, 분산 버퍼 등의 행동 진행
@@ -113,9 +94,7 @@ private:
 	// 들어있는 데이터 전부 Send
 	//--------------------------------------------
 	bool _SendPost(Session* _session);
-	//--------------------------------------------
-	// SendPost가 가능한 상황이면 SendPost를 해주는 함수
-	//--------------------------------------------
+
 	bool _TrySendPost(Session* _session);
 	//--------------------------------------------
 	// 세션리스트의 sendInProgressFlag를 확인하고 Flag가 꺼져 있으면 들어가서 배열을 돌면서 SendPost를 호출해주는 함수
@@ -139,44 +118,31 @@ private:
 	void _DisconnectSession(Session* _session);
 
 	//--------------------------------------------
-	// GQCS 리턴값을 가지고 에러인지 체크하는 함수
 	// 에러라면 예외 처리를 내부에서 함
-	// true면 에러가 발생했다는 의미
+	// 에러 발생시 true 반환
 	//--------------------------------------------
 	bool CheckGQCSError(bool retval, DWORD* recvdbytes, ULONG_PTR recvdkey , OVERLAPPED* overlapped ,DWORD errorno);
 
-	//--------------------------------------------
-	// Config를 읽은 뒤에 세션 리스트를 생성해주는 함수
-	//--------------------------------------------
 	void InitSessionList(int SessionCount);
 	//--------------------------------------------
 	// CancelIo를 호출 시켜서 정리 루틴을 타게 만드는 함수
 	//--------------------------------------------
 	bool RequestSessionAbort(ULONG64 playerID);
-	//--------------------------------------------
-	// Session의 IOCount를 올려주는 함수
-	//--------------------------------------------
+
 	bool IncrementSessionIoCount(Session* _session);
 	//--------------------------------------------
-	// Session의 IOCount를 내리고 0이면 삭제하는 함수
+	// Session의 IOCount를 내리고 0이면 삭제
 	// 여기서 삭제가 진행되면 false 반환
 	//--------------------------------------------
 	bool DecrementSessionIoCount(Session* _session);
-	//--------------------------------------------
-	// Send 완료 처리에 대한 루틴
-	//--------------------------------------------
+
 	bool SendCompletionRoutine(Session* _session);
-	//--------------------------------------------
-	// Recv 완료 처리에 대한 루틴
-	//--------------------------------------------
 	bool RecvCompletionRoutine(Session* _session);
 
 public:
 	/////////////컨텐츠 제공 함수들///////////////////////////////
-	//---------------------------------------------
-	// SessionMaxCount를 리턴해주는 함수
-	//---------------------------------------------
-	int GetSessionCount();
+	bool Start();
+	int GetSessionMaxCount();
 	//---------------------------------------------
 	// ULONG64 변수에서 ID값에 해당하는 6바이트만 추출하는 함수
 	//---------------------------------------------
@@ -187,16 +153,13 @@ public:
 	static unsigned short GetIndex(ULONG64 target);
 	//---------------------------------------------
 	// 컨텐츠에서 다른 세션에 메세지를 보낼때 쓸 함수
-	// 핸들러 함수 등록 안 되면 실패 반환
 	//---------------------------------------------
 	bool SendPacket(ULONG64 playerId, CPacket* buf);
 	//---------------------------------------------
 	// 컨텐츠에서 세션 삭제 요청 함수
 	//---------------------------------------------
 	bool DisconnectSession(ULONG64 sessionID);
-	//----------------------------------------------
-	// 컨텐츠에서 받을 로그들 저장하는 함수
-	//----------------------------------------------
+
 	void EnqueLog(const char* string);
 	void EnqueLog(std::string& string);
 	//--------------------------------------------
@@ -207,10 +170,7 @@ public:
 	virtual void _OnAccept(ULONG64 ID) = 0;
 	virtual void _OnDisConnect(ULONG64 ID) = 0;
 	virtual void _OnSend(ULONG64 ID) = 0;
-	//--------------------------------------------
-	// 서버 종료 시에 호출되는 함수.
-	// 네트워크 라이브러리로써 서버 종료 절차 실행
-	//--------------------------------------------
+
 	void ExitNetWorkManager();
 	//--------------------------------------------
 	// NetWorkLibrary에 PQCS로 SendAllSession을 요청하는 함수
@@ -221,6 +181,17 @@ public:
 	//--------------------------------------------
 	void DisconnectAllSessions();
 
+	void RegistConcurrentCount(int pCount);
+	void RegistSessionMaxCoiunt(int pCount);
+	void RegistWorkerThreadCount(int pCount);
+	void RegistPortNum(int pPortNum);
 
 };
 
+
+
+enum class SendStatus
+{
+	Idle = 0,
+	InProgress = 1
+};
