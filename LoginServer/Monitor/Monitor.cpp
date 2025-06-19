@@ -6,11 +6,11 @@ extern CContentsManager* g_ContentsManager;
 
 void CMonitor::ConsolPrintAll()
 {
-	printf("\n");
+	printf("aa\n");
+	return;
 	ConsolPrintLoginCount();
 	ConsolPrintUserCount();
 
-	return;
 }
 
 

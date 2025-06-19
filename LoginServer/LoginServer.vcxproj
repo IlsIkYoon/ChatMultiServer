@@ -150,7 +150,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Program Files\MySQL\MySQL Server 8.0\include;C:\Users\yun-ilsik\source\repos\ChatMultiServer\MySqlResource;C:\Users\yun-ilsik\source\repos\ChatMultiServer\x64\Release\RedisLib;C:\Users\yun-ilsik\source\repos\ChatMultiServer\NetWorkLib;C:\Users\yun-ilsik\source\repos\ChatMultiServer\LoginServer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
