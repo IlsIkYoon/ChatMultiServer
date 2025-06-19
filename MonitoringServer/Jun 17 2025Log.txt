@@ -1,0 +1,10 @@
+ID: 0 || Read Config error || FILE : Log.cpp, Func : EnqueLog , Line : 115 error : 2
+Wsa Startup ... success
+Socket Init ... success
+Send ZeroBuf Option ... success
+Socket Linger Option ... success
+bind... success
+Socket Listen...success
+NetWorkInit success
+Accept Thread Made Success
+Accept Thread Wake up

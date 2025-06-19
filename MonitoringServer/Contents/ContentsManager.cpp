@@ -37,9 +37,7 @@ bool CContentsManager::HandleContentsMsg(CPacket* message, ULONG64 ID)
 
 	}
 
-
-
-
+	return true;
 }
 
 
@@ -47,7 +45,7 @@ CContentsManager::CContentsManager(CLanServer* pNetworkManager)
 {
 	networkManager = pNetworkManager;
 	agentManager = new CAgentManager(networkManager->_sessionMaxCount);
-	strcpy(clientLoginToken, "ajfw@!cv980dSZ[fje#@fdj123948djf");
+	strcpy_s(clientLoginToken, "ajfw@!cv980dSZ[fje#@fdj123948djf");
 
 }
 
@@ -63,12 +61,64 @@ bool CContentsManager::HandleServerLoginMsg(CPacket* message, ULONG64 ID)
 	(*agentManager)[agentIndex].Status = static_cast<BYTE>(enAgentStatus::en_Alive);
 	(*agentManager)[agentIndex].Type = static_cast<BYTE>(enAgentType::en_Server);
 	(*agentManager)[agentIndex].ServerNo = serverNo;
+	(*agentManager)[agentIndex].sessionID = ID;
 
+	agentManager->RegistServer(ID);
 	return true;
 }
 bool CContentsManager::HandleDataUpdateMsg(CPacket* message, ULONG64 ID)
 {
+	BYTE DataType;
+	int DataValue;
+	int TimeStamp;
 
+	BYTE serverNo;
+	unsigned short AgentIndex;
+
+	if (message->GetDataSize() != sizeof(DataType) + sizeof(DataValue) + sizeof(TimeStamp))
+	{
+		networkManager->DisconnectSession(ID);
+		return false;
+	}
+
+
+	AgentIndex = CLanServer::GetIndex(ID);
+
+	*message >> DataType;
+	*message >> DataValue;
+	*message >> TimeStamp;
+
+	//---------------------------------------------------
+	// 메세지 예외처리 //todo//
+	//---------------------------------------------------
+	if (DataType > 44)
+	{
+		networkManager->DisconnectSession(ID);
+		return false;
+	}
+	
+
+	//여기까지가 Message Dequeue;
+
+	WORD msgType;
+	serverNo = (*agentManager)[AgentIndex].ServerNo;
+
+	CPacket* sendMsg = CPacket::Alloc();
+
+	msgType = en_PACKET_CS_MONITOR_TOOL_DATA_UPDATE;
+
+	*sendMsg << msgType;
+	*sendMsg << serverNo;
+	*sendMsg << DataType;
+	*sendMsg << DataValue;
+	*sendMsg << TimeStamp;
+
+	agentManager->SendAllClient(sendMsg);
+
+	message->DecrementUseCount();
+	sendMsg->DecrementUseCount();
+
+	return true;
 }
 bool CContentsManager::HandeClientLoginMsg(CPacket* message, ULONG64 ID)
 {
@@ -88,9 +138,43 @@ bool CContentsManager::HandeClientLoginMsg(CPacket* message, ULONG64 ID)
 	agentIndex = CLanServer::GetIndex(ID);
 	(*agentManager)[agentIndex].Status = static_cast<BYTE>(enAgentStatus::en_Alive);
 	(*agentManager)[agentIndex].Type = static_cast<BYTE>(enAgentType::en_Server);
+	(*agentManager)[agentIndex].sessionID = ID;
+
+	agentManager->RegistClient(ID);
+	SendClientLoginResMsg(ID);
+
+	message->DecrementUseCount();
+
+	return true;
+}
+
+bool CContentsManager::SendClientLoginResMsg(ULONG64 ID)
+{
+	CPacket* sendMsg;
+
+	WORD MsgType;
+	BYTE LoginResult;
+
+	MsgType = en_PACKET_CS_MONITOR_TOOL_RES_LOGIN;
+	LoginResult = dfMONITOR_TOOL_LOGIN_OK;
+
+	sendMsg = CPacket::Alloc();
+
+	*sendMsg << MsgType;
+	*sendMsg << LoginResult;
+
+	networkManager->SendPacket(ID, sendMsg);
+
+	sendMsg->DecrementUseCount();
+
+	return true;
+}
 
 
-	//todo//클라이언트 접속 응답 보내줘야 함
 
+bool CContentsManager::DeleteAgent(ULONG64 ID)
+{
+	unsigned short agentIndex = CLanServer::GetIndex(ID);
+	(*agentManager)[agentIndex].Clear();
 	return true;
 }

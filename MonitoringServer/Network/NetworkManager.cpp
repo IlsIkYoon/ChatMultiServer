@@ -10,11 +10,11 @@ void CLanServer::_OnMessage(CPacket* SBuf, ULONG64 ID)
 }
 void CLanServer::_OnAccept(ULONG64 ID)
 {
-
+	//할 일 없음
 }
 void CLanServer::_OnDisConnect(ULONG64 ID)
 {
-
+	g_ContentsManager->DeleteAgent(ID);
 }
 void CLanServer::_OnSend(ULONG64 ID)
 {

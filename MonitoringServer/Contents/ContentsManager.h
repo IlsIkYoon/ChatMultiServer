@@ -22,5 +22,10 @@ public:
 	bool HandleDataUpdateMsg(CPacket* message, ULONG64 ID);
 	bool HandeClientLoginMsg(CPacket* message, ULONG64 ID);
 
+	bool SendClientLoginResMsg(ULONG64 ID);
+
+
+	bool DeleteAgent(ULONG64 ID);
+
 };
 

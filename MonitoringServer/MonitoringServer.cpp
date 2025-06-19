@@ -15,6 +15,7 @@ bool MonitoringServer()
 	g_NetworkManager = new CLanServer;
 	g_ContentsManager = new CContentsManager(g_NetworkManager);
 	
+	Sleep(INFINITE);
 	
 
 	return true;
