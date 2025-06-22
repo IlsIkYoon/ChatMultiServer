@@ -482,7 +482,7 @@ bool CheckNullChar(WCHAR* message, DWORD len)
 {
 	bool retval = false;
 
-	for (int i = 0; i < len; i++)
+	for (unsigned int i = 0; i < len; i++)
 	{
 		if (message[i] == NULL)
 		{

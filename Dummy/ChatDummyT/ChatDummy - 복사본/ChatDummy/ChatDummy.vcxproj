@@ -17,20 +17,12 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|ARM64">
-      <Configuration>Debug</Configuration>
-      <Platform>ARM64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|ARM64">
-      <Configuration>Release</Configuration>
-      <Platform>ARM64</Platform>
-    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{6a25801a-8952-4da6-b4cd-6d1e0350f8d9}</ProjectGuid>
-    <RootNamespace>ChatMultiServer</RootNamespace>
+    <ProjectGuid>{7e8ff921-d560-45f7-abf7-883d969a979e}</ProjectGuid>
+    <RootNamespace>ChatDummy</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -60,19 +52,6 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -88,12 +67,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -146,38 +119,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\Users\yun-ilsik\source\repos\ChatMultiServer\NetWorkLib;C:\Users\yun-ilsik\source\repos\ChatMultiServer\ChatMultiServer;C:\Users\yun-ilsik\source\repos\ChatMultiServer\x64\Release\RedisLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\yun-ilsik\source\repos\ChatMultiServer\x64\Release;C:\Users\yun-ilsik\source\repos\ChatMultiServer\x64\Release\RedisLib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -187,39 +129,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ChatMultiServer.cpp" />
-    <ClCompile Include="Connector\RedisConnector.cpp" />
-    <ClCompile Include="ContentsThread\ContentsFunc.cpp" />
-    <ClCompile Include="ContentsResource.cpp" />
-    <ClCompile Include="ContentsThread\ContentsThreadManager.cpp" />
-    <ClCompile Include="ContentsThread\TickThread.cpp" />
-    <ClCompile Include="Log\Monitoring.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Msg\Message.cpp" />
-    <ClCompile Include="Player\Player.cpp" />
-    <ClCompile Include="Player\CharacterKeyManager.cpp" />
-    <ClCompile Include="Player\PlayerManager.cpp" />
-    <ClCompile Include="Sector\Sector.cpp" />
+    <ClCompile Include="MakePacket.cpp" />
+    <ClCompile Include="MonitoringDatas.cpp" />
+    <ClCompile Include="Network.cpp" />
+    <ClCompile Include="PacketBuffer.cpp" />
+    <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="RingBuffer.cpp" />
+    <ClCompile Include="Sector.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ChatMultiServer.h" />
-    <ClInclude Include="Connector\RedisConnector.h" />
-    <ClInclude Include="ContentsThread\ContentsFunc.h" />
-    <ClInclude Include="ContentsResource.h" />
-    <ClInclude Include="ContentsThread\ContentsThreadManager.h" />
-    <ClInclude Include="ContentsThread\TickThread.h" />
-    <ClInclude Include="Log\Monitoring.h" />
-    <ClInclude Include="Msg\CommonProtocol.h" />
-    <ClInclude Include="Msg\ContentsPacket.h" />
-    <ClInclude Include="Msg\Message.h" />
-    <ClInclude Include="Player\Player.h" />
-    <ClInclude Include="Player\CharacterKeyManager.h" />
-    <ClInclude Include="Player\PlayerManager.h" />
-    <ClInclude Include="Sector\Sector.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Config.txt" />
-    <Text Include="ContentsConfig.txt" />
+    <ClInclude Include="MakePacket.h" />
+    <ClInclude Include="MonitoringDatas.h" />
+    <ClInclude Include="Network.h" />
+    <ClInclude Include="PacketBuffer.h" />
+    <ClInclude Include="Parser.h" />
+    <ClInclude Include="Protocol.h" />
+    <ClInclude Include="RingBuffer.h" />
+    <ClInclude Include="Sector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

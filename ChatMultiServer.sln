@@ -23,6 +23,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoginServer", "LoginServer\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MonitoringServer", "MonitoringServer\MonitoringServer.vcxproj", "{B7F9FEAA-33EE-4040-9917-259284FE7C2B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChatSingleServer", "ChatSingleServer\ChatSingleServer.vcxproj", "{6E0BE85E-69CC-4AED-A65B-4EF68223AD0C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1B020BEF-E3AE-45CC-B47E-FD4BD5724462} = {1B020BEF-E3AE-45CC-B47E-FD4BD5724462}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -93,6 +98,18 @@ Global
 		{B7F9FEAA-33EE-4040-9917-259284FE7C2B}.Release|x64.Build.0 = Release|x64
 		{B7F9FEAA-33EE-4040-9917-259284FE7C2B}.Release|x86.ActiveCfg = Release|Win32
 		{B7F9FEAA-33EE-4040-9917-259284FE7C2B}.Release|x86.Build.0 = Release|Win32
+		{6E0BE85E-69CC-4AED-A65B-4EF68223AD0C}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{6E0BE85E-69CC-4AED-A65B-4EF68223AD0C}.Debug|ARM64.Build.0 = Debug|ARM64
+		{6E0BE85E-69CC-4AED-A65B-4EF68223AD0C}.Debug|x64.ActiveCfg = Debug|x64
+		{6E0BE85E-69CC-4AED-A65B-4EF68223AD0C}.Debug|x64.Build.0 = Debug|x64
+		{6E0BE85E-69CC-4AED-A65B-4EF68223AD0C}.Debug|x86.ActiveCfg = Debug|Win32
+		{6E0BE85E-69CC-4AED-A65B-4EF68223AD0C}.Debug|x86.Build.0 = Debug|Win32
+		{6E0BE85E-69CC-4AED-A65B-4EF68223AD0C}.Release|ARM64.ActiveCfg = Release|ARM64
+		{6E0BE85E-69CC-4AED-A65B-4EF68223AD0C}.Release|ARM64.Build.0 = Release|ARM64
+		{6E0BE85E-69CC-4AED-A65B-4EF68223AD0C}.Release|x64.ActiveCfg = Release|x64
+		{6E0BE85E-69CC-4AED-A65B-4EF68223AD0C}.Release|x64.Build.0 = Release|x64
+		{6E0BE85E-69CC-4AED-A65B-4EF68223AD0C}.Release|x86.ActiveCfg = Release|Win32
+		{6E0BE85E-69CC-4AED-A65B-4EF68223AD0C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
