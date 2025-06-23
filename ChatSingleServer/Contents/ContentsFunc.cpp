@@ -40,7 +40,7 @@ void CLanServer::_OnMessage(CPacket* message, ULONG64 ID)
 	*EnqueMessage << ID;
 	EnqueMessage->PutData(localMessage->GetDataPtr(), localMessage->GetDataSize());
 	{
-		Profiler("g_ContentsJobQ_Enque");
+		Profiler p("g_ContentsJobQ_Enque");
 
 #ifdef __JOBQLOCKFREEQ_
 		g_ContentsJobQ.Enqueue(EnqueMessage);
@@ -82,7 +82,7 @@ void CLanServer::_OnAccept(ULONG64 ID)
 	CreatePlayerMsg->PutData((char*)&msgHeader, sizeof(msgHeader));
 	{
 
-		Profiler("g_ContentsJobQ_Enque");
+		Profiler p("g_ContentsJobQ_Enque");
 #ifdef __JOBQLOCKFREEQ_
 		g_ContentsJobQ.Enqueue(CreatePlayerMsg);
 #else
@@ -114,7 +114,7 @@ void CLanServer::_OnDisConnect(ULONG64 ID)
 	DeletePlayerMsg->PutData((char*)&msgHeader, sizeof(msgHeader));
 
 	{
-		Profiler("g_ContentsJobQ_Enque");
+		Profiler p("g_ContentsJobQ_Enque");
 
 #ifdef __JOBQLOCKFREEQ_
 		g_ContentsJobQ.Enqueue(DeletePlayerMsg);
@@ -209,7 +209,7 @@ bool HandleContentJob()
 
 	//Todo // 락프리큐랑 링버퍼 성능 비교해보기
 	{
-		Profiler("g_ContentsJobQ_Deque");
+		Profiler p("g_ContentsJobQ_Deque");
 
 #ifdef __JOBQLOCKFREEQ_
 		JobMessage = g_ContentsJobQ.Dequeue();
@@ -241,21 +241,18 @@ bool HandleContentJob()
 
 		JobMessage->PopFrontData(sizeof(contentsHeader), (char*)&contentsHeader);
 
-		msgPayload = CPacket::Alloc();
-
-
 		switch (contentsHeader.type)
 		{
 		case stPacket_Client_Chat_MoveStart:
-			HandleMoveStartMsg(msgPayload, userId);
+			HandleMoveStartMsg(JobMessage, userId);
 			break;
 
 		case stPacket_Client_Chat_MoveStop:
-			HandleMoveStopMsg(msgPayload, userId);
+			HandleMoveStopMsg(JobMessage, userId);
 			break;
 
 		case stPacket_Client_Chat_LocalChat:
-			HandleLocalChatMsg(msgPayload, userId);
+			HandleLocalChatMsg(JobMessage, userId);
 			break;
 
 		case stPacket_Client_Chat_HeartBeat:
@@ -279,8 +276,6 @@ bool HandleContentJob()
 			break;
 
 		}
-
-	msgPayload->DecrementUseCount();
 
 	JobMessage->DecrementUseCount();
 
@@ -339,12 +334,14 @@ void TimeOutCheck()
 			continue;
 		}
 
+		/*
 		if (g_PlayerArr[i]._timeOut < deadLine)
 		{
 			pLib->DisconnectSession(g_PlayerArr[i].GetID());
 			InterlockedIncrement(&g_HeartBeatOverCount);
 			
 		}
+		*/
 	}
 
 }

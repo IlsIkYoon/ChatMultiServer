@@ -110,7 +110,6 @@ void Session::clear()
 	_recvBuffer->DecrementUseCount();
 	_recvBuffer = nullptr;
 
-	InterlockedExchange(&_sendFlag, 0);
 	sendData = 0;
 	sendCount = 0;
 

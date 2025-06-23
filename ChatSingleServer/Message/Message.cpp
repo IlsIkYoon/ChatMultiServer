@@ -31,8 +31,6 @@ extern std::queue<ULONG64> g_WaitingPlayerAcceptQ;
 
 extern CLanServer* pLib;
 
-
-
 void MsgSectorBroadCasting(void (*Func)(ULONG64 srcID, ULONG64 destID, CPacket* Packet), char* _src, CPacket* Packet, bool SendMe)
 {
 	Player* pSrc = (Player*)_src;
@@ -94,6 +92,7 @@ bool HandleMoveStartMsg(CPacket* payLoad, ULONG64 id)
 
 	CPacket* msg;
 	msg = payLoad;
+
 
 	*msg >> direction;
 	*msg >> x;
@@ -171,8 +170,6 @@ bool HandleLocalChatMsg(CPacket* payLoad, ULONG64 id)
 		return false;
 	}
 
-
-
 	CPacket* msg = payLoad;
 	*msg >> chatMessageLen;
 	
@@ -212,10 +209,13 @@ bool HandleChatEndMsg(ULONG64 id)
 {
 	InterlockedIncrement(&g_ChatEndCount);
 
+
+
 	int playerIndex = pLib->GetIndex(id);
 
 	if (g_PlayerArr[playerIndex].GetID() != id || g_PlayerArr[playerIndex].isAlive() == false)
 	{
+		__debugbreak();
 		return false;
 	}
 
@@ -229,6 +229,8 @@ bool HandleChatEndMsg(ULONG64 id)
 	pLib->SendPacket(id, sendMsg);
 	sendMsg->DecrementUseCount();
 
+
+
 	return true;
 }
 
@@ -240,13 +242,14 @@ bool HandleCreatePlayer(ULONG64 id)
 	playerIndex = pLib->GetIndex(id);
 
 
-
+	/*
 	if (g_PlayerLogInCount >= PLAYERMAXCOUNT)
 	{
 		EnqueueWaitingPlayerQ(id);
 		return false;
 	}
 
+	*/
 	g_PlayerArr[playerIndex].Init(id);
 
 	ContentsSendCreatePlayerPacket(id);

@@ -144,6 +144,11 @@ bool Player::Move(DWORD fixedDeltaTime) {
 
 bool Player::MoveStart(BYTE Direction, int x, int y) {
 
+	if (x < 0 || y < 0)
+	{
+		__debugbreak();
+	}
+
 	int oldX = _x;
 	int oldY = _y;
 
@@ -172,6 +177,10 @@ bool Player::MoveStart(BYTE Direction, int x, int y) {
 
 void Player::MoveStop(BYTE Dir, int x, int y)
 {
+	if (x < 0 || y < 0)
+	{
+		__debugbreak();
+	}
 	int oldX = _x;
 	int oldY = _y;
 

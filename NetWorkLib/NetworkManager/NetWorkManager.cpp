@@ -361,6 +361,7 @@ bool NetWorkManager::_RecvPost(Session* _session)
 
 		if (GetLastError() == 10054 || GetLastError() == 10053)
 		{
+			RequestSessionAbort(_session->_ID._ulong64);
 			DecrementSessionIoCount(_session);
 		}
 		else 
@@ -517,7 +518,7 @@ bool NetWorkManager::SendPacket(ULONG64 playerId, CPacket* buf)
 	ULONG64 CurrentId = _session->_ID._ulong64;
 	if (CurrentId != playerId)
 	{
-		__debugbreak();
+		
 		DecrementSessionIoCount(_session);
 		sendPacket->DecrementUseCount();
 		return false;
@@ -832,7 +833,6 @@ bool NetWorkManager::RequestSessionAbort(ULONG64 playerID)
 	if (_session->_ID._ulong64 != playerID)
 	{
 		DecrementSessionIoCount(_session);
-		__debugbreak();
 		return false;
 	}
 
@@ -841,9 +841,6 @@ bool NetWorkManager::RequestSessionAbort(ULONG64 playerID)
 
 	if (CanelIoExResult == false) //등록된 io가 없었음
 	{
-		std::string logString;
-		logString = std::format("CancelIoEx Failed || Session ID : {}", _session->_ID.GetID());
-		EnqueLog(logString);
 		DecrementSessionIoCount(_session);
 		return false;
 	}
@@ -885,7 +882,6 @@ bool NetWorkManager::IncrementSessionIoCount(Session* _session)
 }
 bool NetWorkManager::DecrementSessionIoCount(Session* _session)
 {
-	DWORD localIOCount = *_session->_releaseIOFlag.GetIoCountPtr();
 
 	long retval;
 
@@ -928,17 +924,8 @@ bool NetWorkManager::SendCompletionRoutine(Session* _session)
 
 	if (InterlockedExchange(&_session->_sendFlag, 0) == 0)
 	{
-		//내가 바꾸지도 않았는데 sendflag가 바뀌어 있는 상황
 		__debugbreak();
 	}
-	/*
-	* 
-	if (_session->_status == static_cast<long>(Session::Status::Active))
-	{
-		_TrySendPost(_session);
-
-	}
-	*/
 
 	if (InterlockedCompareExchange(&_session->_status, static_cast<long>(Session::Status::Active), static_cast<long>(Session::Status::Active))
 		== static_cast<long>(Session::Status::MarkForDeletion))
@@ -1036,7 +1023,6 @@ bool NetWorkManager::RecvCompletionRoutine(Session* _session)
 			== static_cast<long>(Session::Status::MarkForDeletion))
 		{
 			RequestSessionAbort(_session->_ID._ulong64);
-			//여기도 리턴값 줘야 하나 고민
 		}
 	}
 

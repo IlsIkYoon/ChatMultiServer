@@ -30,7 +30,7 @@
 #define dfERROR_RANGE		50 //나중에 수정
 
 
-#define PLAYERMAXCOUNT 5000
+#define PLAYERMAXCOUNT 20000
 
 #define LL 0x00
 #define RR 0x04

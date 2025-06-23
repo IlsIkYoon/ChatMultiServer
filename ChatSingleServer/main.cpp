@@ -100,8 +100,26 @@ int main()
 
 	g_ExitEvent = CreateEvent(NULL, true, false, NULL);
 
+	int portNum;
+	int SessionMaxCount;
+	int WorkerThreadCount;
+	int ConcurrentCount;
+
 	pLib = new CLanServer;
 	g_ContentsThread = (HANDLE)_beginthreadex(NULL, 0, ContentsThreadFunc, NULL, NULL, NULL);
+
+	txParser.GetData("Chat_Single_Config.ini");
+	txParser.SearchData("PortNum", &portNum);
+	txParser.SearchData("SessionMaxCount", &SessionMaxCount);
+	txParser.SearchData("WorkerThreadCount", &WorkerThreadCount);
+	txParser.SearchData("ConcurrentCount", &ConcurrentCount);
+	txParser.CloseData();
+
+	pLib->RegistPortNum(portNum);
+	pLib->RegistSessionMaxCoiunt(SessionMaxCount);
+	pLib->RegistWorkerThreadCount(WorkerThreadCount);
+	pLib->RegistConcurrentCount(ConcurrentCount);
+
 	pLib->Start();
 
 	//-------------------------------------
@@ -163,12 +181,10 @@ void PrintTPS()
 	localAcceptTPS = InterlockedExchange(&g_AcceptTps, 0);
 	long long localRECVTPS = 0;
 	long long localSENDTPS = 0;
-	for (int i = 0; i < g_workerThreadCount; i++)
+	for (int i = 0; i < pLib->_workerThreadCount; i++)
 	{
-		localRECVTPS += g_pRecvTps[i];
-		InterlockedExchange(&g_pRecvTps[i], 0);
-		localSENDTPS += g_pSendTps[i];
-		InterlockedExchange(&g_pSendTps[i], 0);
+		localRECVTPS += InterlockedExchange(&g_pRecvTps[i], 0);
+		localSENDTPS += InterlockedExchange(&g_pSendTps[i], 0);
 	}
 
 	printf("------------------------------------------\n");
