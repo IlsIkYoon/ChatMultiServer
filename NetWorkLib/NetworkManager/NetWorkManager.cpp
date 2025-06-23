@@ -353,7 +353,7 @@ bool NetWorkManager::_RecvPost(Session* _session)
 		return false;
 
 	IncrementSessionIoCount(_session);
-
+	ZeroMemory(&_session->_recvOverLapped, sizeof(_session->_recvOverLapped));
 	recvRet = WSARecv(_session->_socket, &localBuf, 1, NULL, &flag, &_session->_recvOverLapped, NULL);
 
 	if (recvRet != 0 && GetLastError() != WSA_IO_PENDING)
@@ -407,6 +407,12 @@ bool NetWorkManager::_SendPost(Session* _session)
 		buf[i].len = targetBuf->GetDataSize();
 		targetNode = targetNode->_next;
 
+		if (buf[i].len == 0)		
+		{
+			__debugbreak();
+		}
+
+
 		_session->sendData += buf[i].len;
 		_session->sendCount++;
 	}
@@ -419,15 +425,24 @@ bool NetWorkManager::_SendPost(Session* _session)
 		return false;
 	}
 
-	{
-	
-		sendRet = WSASend(_session->_socket, buf, (DWORD)sendSize, NULL, NULL, &_session->_sendOverLapped, NULL);
-	}
+	ZeroMemory(&_session->_sendOverLapped, sizeof(_session->_sendOverLapped));
+	OVERLAPPED localOverlapped = _session->_sendOverLapped;
+	SOCKET localSocket = _session->_socket;
 
-	if (sendRet != 0 && GetLastError() != WSA_IO_PENDING)
+	{
+		sendRet = WSASend(localSocket, buf, (DWORD)sendSize, NULL, NULL, &_session->_sendOverLapped, NULL);
+	}
+	DWORD errCode = GetLastError();
+	if (sendRet != 0 && errCode != WSA_IO_PENDING)
 	{	
-		if (GetLastError() == 10054 || GetLastError() == 10053)
+		if (errCode == 10054 || errCode == 10053 || errCode == 10004)
 		{
+			std::string error;
+			error = "WSA Send Error || ErrorCode : ";
+			error += std::to_string(errCode);
+			error += "session ID : ";
+			error += std::to_string(_session->_ID._ulong64);
+			EnqueLog(error);
 			DecrementSessionIoCount(_session);
 		}
 		else {
@@ -568,7 +583,7 @@ void NetWorkManager::_DisconnectSession(Session* _session)
 {
 	if (InterlockedCompareExchange64(&_session->_releaseIOFlag._all, SESSION_DISCONNECTING, SESSION_CLOSABLE) != SESSION_CLOSABLE)
 	{
-		
+		//그 사이에 누가 iocount를 올리고 작업에 들어갔음 ?
 		return;
 	}
 
