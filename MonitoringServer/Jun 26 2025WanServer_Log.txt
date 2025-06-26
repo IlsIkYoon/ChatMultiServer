@@ -10,7 +10,6 @@ Accept Thread Wake up
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
-IOCP_WORKER Thread Made Success
 Wsa Startup ... success
 Socket Init ... success
 Send ZeroBuf Option ... success
@@ -20,20 +19,6 @@ Socket Listen...success
 NetWorkInit success
 Accept Thread Made Success
 Accept Thread Wake up
-IOCP_WORKER Thread Made Success
-IOCP_WORKER Thread Made Success
-IOCP_WORKER Thread Made Success
-IOCP_WORKER Thread Made Success
-Wsa Startup ... success
-Socket Init ... success
-Send ZeroBuf Option ... success
-Socket Linger Option ... success
-bind... success
-Socket Listen...success
-NetWorkInit success
-Accept Thread Made Success
-Accept Thread Wake up
-IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
@@ -49,7 +34,6 @@ Accept Thread Wake up
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
-IOCP_WORKER Thread Made Success
 Wsa Startup ... success
 Socket Init ... success
 Send ZeroBuf Option ... success
@@ -59,30 +43,6 @@ Socket Listen...success
 NetWorkInit success
 Accept Thread Made Success
 Accept Thread Wake up
-Wsa Startup ... success
-Socket Init ... success
-Send ZeroBuf Option ... success
-Socket Linger Option ... success
-bind... success
-Socket Listen...success
-NetWorkInit success
-Accept Thread Made Success
-Accept Thread Wake up
-IOCP_WORKER Thread Made Success
-IOCP_WORKER Thread Made Success
-IOCP_WORKER Thread Made Success
-IOCP_WORKER Thread Made Success
-Duplicate delete!
-Wsa Startup ... success
-Socket Init ... success
-Send ZeroBuf Option ... success
-Socket Linger Option ... success
-bind... success
-Socket Listen...success
-NetWorkInit success
-Accept Thread Made Success
-Accept Thread Wake up
-IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
@@ -98,7 +58,6 @@ Accept Thread Wake up
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
-IOCP_WORKER Thread Made Success
 Wsa Startup ... success
 Socket Init ... success
 Send ZeroBuf Option ... success
@@ -108,17 +67,6 @@ Socket Listen...success
 NetWorkInit success
 Accept Thread Made Success
 Accept Thread Wake up
-IOCP_WORKER Thread Made Success
-Wsa Startup ... success
-Socket Init ... success
-Send ZeroBuf Option ... success
-Socket Linger Option ... success
-bind... success
-Socket Listen...success
-NetWorkInit success
-Accept Thread Made Success
-Accept Thread Wake up
-IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
@@ -134,7 +82,6 @@ Accept Thread Wake up
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
-IOCP_WORKER Thread Made Success
 Wsa Startup ... success
 Socket Init ... success
 Send ZeroBuf Option ... success
@@ -144,20 +91,6 @@ Socket Listen...success
 NetWorkInit success
 Accept Thread Made Success
 Accept Thread Wake up
-IOCP_WORKER Thread Made Success
-IOCP_WORKER Thread Made Success
-IOCP_WORKER Thread Made Success
-IOCP_WORKER Thread Made Success
-Wsa Startup ... success
-Socket Init ... success
-Send ZeroBuf Option ... success
-Socket Linger Option ... success
-bind... success
-Socket Listen...success
-NetWorkInit success
-Accept Thread Made Success
-Accept Thread Wake up
-IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
@@ -173,6 +106,17 @@ Accept Thread Wake up
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
+Wsa Startup ... success
+Socket Init ... success
+Send ZeroBuf Option ... success
+Socket Linger Option ... success
+bind... success
+Socket Listen...success
+NetWorkInit success
+Accept Thread Made Success
+Accept Thread Wake up
+IOCP_WORKER Thread Made Success
+IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
 Wsa Startup ... success
 Socket Init ... success
@@ -186,7 +130,6 @@ Accept Thread Wake up
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
-IOCP_WORKER Thread Made Success
 Wsa Startup ... success
 Socket Init ... success
 Send ZeroBuf Option ... success
@@ -196,20 +139,6 @@ Socket Listen...success
 NetWorkInit success
 Accept Thread Made Success
 Accept Thread Wake up
-IOCP_WORKER Thread Made Success
-IOCP_WORKER Thread Made Success
-IOCP_WORKER Thread Made Success
-IOCP_WORKER Thread Made Success
-Wsa Startup ... success
-Socket Init ... success
-Send ZeroBuf Option ... success
-Socket Linger Option ... success
-bind... success
-Socket Listen...success
-NetWorkInit success
-Accept Thread Made Success
-Accept Thread Wake up
-IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success
 IOCP_WORKER Thread Made Success

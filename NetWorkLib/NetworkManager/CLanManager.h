@@ -183,5 +183,7 @@ public:
 	void RegistWorkerThreadCount(int pCount);
 	void RegistPortNum(int pPortNum);
 
+	bool ConnectServer(std::wstring ip, unsigned short portNum, ULONG64* outSessionID);
+
 };
 

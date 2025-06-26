@@ -3,6 +3,7 @@
 #include "Sector/Sector.h"
 #include "Contents/ContentsFunc.h"
 #include "Message/Message.h"
+#include "Network/Network.h"
 //-----------------------------------------
 // 플레이어 카운팅을 위한 변수
 //-----------------------------------------
@@ -18,7 +19,7 @@ extern std::stack<int> g_playerIndexStack;
 Player* g_PlayerArr;
 
 extern std::list<Player*> Sector[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
-extern CLanServer* pLib;
+extern CWanServer* pLib;
 
 //-----------------------------------------
 // Session은 여유가 있는데 Player가 맥스일때 들어가는 대기열

@@ -4,7 +4,7 @@
 
 #define NO_SERVER 0
 
-extern CLanServer* g_NetworkManager;
+extern CWanServer* g_NetworkManager;
 
 enum class enAgentType
 {

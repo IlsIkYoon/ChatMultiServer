@@ -229,7 +229,7 @@ void CWanManager::AcceptThread()
 			continue;
 		}
 		
-		if (_sessionLoginCount == _sessionMaxCount)
+		if (InterlockedIncrement(&_sessionLoginCount) >= _sessionMaxCount)
 		{
 			_log.EnqueLog("Session OverFLow\n");
 			closesocket(newSocket);
@@ -242,11 +242,6 @@ void CWanManager::AcceptThread()
 
 		_sessionList->_makeNewSession(&currentIdex, &newSocket, &clientAddr);
 		currentSession = &_sessionList->GetSession(currentIdex);
-
-		if (InterlockedIncrement(&_sessionLoginCount) > _sessionMaxCount)
-		{
-			__debugbreak();
-		}
 
 		_OnAccept(_sessionList->GetSession(currentIdex)._ID._ulong64);
 
@@ -752,6 +747,7 @@ bool CWanManager::SendToAllSessions()
 	}
 
 
+
 	for (int i = 0; i < _sessionMaxCount; i++)
 	{
 		targetSession = &_sessionList->GetSession(i);
@@ -1009,10 +1005,7 @@ bool CWanManager::RecvCompletionRoutine(Session* _session)
 		{
 			_OnMessage(SBuf, _session->_ID._ulong64);
 
-			if (SBuf->_usageCount != 1)
-			{
-				__debugbreak();
-			}
+
 			SBuf->DecrementUseCount();
 		}
 
@@ -1089,3 +1082,49 @@ void CWanManager::RegistPortNum(int pPortNum)
 	_portNum = pPortNum;
 }
 
+
+bool CWanManager::ConnectServer(std::wstring ip, unsigned short portNum, ULONG64* outSessionID)
+{
+	SOCKET newSocket;
+	unsigned short currentIdex;
+	SOCKADDR_IN serverAddr;
+	Session* currentSession;
+	int retval;
+
+	if (InterlockedIncrement(&_sessionLoginCount) >= _sessionMaxCount)
+	{
+		InterlockedDecrement(&_sessionLoginCount);
+		_log.EnqueLog("Session OverFLow\n");
+		return false;
+	}
+
+	serverAddr.sin_family = AF_INET;
+	serverAddr.sin_port = htons(portNum);
+	InetPtonW(AF_INET, ip.c_str(), &serverAddr.sin_addr.S_un.S_addr);
+
+	newSocket = socket(AF_INET, SOCK_STREAM, NULL);
+	if (newSocket == INVALID_SOCKET)
+	{
+		__debugbreak();
+	}
+
+	retval = connect(newSocket, (SOCKADDR*)&serverAddr, sizeof(serverAddr));
+	if (retval != 0)
+	{
+		__debugbreak();
+	}
+
+	_sessionList->_makeNewSession(&currentIdex, &newSocket, &serverAddr);
+	(*_sessionList)[currentIdex]._type = static_cast<BYTE>(enSessionType::en_Server);
+
+	*outSessionID = (*_sessionList)[currentIdex]._ID._ulong64;
+	currentSession = &_sessionList->GetSession(currentIdex);
+
+	CreateIoCompletionPort((HANDLE)currentSession->_socket, _hIOCP,
+		(ULONG_PTR)currentSession, 0);
+
+	_RecvPost(currentSession);
+
+	DecrementSessionIoCount(currentSession);
+
+}

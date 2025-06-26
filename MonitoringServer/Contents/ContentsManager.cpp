@@ -41,9 +41,10 @@ bool CContentsManager::HandleContentsMsg(CPacket* message, ULONG64 ID)
 }
 
 
-CContentsManager::CContentsManager(CLanServer* pNetworkManager)
+CContentsManager::CContentsManager(CWanServer* pNetworkManager)
 {
 	networkManager = pNetworkManager;
+	
 	agentManager = new CAgentManager(networkManager->_sessionMaxCount);
 	strcpy_s(clientLoginToken, "ajfw@!cv980dSZ[fje#@fdj123948djf");
 
@@ -57,7 +58,7 @@ bool CContentsManager::HandleServerLoginMsg(CPacket* message, ULONG64 ID)
 
 	*message >> serverNo;
 
-	agentIndex = CLanServer::GetIndex(ID);
+	agentIndex = CWanServer::GetIndex(ID);
 	(*agentManager)[agentIndex].Status = static_cast<BYTE>(enAgentStatus::en_Alive);
 	(*agentManager)[agentIndex].Type = static_cast<BYTE>(enAgentType::en_Server);
 	(*agentManager)[agentIndex].ServerNo = serverNo;
@@ -82,7 +83,7 @@ bool CContentsManager::HandleDataUpdateMsg(CPacket* message, ULONG64 ID)
 	}
 
 
-	AgentIndex = CLanServer::GetIndex(ID);
+	AgentIndex = CWanServer::GetIndex(ID);
 
 	*message >> DataType;
 	*message >> DataValue;
@@ -135,7 +136,7 @@ bool CContentsManager::HandeClientLoginMsg(CPacket* message, ULONG64 ID)
 		return false;
 	}
 
-	agentIndex = CLanServer::GetIndex(ID);
+	agentIndex = CWanServer::GetIndex(ID);
 	(*agentManager)[agentIndex].Status = static_cast<BYTE>(enAgentStatus::en_Alive);
 	(*agentManager)[agentIndex].Type = static_cast<BYTE>(enAgentType::en_Server);
 	(*agentManager)[agentIndex].sessionID = ID;
@@ -174,7 +175,7 @@ bool CContentsManager::SendClientLoginResMsg(ULONG64 ID)
 
 bool CContentsManager::DeleteAgent(ULONG64 ID)
 {
-	unsigned short agentIndex = CLanServer::GetIndex(ID);
+	unsigned short agentIndex = CWanServer::GetIndex(ID);
 	(*agentManager)[agentIndex].Clear();
 	return true;
 }

@@ -69,7 +69,7 @@ Session::Session()
 	
 	_sendFlag = 0;
 
-	ZeroMemory(&_clientAddr, sizeof(_clientAddr));
+	ZeroMemory(&_Addr, sizeof(_Addr));
 	ZeroMemory(&_sendOverLapped, sizeof(_sendOverLapped));
 	ZeroMemory(&_recvOverLapped, sizeof(_recvOverLapped));
 
@@ -104,7 +104,7 @@ void Session::clear()
 	_socket = 0;
 	_ID._ulong64 = 0;
 
-	ZeroMemory(&_clientAddr, sizeof(_clientAddr));
+	ZeroMemory(&_Addr, sizeof(_Addr));
 
 	_sendBuffer.Clear();
 	_recvBuffer->DecrementUseCount();
@@ -139,8 +139,8 @@ bool SessionManager::_makeNewSession(unsigned short* outIDex, SOCKET* newSocket,
 	_sessionList[iDex]._ID.SetID(localID);
 	_sessionList[iDex]._ID.SetIndex(iDex);
 	_sessionList[iDex]._socket = *newSocket;
-	_sessionList[iDex]._clientAddr = *clientAddr;
-
+	_sessionList[iDex]._Addr = *clientAddr;
+	_sessionList[iDex]._type = static_cast<BYTE>(enSessionType::en_Client); //기본이 클라이언트
 
 
 	g_SessionTotalCreateCount++; //acceptThread에서만 증가 연산 중

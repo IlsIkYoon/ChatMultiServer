@@ -5,22 +5,6 @@
 #include "ContentsPacket.h"
 
 
-class CLanServer : public CWanManager
-{
-
-public:
-	CLanServer();
-
-	void _OnMessage(CPacket* message, ULONG64 ID) override final;
-	void _OnAccept(ULONG64 ID) override final;
-	void _OnDisConnect(ULONG64 ID) override final;
-	void _OnSend(ULONG64 ID) override final;
-
-};
-
-
-
-
 //------------------------------------
 // printList의 size가 0이 될 때 까지 꺼내서 출력
 //------------------------------------
@@ -45,7 +29,6 @@ bool HandleContentJob();
 // 컨텐츠 배열 메모리 할당 + 스택에 인덱스 값들 push
 //----------------------------------------------
 bool InitContentsResource();
-
 
 //----------------------------------------------
 // 매 프레임마다 해야할 일 

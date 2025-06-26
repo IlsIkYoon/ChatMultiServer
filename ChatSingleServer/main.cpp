@@ -2,6 +2,9 @@
 #include "Contents/ContentsPacket.h"
 #include "Contents/ContentsFunc.h"
 #include "Player/Player.h"
+#include "Network/Network.h"
+#include "Contents/MonitorManager.h"
+#include "CommonProtocol.h"
 
 //----------------------------------------
 //모니터링 출력을 위한 전역 변수들
@@ -65,11 +68,12 @@ HANDLE g_ExitEvent;
 void PrintSendBufferPool();
 void PrintSerializePool();
 void PrintSessionCount();
-void PrintTPS();
 void PrintMessageCount();
 void PrintConsolMenu();
 void PrintfCpuUsage();
 void PrintConsolAll();
+
+void UpdateMonitorData();
 
 //----------------------------------------
 // 입력 값을 체크. 입력 값에 따라 출력 혹은 종료
@@ -81,15 +85,13 @@ void CheckInput();
 //----------------------------------------
 void ExitAllProcess();
 
-CLanServer* pLib;
+CWanServer* pLib;
 CCpuUsage CPUUsage;
-
+CMonitorManager g_Monitor;
+CPdhManager g_PDH;
 
 int main()
 {
-	//메인 쓰레드는 사실상 모니터링 쓰레드
-	//1초에 한번 화면 출력
-
 	timeBeginPeriod(1);
 	
 	DWORD startTimeTick;
@@ -98,14 +100,15 @@ int main()
 
 	procademy::CCrashDump dump;
 
-	g_ExitEvent = CreateEvent(NULL, true, false, NULL);
-
 	int portNum;
+	int MonitorPortNum;
 	int SessionMaxCount;
 	int WorkerThreadCount;
 	int ConcurrentCount;
 
-	pLib = new CLanServer;
+	g_ExitEvent = CreateEvent(NULL, true, false, NULL);
+
+	pLib = new CWanServer;
 	g_ContentsThread = (HANDLE)_beginthreadex(NULL, 0, ContentsThreadFunc, NULL, NULL, NULL);
 
 	txParser.GetData("Chat_Single_Config.ini");
@@ -113,6 +116,7 @@ int main()
 	txParser.SearchData("SessionMaxCount", &SessionMaxCount);
 	txParser.SearchData("WorkerThreadCount", &WorkerThreadCount);
 	txParser.SearchData("ConcurrentCount", &ConcurrentCount);
+	txParser.SearchData("MonitorPortNum", &MonitorPortNum);
 	txParser.CloseData();
 
 	pLib->RegistPortNum(portNum);
@@ -122,9 +126,10 @@ int main()
 
 	pLib->Start();
 
-	//-------------------------------------
-	// 출력에 대한 옵션 변수들
-	//-------------------------------------
+	g_PDH.RegistEthernetMax(3);
+	g_PDH.Start();
+	g_Monitor.RegistMonitor(L"127.0.0.1", MonitorPortNum);
+
 	
 
 	while (1)
@@ -136,9 +141,8 @@ int main()
 
 		CheckInput();
 
-		PrintConsolAll();
+		UpdateMonitorData();
 		
-
 		endTimeTick = timeGetTime();
 		resultTimeTick = (endTimeTick - startTimeTick) / 1000;
 		Sleep(1000 - resultTimeTick);
@@ -175,25 +179,7 @@ void PrintSessionCount()
 	printf("Player LogOut : %lld\n", g_PlayerLogOut);
 	printf("Waiting Player : %lld\n", g_WaitingPlayerAcceptQ.size());
 }
-void PrintTPS()
-{
-	long long localAcceptTPS = 0;
-	localAcceptTPS = InterlockedExchange(&g_AcceptTps, 0);
-	long long localRECVTPS = 0;
-	long long localSENDTPS = 0;
-	for (int i = 0; i < pLib->_workerThreadCount; i++)
-	{
-		localRECVTPS += InterlockedExchange(&g_pRecvTps[i], 0);
-		localSENDTPS += InterlockedExchange(&g_pSendTps[i], 0);
-	}
 
-	printf("------------------------------------------\n");
-	printf("ContentsFrame : %d\n", g_frame);
-	g_frame = 0;
-	printf("ACCEPT TPS : %lld\n", localAcceptTPS);
-	printf("RECV TPS : %lld || SEND TPS : %lld\n", localRECVTPS, localSENDTPS);
-	
-}
 
 void PrintMessageCount()
 {
@@ -256,7 +242,6 @@ void PrintConsolAll()
 	PrintMessageCount();
 	PrintSerializePool();
 	PrintSessionCount();
-	PrintTPS();
 	PrintfCpuUsage();
 }
 
@@ -266,6 +251,41 @@ void ExitAllProcess()
 	//서버 종료 절차
 	pLib->ExitNetWorkManager();
 
+
+
+}
+
+void UpdateMonitorData()
+{
+	long long localAcceptTPS = InterlockedExchange(&g_AcceptTps, 0);
+	long long localRECVTPS = 0;
+	long long localSENDTPS = 0;
+	int localFrame = 0;
+	int localProcessorTotal = 0;
+	double PrivateMem = 0;
+	double ProcessNonPaged = 0;
+	double TotalNonPaged = 0;
+	double Available = 0;
+	for (int i = 0; i < pLib->_workerThreadCount; i++)
+	{
+		localRECVTPS += InterlockedExchange(&g_pRecvTps[i], 0);
+		localSENDTPS += InterlockedExchange(&g_pSendTps[i], 0);
+	}
+	localFrame = InterlockedExchange(&g_frame, 0);
+
+	g_PDH.GetMemoryData(&PrivateMem, &ProcessNonPaged, &TotalNonPaged, &Available);
+	
+
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_GAME_GAME_THREAD_FPS, localFrame);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_GAME_ACCEPT_TPS, localAcceptTPS);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_GAME_PACKET_RECV_TPS, localRECVTPS);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_GAME_PACKET_SEND_TPS, localSENDTPS);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_GAME_SESSION, pLib->_sessionLoginCount);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_GAME_GAME_PLAYER, g_PlayerLogInCount);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_MONITOR_CPU_TOTAL, localProcessorTotal);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_MONITOR_NONPAGED_MEMORY, (int)TotalNonPaged);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_MONITOR_AVAILABLE_MEMORY, (int)Available);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_GAME_SERVER_MEM, (int)PrivateMem);
 
 
 }

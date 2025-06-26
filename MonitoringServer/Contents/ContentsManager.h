@@ -6,14 +6,14 @@
 
 class CContentsManager
 {
-	CLanServer* networkManager;
+	CWanServer* networkManager;
 	CAgentManager* agentManager;
 	char clientLoginToken[33];
 
 
 public:
 	CContentsManager() = delete;
-	CContentsManager(CLanServer* pNetworkManager);
+	CContentsManager(CWanServer* pNetworkManager);
 
 
 	bool HandleContentsMsg(CPacket* message, ULONG64 ID);

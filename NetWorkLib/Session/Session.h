@@ -74,7 +74,7 @@ struct Session
 	SessionIndexUnion _ID;
 	SessionReleaseIOCount _releaseIOFlag;
 
-	SOCKADDR_IN _clientAddr;
+	SOCKADDR_IN _Addr;
 	long _sendFlag;
 
 	LFreeQ<CPacket*> _sendBuffer;

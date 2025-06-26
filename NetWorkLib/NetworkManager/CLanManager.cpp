@@ -7,7 +7,7 @@
 
 #define DEFAULT_LAN_SESSIONCOUNT 128
 #define DEFAULT_LAN_WORKERTHREAD 1
-
+#define DEFAULT_LAN_PORTNUM 15053
 
 
 #ifdef __LOGDEBUG__
@@ -28,7 +28,7 @@ CLanManager::CLanManager()
 	_hIOCP = NULL;
 	_listenSocket = NULL;
 	ZeroMemory(&_serverAddr, sizeof(_serverAddr));
-	_portNum = DEFAULT_PORTNUM;
+	_portNum = DEFAULT_LAN_PORTNUM;
 	_sessionLoginCount = 0;
 	_workerThreadCount = DEFAULT_LAN_WORKERTHREAD;
 	_sessionMaxCount = DEFAULT_LAN_SESSIONCOUNT;
@@ -520,7 +520,6 @@ bool CLanManager::SendPacket(ULONG64 playerId, CPacket* buf)
 		return false;
 	}
 
-	//이 부분이 Wan과의 차이
 	unsigned short msgLen;
 	msgLen = sendPacket->GetDataSize();
 	sendPacket->InsertLen(msgLen);
@@ -959,16 +958,14 @@ bool CLanManager::RecvCompletionRoutine(Session* _session)
 			break;
 		}
 
+		_OnMessage(SBuf, _session->_ID._ulong64);
 
+		if (SBuf->_usageCount != 1)
 		{
-			_OnMessage(SBuf, _session->_ID._ulong64);
-
-			if (SBuf->_usageCount != 1)
-			{
-				__debugbreak();
-			}
-			SBuf->DecrementUseCount();
+			__debugbreak();
 		}
+		SBuf->DecrementUseCount();
+
 
 
 	}
@@ -1041,3 +1038,47 @@ void CLanManager::RegistPortNum(int pPortNum)
 	_portNum = pPortNum;
 }
 
+bool CLanManager::ConnectServer(std::wstring ip, unsigned short portNum, ULONG64* outSessionID)
+{
+	SOCKET newSocket;
+	unsigned short currentIdex;
+	SOCKADDR_IN serverAddr;
+	Session* currentSession;
+	int retval;
+
+	if (InterlockedIncrement(&_sessionLoginCount) >= _sessionMaxCount)
+	{
+		InterlockedDecrement(&_sessionLoginCount);
+		_log.EnqueLog("Session OverFLow\n");
+		return false;
+	}
+
+	serverAddr.sin_family = AF_INET;
+	serverAddr.sin_port = htons(portNum);
+	InetPtonW(AF_INET, ip.c_str(), &serverAddr.sin_addr.S_un.S_addr);
+	
+	newSocket = socket(AF_INET, SOCK_STREAM, NULL);
+	if (newSocket == INVALID_SOCKET)
+	{
+		__debugbreak();
+	}
+
+	retval = connect(newSocket, (SOCKADDR*)&serverAddr, sizeof(serverAddr));
+	if (retval != 0)
+	{
+		__debugbreak();
+	}
+
+	_sessionList->_makeNewSession(&currentIdex, &newSocket, &serverAddr);
+	(*_sessionList)[currentIdex]._type = static_cast<BYTE>(enSessionType::en_Server);
+
+	currentSession = &_sessionList->GetSession(currentIdex);
+
+	CreateIoCompletionPort((HANDLE)currentSession->_socket, _hIOCP,
+		(ULONG_PTR)currentSession, 0);
+
+	_RecvPost(currentSession);
+
+	DecrementSessionIoCount(currentSession);
+
+}

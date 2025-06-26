@@ -3,6 +3,7 @@
 #include "Contents/ContentsPacket.h"
 #include "Player./Player.h"
 #include "Contents/ContentsFunc.h"
+#include "Network/Network.h"
 #include <format>
 //-----------------------------------------
 // 출력을 위한 메세지 카운팅
@@ -29,7 +30,7 @@ extern unsigned long long g_PlayerLogInCount;
 extern unsigned long long g_TotalPlayerCreate;
 extern std::queue<ULONG64> g_WaitingPlayerAcceptQ;
 
-extern CLanServer* pLib;
+extern CWanServer* pLib;
 
 void MsgSectorBroadCasting(void (*Func)(ULONG64 srcID, ULONG64 destID, CPacket* Packet), char* _src, CPacket* Packet, bool SendMe)
 {

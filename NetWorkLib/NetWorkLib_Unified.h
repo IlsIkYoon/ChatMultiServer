@@ -16,6 +16,7 @@
 #include "Log/Log.h"
 #include "Log/CpuUsage.h"
 #include "NetworkManager/NetWorkManager.h"
+#include "NetworkManager/CLanManager.h"
 #include "Log/CrashDump.h"
-
+#include "Log/PdhManager.h"
 

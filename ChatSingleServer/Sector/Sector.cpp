@@ -1,13 +1,14 @@
 #include "Sector.h"
 #include "Message/Message.h"
 #include "Contents/ContentsFunc.h"
+#include "Network/Network.h"
 
 std::list<Player*> Sector[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
 int sectorXRange = dfRANGE_MOVE_RIGHT / SECTOR_RATIO;
 int sectorYRange = dfRANGE_MOVE_BOTTOM / SECTOR_RATIO;
 
 extern Player* g_PlayerArr;
-extern CLanServer* pLib;
+extern CWanServer* pLib;
 
 bool SyncSector(ULONG64 UserId, int beforeX, int beforeY)
 {
