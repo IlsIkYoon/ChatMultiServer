@@ -1,54 +1,43 @@
-
 #include "pch.h"
-#include "NetWorkManager.h"
+#include "CLanManager.h"
 #include "Parser/TextParser.h"
 #include "ntPacketDefine.h"
 #include "Buffer/LFreeQ.h"
+#include "NetWorkManager.h"
+
+#define DEFAULT_LAN_SESSIONCOUNT 128
+#define DEFAULT_LAN_WORKERTHREAD 1
+
+
 
 #ifdef __LOGDEBUG__
 extern CRITICAL_SECTION g_Lock;
 #endif
 
-int g_concurrentCount;
-int g_workerThreadCount;
-int g_maxSessionCount;
 
+unsigned long g_LanThreadIndex;
 
+LogManager CLanManager::_log;
 
-unsigned long long g_SessionTotalCreateCount;
-unsigned long long g_PlayerTotalCreateCount;
-unsigned long long g_LoginSessionCount;
-unsigned long long g_LogoutSessionCount;
-
-
-unsigned long long g_AcceptTps;
-unsigned long long* g_pRecvTps;
-unsigned long long* g_pSendTps;
-
-unsigned long g_threadIndex;
-
-
-LogManager CWanManager::_log;
-
-CWanManager::CWanManager()
+CLanManager::CLanManager()
 {
 	_exitThreadEvent = CreateEvent(NULL, true, false, NULL);
 
 	_sendInProgress = 0;
-	_concurrentCount = DEFAULT_CONCURRENT_COUNT;
+	_concurrentCount = DEFAULT_LAN_WORKERTHREAD;
 	_hIOCP = NULL;
 	_listenSocket = NULL;
 	ZeroMemory(&_serverAddr, sizeof(_serverAddr));
 	_portNum = DEFAULT_PORTNUM;
 	_sessionLoginCount = 0;
-	_workerThreadCount = DEFAULT_WORKER_THREAD_COUNT;
-	_sessionMaxCount = DEFAULT_SESSION_MAX_COUNT;
+	_workerThreadCount = DEFAULT_LAN_WORKERTHREAD;
+	_sessionMaxCount = DEFAULT_LAN_SESSIONCOUNT;
 
 	_workerThreadArr = nullptr;
 	_sessionList = nullptr;
 }
 
-CWanManager::~CWanManager()
+CLanManager::~CLanManager()
 {
 	closesocket(_listenSocket); //더이상의 접속을 막는다
 
@@ -87,9 +76,9 @@ CWanManager::~CWanManager()
 }
 
 
-bool CWanManager::_NetworkInit()
+bool CLanManager::_NetworkInit()
 {
-	
+
 	int wsa_retval;
 	int bind_retval;
 	int listen_retval;
@@ -98,7 +87,7 @@ bool CWanManager::_NetworkInit()
 
 
 	LINGER ling;
-	
+
 	ling.l_linger = 0;
 	ling.l_onoff = 1;
 
@@ -182,13 +171,13 @@ bool CWanManager::_NetworkInit()
 
 
 
-void CWanManager::_MakeNetWorkMainThread()
+void CLanManager::_MakeNetWorkMainThread()
 {
 	_acceptThread = std::thread([this]() { this->AcceptThread(); });
 	_log.EnqueLog("Accept Thread Made Success");
 }
 
-void CWanManager::AcceptThread()
+void CLanManager::AcceptThread()
 {
 
 	_log.EnqueLog("Accept Thread Wake up");
@@ -197,11 +186,11 @@ void CWanManager::AcceptThread()
 
 	for (int i = 0; i < _workerThreadCount; i++)
 	{
-		_workerThreadArr[i] = std::thread(&CWanManager::IOCP_WorkerThread, this);
+		_workerThreadArr[i] = std::thread(&CLanManager::IOCP_WorkerThread, this);
 	}
 
 
-	
+
 
 	Session* currentSession;
 	SOCKET newSocket;
@@ -214,7 +203,7 @@ void CWanManager::AcceptThread()
 		//todo//어떤 시그널을 받아서 마지막에 정상 종료할 수 있게 로직을 짜기
 		newSocket = 0;
 		ZeroMemory(&clientAddr, sizeof(clientAddr));
-		
+
 		newSocket = accept(_listenSocket, (SOCKADDR*)&clientAddr, &addrLen);
 
 		if (newSocket == INVALID_SOCKET)
@@ -228,7 +217,7 @@ void CWanManager::AcceptThread()
 			_log.EnqueLog("Accept Error", 0, __FILE__, __func__, __LINE__, GetLastError());
 			continue;
 		}
-		
+
 		if (_sessionLoginCount == _sessionMaxCount)
 		{
 			_log.EnqueLog("Session OverFLow\n");
@@ -236,9 +225,6 @@ void CWanManager::AcceptThread()
 			continue;
 		}
 
-
-
-		g_AcceptTps++;
 
 		_sessionList->_makeNewSession(&currentIdex, &newSocket, &clientAddr);
 		currentSession = &_sessionList->GetSession(currentIdex);
@@ -256,22 +242,22 @@ void CWanManager::AcceptThread()
 		_RecvPost(currentSession);
 
 		DecrementSessionIoCount(currentSession);
-		
+
 	}
 	//AcceptThread 종료 로직 
 	WaitForSingleObject(_exitThreadEvent, INFINITE);
 	_log.EnqueLog("exitThreadEvent Signaled !!!");
-	
+
 
 }
 
 
 
-thread_local DWORD t_MyIndex;
+thread_local DWORD t_LanMyIndex;
 
 
 
-void CWanManager::IOCP_WorkerThread()
+void CLanManager::IOCP_WorkerThread()
 {
 	_log.EnqueLog("IOCP_WORKER Thread Made Success");
 
@@ -285,8 +271,8 @@ void CWanManager::IOCP_WorkerThread()
 	Session* _session;
 	bool completionRetval;
 
-	t_MyIndex = InterlockedIncrement(&g_threadIndex) - 1;
-	
+	t_LanMyIndex = InterlockedIncrement(&g_LanThreadIndex) - 1;
+
 
 	while (1)
 	{
@@ -338,7 +324,7 @@ void CWanManager::IOCP_WorkerThread()
 
 
 
-bool CWanManager::_RecvPost(Session* _session)
+bool CLanManager::_RecvPost(Session* _session)
 {
 	WSABUF localBuf;
 
@@ -364,7 +350,7 @@ bool CWanManager::_RecvPost(Session* _session)
 			RequestSessionAbort(_session->_ID._ulong64);
 			DecrementSessionIoCount(_session);
 		}
-		else 
+		else
 		{
 			printf("GetLastError : %d\n", GetLastError());
 			_log.EnqueLog("WsaRecvError", _session->_ID.GetID(), __FILE__, __func__, __LINE__, GetLastError());
@@ -374,7 +360,7 @@ bool CWanManager::_RecvPost(Session* _session)
 
 	return true;
 }
-bool CWanManager::_SendPost(Session* _session)
+bool CLanManager::_SendPost(Session* _session)
 {
 	if (_session->_sendBuffer.GetSize() == 0)
 	{
@@ -390,16 +376,16 @@ bool CWanManager::_SendPost(Session* _session)
 
 
 	unsigned long long sendSize = _session->_sendBuffer.GetSize();
-	
+
 	WSABUF* buf = new WSABUF[sendSize];
 
 	targetNode = _session->_sendBuffer.PeekFront();
 
-	
+
 	for (int i = 0; i < sendSize; i++)
 	{
 		targetBuf = (CPacket*)targetNode->_data;
-		if (targetNode == nullptr) 
+		if (targetNode == nullptr)
 			__debugbreak();
 
 		//sendq에서 순회하면서 버퍼에 넣어 줌 
@@ -407,7 +393,7 @@ bool CWanManager::_SendPost(Session* _session)
 		buf[i].len = targetBuf->GetDataSize();
 		targetNode = targetNode->_next;
 
-		if (buf[i].len == 0)		
+		if (buf[i].len == 0)
 		{
 			__debugbreak();
 		}
@@ -416,7 +402,7 @@ bool CWanManager::_SendPost(Session* _session)
 		_session->sendData += buf[i].len;
 		_session->sendCount++;
 	}
-	
+
 	if (_session->sendCount > 1000)
 	{
 		__debugbreak();
@@ -434,7 +420,7 @@ bool CWanManager::_SendPost(Session* _session)
 	}
 	DWORD errCode = GetLastError();
 	if (sendRet != 0 && errCode != WSA_IO_PENDING)
-	{	
+	{
 		if (errCode == 10054 || errCode == 10053 || errCode == 10004)
 		{
 			std::string error;
@@ -458,42 +444,37 @@ bool CWanManager::_SendPost(Session* _session)
 
 
 
-bool CWanManager::_DequePacket(CPacket* sBuf, Session* _session)
+bool CLanManager::_DequePacket(CPacket* sBuf, Session* _session)
 {
-	ClientHeader header;
-#ifdef __SMARTPOINTER__
-	SmartPointer<CPacket> targetBuf = _session->_recvBuffer;
-
-#else
+	unsigned short LanHeader;
 	CPacket* targetBuf = _session->_recvBuffer;
-#endif
 
-	
 
-	if (targetBuf->GetDataSize() < sizeof(ClientHeader))
+
+	if (targetBuf->GetDataSize() < sizeof(LanHeader))
 	{
 		return false;
 	}
-	
-	targetBuf->PopFrontData(sizeof(header), (char*)&header);
 
-	if (targetBuf->GetDataSize() < header._len)
+	targetBuf->PopFrontData(sizeof(LanHeader), (char*)&LanHeader);
+
+	if (targetBuf->GetDataSize() < LanHeader)
 	{
 		//다시 데이터 넣기 
-		_RecvBufRestorePacket(_session, (char*)&header, sizeof(header));
+		_RecvBufRestorePacket(_session, (char*)&LanHeader, sizeof(LanHeader));
 		return false;
 	}
 
-	targetBuf->PopFrontData(header._len, sBuf->GetBufferPtr());
-	sBuf->MoveRear(header._len);
+	targetBuf->PopFrontData(LanHeader, sBuf->GetBufferPtr());
+	sBuf->MoveRear(LanHeader);
 
 	return true;
 }
 
 
-void CWanManager::_RecvBufRestorePacket(Session* _session, char* _packet, int _packetSize)
+void CLanManager::_RecvBufRestorePacket(Session* _session, char* _packet, int _packetSize)
 {
-	
+
 	int size = _session->_recvBuffer->GetDataSize();
 	char* localBuf = (char*)malloc(size);
 
@@ -509,7 +490,7 @@ void CWanManager::_RecvBufRestorePacket(Session* _session, char* _packet, int _p
 
 
 
-bool CWanManager::SendPacket(ULONG64 playerId, CPacket* buf)
+bool CLanManager::SendPacket(ULONG64 playerId, CPacket* buf)
 {
 
 	CPacket* sendPacket = buf;
@@ -528,18 +509,21 @@ bool CWanManager::SendPacket(ULONG64 playerId, CPacket* buf)
 		sendPacket->DecrementUseCount();
 		return false;
 	}
-	
+
 	//ID가 달라졌는지 비교
 	ULONG64 CurrentId = _session->_ID._ulong64;
 	if (CurrentId != playerId)
 	{
-		
+
 		DecrementSessionIoCount(_session);
 		sendPacket->DecrementUseCount();
 		return false;
 	}
 
-	sendPacket->_ClientEncodePacket();
+	//이 부분이 Wan과의 차이
+	unsigned short msgLen;
+	msgLen = sendPacket->GetDataSize();
+	sendPacket->InsertLen(msgLen);
 
 	_sessionList->GetSession(localIndex)._sendBuffer.Enqueue(sendPacket);
 
@@ -547,19 +531,19 @@ bool CWanManager::SendPacket(ULONG64 playerId, CPacket* buf)
 	DecrementSessionIoCount(_session);
 
 
-	 return true;
+	return true;
 }
 
 
-void CWanManager::_DisconnectSession(ULONG64 sessionID)
+void CLanManager::_DisconnectSession(ULONG64 sessionID)
 {
 	unsigned long long currentLoginCount;
 
 	unsigned short localIndex = GetIndex(sessionID);
 	ULONG64 localID = GetID(sessionID);
 
-	if (InterlockedCompareExchange64(&_sessionList->GetSession(localIndex)._releaseIOFlag._all, SESSION_DISCONNECTING, SESSION_CLOSABLE) 
-									!= SESSION_CLOSABLE)
+	if (InterlockedCompareExchange64(&_sessionList->GetSession(localIndex)._releaseIOFlag._all, SESSION_DISCONNECTING, SESSION_CLOSABLE)
+		!= SESSION_CLOSABLE)
 	{
 		return;
 	}
@@ -574,12 +558,9 @@ void CWanManager::_DisconnectSession(ULONG64 sessionID)
 
 	_sessionList->Delete(localIndex);
 
-	
-	InterlockedDecrement(&_sessionLoginCount);
-	InterlockedIncrement(&g_LogoutSessionCount);
-	
+
 }
-void CWanManager::_DisconnectSession(Session* _session)
+void CLanManager::_DisconnectSession(Session* _session)
 {
 	if (InterlockedCompareExchange64(&_session->_releaseIOFlag._all, SESSION_DISCONNECTING, SESSION_CLOSABLE) != SESSION_CLOSABLE)
 	{
@@ -588,23 +569,19 @@ void CWanManager::_DisconnectSession(Session* _session)
 	}
 
 	_OnDisConnect(_session->_ID._ulong64);
-	
+
 	closesocket(_session->_socket);
 
-	InterlockedDecrement(&_sessionLoginCount);
-	InterlockedDecrement(&g_LoginSessionCount);
-	InterlockedIncrement(&g_LogoutSessionCount);
-
 	_sessionList->Delete(_session->_ID.GetIndex());
-	
+
 }
-bool CWanManager::DisconnectSession(ULONG64 playerID)
+bool CLanManager::DisconnectSession(ULONG64 playerID)
 {
 	RequestSessionAbort(playerID);
 	return true;
 }
 
-bool CWanManager::CheckGQCSError(bool retval, DWORD* recvdbytes, ULONG_PTR recvdkey, OVERLAPPED* overlapped, DWORD errorno)
+bool CLanManager::CheckGQCSError(bool retval, DWORD* recvdbytes, ULONG_PTR recvdkey, OVERLAPPED* overlapped, DWORD errorno)
 {
 	Session* _session = (Session*)recvdkey;
 
@@ -665,7 +642,7 @@ bool CWanManager::CheckGQCSError(bool retval, DWORD* recvdbytes, ULONG_PTR recvd
 
 
 
-ULONG64 CWanManager::GetID(ULONG64 target)
+ULONG64 CLanManager::GetID(ULONG64 target)
 {
 	ULONG64 ret;
 	ret = target & 0x0000ffffffffffff;
@@ -673,11 +650,11 @@ ULONG64 CWanManager::GetID(ULONG64 target)
 	return ret;
 }
 
-unsigned short CWanManager::GetIndex(ULONG64 target)
+unsigned short CLanManager::GetIndex(ULONG64 target)
 {
 	ULONG64 temp;
 	unsigned short ret;
-	
+
 	temp = target & 0xffff000000000000;
 	temp = temp >> 48;
 	ret = (unsigned short)temp;
@@ -685,36 +662,36 @@ unsigned short CWanManager::GetIndex(ULONG64 target)
 	return ret;
 }
 
-void CWanManager::EnqueLog(const char* string)
+void CLanManager::EnqueLog(const char* string)
 {
 	_log.EnqueLog(string);
 }
 
 
-void CWanManager::EnqueLog(std::string& string)
+void CLanManager::EnqueLog(std::string& string)
 {
 	_log.EnqueLog(string.c_str());
 }
 
 
-void CWanManager::InitSessionList(int SessionCount)
+void CLanManager::InitSessionList(int SessionCount)
 {
 	_sessionList = new SessionManager(SessionCount);
 }
 
 
-int CWanManager::GetSessionMaxCount()
+int CLanManager::GetSessionMaxCount()
 {
 	return _sessionMaxCount;
 }
 
 
-void CWanManager::ExitNetWorkManager()
+void CLanManager::ExitNetWorkManager()
 {
 	closesocket(_listenSocket); //더이상의 접속을 막는다
 
 	//모든 세션을 내보내고 기다림
-	DisconnectAllSessions(); 
+	DisconnectAllSessions();
 
 	while (1)
 	{
@@ -731,13 +708,13 @@ void CWanManager::ExitNetWorkManager()
 	//쓰레드 종료에 대한 대기 작업
 
 	//리턴
-	
-	
+
+
 
 }
 
 
-bool CWanManager::SendToAllSessions()
+bool CLanManager::SendToAllSessions()
 {
 	Session* targetSession;
 	ULONG64 playerId;
@@ -745,7 +722,7 @@ bool CWanManager::SendToAllSessions()
 	long releaseFlag;
 
 
-	if (InterlockedExchange(&_sendInProgress, static_cast<unsigned long>(SendStatus::InProgress)) 
+	if (InterlockedExchange(&_sendInProgress, static_cast<unsigned long>(SendStatus::InProgress))
 		!= static_cast<unsigned long>(SendStatus::Idle))
 	{
 		return false;
@@ -757,8 +734,8 @@ bool CWanManager::SendToAllSessions()
 		targetSession = &_sessionList->GetSession(i);
 		playerId = targetSession->_ID._ulong64;
 
-		 releaseFlag = targetSession->_releaseIOFlag._struct.releaseFlag;
-		if (releaseFlag == 0x01) 
+		releaseFlag = targetSession->_releaseIOFlag._struct.releaseFlag;
+		if (releaseFlag == 0x01)
 		{
 			continue;
 		}
@@ -792,13 +769,13 @@ bool CWanManager::SendToAllSessions()
 }
 
 
-void CWanManager::EnqueSendRequest()
+void CLanManager::EnqueSendRequest()
 {
 	PostQueuedCompletionStatus(_hIOCP, SENDREQUEST_BYTE, SENDREQUEST_KEY, SENDREQUEST);
 }
 
 
-bool CWanManager::_TrySendPost(Session* _session)
+bool CLanManager::_TrySendPost(Session* _session)
 {
 
 	while (1)
@@ -821,12 +798,12 @@ bool CWanManager::_TrySendPost(Session* _session)
 
 		break;
 	}
-	
+
 	return true;
 }
 
 
-bool CWanManager::RequestSessionAbort(ULONG64 playerID)
+bool CLanManager::RequestSessionAbort(ULONG64 playerID)
 {
 	bool CanelIoExResult;
 	int localIndex;
@@ -866,7 +843,7 @@ bool CWanManager::RequestSessionAbort(ULONG64 playerID)
 }
 
 
-void CWanManager::DisconnectAllSessions()
+void CLanManager::DisconnectAllSessions()
 {
 	Session* _session;
 	for (int i = 0; i < _sessionMaxCount; i++)
@@ -887,15 +864,15 @@ void CWanManager::DisconnectAllSessions()
 
 
 
-bool CWanManager::IncrementSessionIoCount(Session* _session)
+bool CLanManager::IncrementSessionIoCount(Session* _session)
 {
-	
+
 	InterlockedIncrement(_session->_releaseIOFlag.GetIoCountPtr());
 
 
 	return true;
 }
-bool CWanManager::DecrementSessionIoCount(Session* _session)
+bool CLanManager::DecrementSessionIoCount(Session* _session)
 {
 
 	long retval;
@@ -918,7 +895,7 @@ bool CWanManager::DecrementSessionIoCount(Session* _session)
 
 
 
-bool CWanManager::SendCompletionRoutine(Session* _session)
+bool CLanManager::SendCompletionRoutine(Session* _session)
 {
 	for (unsigned int i = 0; i < _session->sendCount; i++)
 	{
@@ -929,8 +906,6 @@ bool CWanManager::SendCompletionRoutine(Session* _session)
 		if (retNode == nullptr) __debugbreak();
 
 		if (retNode->_usageCount == 0) __debugbreak();
-
-		g_pSendTps[t_MyIndex]++;
 
 		retNode->DecrementUseCount();
 	}
@@ -953,7 +928,7 @@ bool CWanManager::SendCompletionRoutine(Session* _session)
 }
 
 
-bool CWanManager::RecvCompletionRoutine(Session* _session)
+bool CLanManager::RecvCompletionRoutine(Session* _session)
 {
 	int decodeRetval;
 	bool disconnected = false;
@@ -966,28 +941,7 @@ bool CWanManager::RecvCompletionRoutine(Session* _session)
 
 	while (1)
 	{
-
-		decodeRetval = _session->_recvBuffer->_ClientDecodePacket();
-
-		if (decodeRetval == static_cast<int>(CPacket::ErrorCode::INCOMPLETE_DATA_PACKET))
-		{
-			break;
-		}
-		else if (decodeRetval == static_cast<int>(CPacket::ErrorCode::INVALID_DATA_PACKET))
-		{
-			std::string errorMsg;
-			errorMsg = std::format("Packet Decode Error !!! SessionID [{}]", GetID(_session->_ID._ulong64));
-			_log.EnqueLog(errorMsg.c_str());
-
-			DecrementSessionIoCount(_session);
-			disconnected = true;
-			break;
-		}
-
-		g_pRecvTps[t_MyIndex]++;
-
 		SBuf = CPacket::Alloc();
-
 
 		if (_DequePacket(SBuf, _session) == false)
 		{
@@ -1045,18 +999,16 @@ bool CWanManager::RecvCompletionRoutine(Session* _session)
 	return true;
 }
 
-bool CWanManager::Start()
+bool CLanManager::Start()
 {
 	bool networkInit_retval;
 
-	_log.RegistMyFileName("WanServer");
+	_log.RegistMyFileName("LanServer");
 	_log.InitLogManager();
 
-	g_pRecvTps = new unsigned long long[_workerThreadCount];
-	g_pSendTps = new unsigned long long[_workerThreadCount];
 
 	InitSessionList(_sessionMaxCount);
-	
+
 	networkInit_retval = _NetworkInit();
 	if (networkInit_retval == false)
 	{
@@ -1072,19 +1024,19 @@ bool CWanManager::Start()
 }
 
 
-void CWanManager::RegistConcurrentCount(int pCount)
+void CLanManager::RegistConcurrentCount(int pCount)
 {
 	_concurrentCount = pCount;
 }
-void CWanManager::RegistSessionMaxCoiunt(int pCount)
+void CLanManager::RegistSessionMaxCoiunt(int pCount)
 {
 	_sessionMaxCount = pCount;
 }
-void CWanManager::RegistWorkerThreadCount(int pCount)
+void CLanManager::RegistWorkerThreadCount(int pCount)
 {
 	_workerThreadCount = pCount;
 }
-void CWanManager::RegistPortNum(int pPortNum)
+void CLanManager::RegistPortNum(int pPortNum)
 {
 	_portNum = pPortNum;
 }

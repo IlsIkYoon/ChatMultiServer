@@ -8,7 +8,7 @@ bool CCharacterKeyManager::InsertID(ULONG64 characterKey)
 	{
 		auto logMsg = std::format("Duplicated Character Key [{}]", characterKey);
 
-		NetWorkManager::_log.EnqueLog(logMsg.c_str());
+		CWanManager::_log.EnqueLog(logMsg.c_str());
 		return false;
 	}
 	if (_Key_uSet.size() >= _playerMaxCount)
@@ -16,7 +16,7 @@ bool CCharacterKeyManager::InsertID(ULONG64 characterKey)
 		__debugbreak();
 		auto logMsg = std::format("PlayerCount Full [{}]", characterKey);
 
-		NetWorkManager::_log.EnqueLog(logMsg.c_str());
+		CWanManager::_log.EnqueLog(logMsg.c_str());
 		return false;
 	}
 
@@ -33,7 +33,7 @@ bool CCharacterKeyManager::DeleteID(ULONG64 characterKey)
 	{
 		auto logMsg = std::format("Key is Not Exist !!! [{}]", characterKey);
 
-		NetWorkManager::_log.EnqueLog(logMsg.c_str());
+		CWanManager::_log.EnqueLog(logMsg.c_str());
 
 		__debugbreak();
 

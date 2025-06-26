@@ -6,7 +6,7 @@
 #include "Msg/ContentsPacket.h"
 
 
-class CLanServer : public NetWorkManager
+class CLanServer : public CWanManager
 {
 
 public:

@@ -12,11 +12,11 @@
 //-----------------------------------------------
 // 클라이언트 통신 전용 네트워크 매니저
 //-----------------------------------------------
-class CWanManager
+class CLanManager
 {
 public:
 
-	
+
 	//--------------------------------------------
 	//network Session 관리를 위한 변수
 	//--------------------------------------------
@@ -29,8 +29,8 @@ public:
 
 	int _sessionMaxCount;
 	long _sessionLoginCount;
-	
-	
+
+
 
 	//--------------------------------------------
 	// IOCP 변수
@@ -39,7 +39,7 @@ public:
 	int _workerThreadCount;
 	HANDLE _hIOCP;
 
-	
+
 	//---------------------------------------------
 	//쓰레드 관리를 위한 변수
 	//---------------------------------------------
@@ -47,8 +47,8 @@ public:
 	std::thread _acceptThread;
 
 	HANDLE _exitThreadEvent;
-	
-	
+
+
 	//---------------------------------------------
 	// 로그 관리를 하는 매니저
 	// 내부에서 로그 쓰레드 생성 및 큐에 있는 로그를 파일에 출력하는 역할
@@ -62,12 +62,12 @@ public:
 
 
 public:
-	CWanManager();
+	CLanManager();
 
 	//--------------------------------------------
 	// //todo//리소스 반환 및 저장
 	//--------------------------------------------
-	~CWanManager();
+	~CLanManager();
 
 private:
 
@@ -119,7 +119,7 @@ private:
 	// 에러라면 예외 처리를 내부에서 함
 	// 에러 발생시 true 반환
 	//--------------------------------------------
-	bool CheckGQCSError(bool retval, DWORD* recvdbytes, ULONG_PTR recvdkey , OVERLAPPED* overlapped ,DWORD errorno);
+	bool CheckGQCSError(bool retval, DWORD* recvdbytes, ULONG_PTR recvdkey, OVERLAPPED* overlapped, DWORD errorno);
 
 	void InitSessionList(int SessionCount);
 	//--------------------------------------------
@@ -185,10 +185,3 @@ public:
 
 };
 
-
-
-enum class SendStatus
-{
-	Idle = 0,
-	InProgress = 1
-};

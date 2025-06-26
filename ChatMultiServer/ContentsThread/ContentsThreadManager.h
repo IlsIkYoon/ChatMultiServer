@@ -9,13 +9,13 @@ public:
 	static int playerMaxCount;
 	HANDLE tickThread;
 
-	static NetWorkManager* ntManager;
+	static CWanManager* ntManager;
 	static CPlayerManager* playerList;
 	static CCharacterKeyManager* keyList;
 
 
 	CContentsThreadManager() = delete;
-	CContentsThreadManager(NetWorkManager* ntLib);
+	CContentsThreadManager(CWanManager* ntLib);
 	~CContentsThreadManager();
 
 	bool ReadConfig();

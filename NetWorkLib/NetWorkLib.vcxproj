@@ -213,8 +213,10 @@
     <ClInclude Include="Log\CpuUsage.h" />
     <ClInclude Include="Log\CrashDump.h" />
     <ClInclude Include="Log\Log.h" />
+    <ClInclude Include="Log\PdhManager.h" />
     <ClInclude Include="Log\Profiler.h" />
     <ClInclude Include="NetWorkLib_Unified.h" />
+    <ClInclude Include="NetworkManager\CLanManager.h" />
     <ClInclude Include="NetworkManager\NetWorkManager.h" />
     <ClInclude Include="ntPacketDefine.h" />
     <ClInclude Include="Parser\TextParser.h" />
@@ -229,8 +231,10 @@
     <ClCompile Include="Log\CpuUsage.cpp" />
     <ClCompile Include="Log\CrashDump.cpp" />
     <ClCompile Include="Log\Log.cpp" />
+    <ClCompile Include="Log\PdhManager.cpp" />
     <ClCompile Include="Log\Profiler.cpp" />
     <ClCompile Include="NetWorkLib.cpp" />
+    <ClCompile Include="NetworkManager\CLanManager.cpp" />
     <ClCompile Include="NetworkManager\NetWorkManager.cpp" />
     <ClCompile Include="Parser\TextParser.cpp" />
     <ClCompile Include="pch.cpp">

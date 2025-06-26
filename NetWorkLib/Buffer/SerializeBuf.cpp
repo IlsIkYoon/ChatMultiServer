@@ -342,6 +342,16 @@ int CPacket::_ClientDecodePacket()
 	return static_cast<int>(ErrorCode::INVALID_DATA_PACKET);
 }
 
+bool CPacket::InsertLen(unsigned short pLen)
+{
+	_front = 3;
+
+	memcpy(&_buf[_front], &pLen, sizeof(pLen));
+
+	return true;
+}
+
+
 //--------------------------------------------------------------------
 
 thread_local TMemoryPool<CPacket> CPacket::cLocalPool;

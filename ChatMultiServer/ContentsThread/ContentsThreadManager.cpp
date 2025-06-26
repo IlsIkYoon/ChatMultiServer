@@ -6,10 +6,10 @@
 
 int CContentsThreadManager::playerMaxCount;
 CPlayerManager* CContentsThreadManager::playerList;
-NetWorkManager* CContentsThreadManager::ntManager;
+CWanManager* CContentsThreadManager::ntManager;
 CCharacterKeyManager* CContentsThreadManager::keyList;
 
-CContentsThreadManager::CContentsThreadManager(NetWorkManager* ntLib)
+CContentsThreadManager::CContentsThreadManager(CWanManager* ntLib)
 {
 	ntManager = ntLib;
 	playerMaxCount = 0;

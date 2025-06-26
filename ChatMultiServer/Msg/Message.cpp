@@ -162,7 +162,7 @@ void SendChatResPacket(ULONG64 srcID, ULONG64 destID, CPacket* packet)
 	WORD Type;
 	INT64 AccountNo;
 
-	playerIndex = NetWorkManager::GetIndex(destID);
+	playerIndex = CWanManager::GetIndex(destID);
 	localPlayerList = contentsManager.playerList->playerArr;
 
 	Type = en_PACKET_CS_CHAT_RES_MESSAGE;
@@ -225,7 +225,7 @@ bool HandleLoginMessage(CPacket* message, ULONG64 sessionID)
 	char SessionKey[65]; //인증 토큰
 	
 	localPlayerList = contentsManager.playerList->playerArr;
-	playerIndex = NetWorkManager::GetIndex(sessionID);
+	playerIndex = CWanManager::GetIndex(sessionID);
 	//------------------------------------
 	// 오류 체크
 	//------------------------------------
@@ -303,7 +303,7 @@ bool HandleSectorMoveMessage(CPacket* message, ULONG64 sessionID)
 	WORD SectorY;
 
 	localPlayerList = contentsManager.playerList->playerArr;
-	playerIndex = NetWorkManager::GetIndex(sessionID);
+	playerIndex = CWanManager::GetIndex(sessionID);
 
 	if (message->GetDataSize() != sizeof(AccountNo) + sizeof(SectorX) + sizeof(SectorY))
 	{
@@ -383,7 +383,7 @@ bool HandleChatMessage(CPacket* message, ULONG64 sessionID)
 	Player* localPlayerList;
 
 	localPlayerList = contentsManager.playerList->playerArr;
-	playerIndex = NetWorkManager::GetIndex(sessionID);
+	playerIndex = CWanManager::GetIndex(sessionID);
 
 	*message >> AccountNo;
 	*message >> MessageLen;
@@ -456,7 +456,7 @@ void SendSectorMoveResPacket(ULONG64 sessionID)
 	WORD SectorY;
 
 	localPlayerList = contentsManager.playerList->playerArr;
-	playerIndex = NetWorkManager::GetIndex(sessionID);
+	playerIndex = CWanManager::GetIndex(sessionID);
 
 	Type = en_PACKET_CS_CHAT_RES_SECTOR_MOVE;
 	AccountNo = localPlayerList[playerIndex].accountNo;

@@ -2,7 +2,7 @@
 #include "Resource/MonitoringServerResource.h"
 
 
-class CLanServer : public NetWorkManager
+class CLanServer : public CLanManger
 {
 	virtual void _OnMessage(CPacket* SBuf, ULONG64 ID) override;
 	virtual void _OnAccept(ULONG64 ID) override;

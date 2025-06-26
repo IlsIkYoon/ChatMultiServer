@@ -43,9 +43,6 @@
 // --디버그 옵션--
 //#define __LOGDEBUG__ // 
 #define __DEBUG__ //
-//#define __LFDEBUG__ //락프리 메모리 디버그 옵션
-
-//#define __JOBQLOCKFREEQ_
 
 //-----------------------------------------------
 // Contents에서 따로 Regist 안했을 시에 동작할 기본 값
@@ -83,11 +80,5 @@
 
 #define KEY_ESC 27
 
-/*
-#ifdef __PROFILE__
-#include "Profiler.h"
-#endif
-
-*/
 
 #endif //PCH_H
