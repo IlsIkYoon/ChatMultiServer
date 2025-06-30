@@ -1,40 +1,35 @@
 #include "Network.h"
 #include "Contents/ContentsPacket.h"
 
-extern LFreeQ<CPacket*> g_ContentsJobQ;
+extern LFreeQ<Job> g_ContentsJobQ;
 extern long long g_playerCount;
 
 
 void CWanServer::_OnMessage(CPacket* message, ULONG64 ID)
 {
-	unsigned int enqueResult;
-	ULONG64 localID = GetID(ID);
-
-	CPacket* EnqueMessage = CPacket::Alloc();
-
-	*EnqueMessage << ID;
-	EnqueMessage->PutData(message->GetDataPtr(), message->GetDataSize());
-	g_ContentsJobQ.Enqueue(EnqueMessage);
+	Job enqueMessage;
+	enqueMessage.ID = ID;
+	enqueMessage.packet = message;
+	message->IncrementUseCount(); // 넣었다는 의미
+	g_ContentsJobQ.Enqueue(enqueMessage);
 }
 
 
 void CWanServer::_OnAccept(ULONG64 ID)
 {
-	unsigned int enqueResult;
+	Job enqueMessage;
 	CPacket* CreatePlayerMsg;
-	stHeader msgHeader;
 
-
-	//플레이어 카운트가 맥스인지를 확인하고
-	//맥스라면 큐에 넣어줌
-
-	msgHeader.type = stJob_CreatePlayer;
+	WORD type = stJob_CreatePlayer;
 
 	CreatePlayerMsg = CPacket::Alloc();
-
+	*CreatePlayerMsg << type;
 	*CreatePlayerMsg << ID;
-	CreatePlayerMsg->PutData((char*)&msgHeader, sizeof(msgHeader));
-	g_ContentsJobQ.Enqueue(CreatePlayerMsg);
+
+	enqueMessage.ID = SERVER_ID;
+	enqueMessage.packet = CreatePlayerMsg;
+
+	g_ContentsJobQ.Enqueue(enqueMessage);
 
 	InterlockedIncrement64(&g_playerCount);
 }
@@ -47,17 +42,20 @@ void CWanServer::_OnSend(ULONG64 ID)
 }
 void CWanServer::_OnDisConnect(ULONG64 ID)
 {
-
+	Job enqueMessage;
 	CPacket* DeletePlayerMsg;
-	stHeader msgHeader;
+
+	WORD type = stJob_DeletePlayer;
 
 	DeletePlayerMsg = CPacket::Alloc();
-	msgHeader.type = stJob_DeletePlayer;
 
+	*DeletePlayerMsg << type;
 	*DeletePlayerMsg << ID;
-	DeletePlayerMsg->PutData((char*)&msgHeader, sizeof(msgHeader));
 
-	g_ContentsJobQ.Enqueue(DeletePlayerMsg);
+	enqueMessage.ID = SERVER_ID;
+	enqueMessage.packet = DeletePlayerMsg;
+
+	g_ContentsJobQ.Enqueue(enqueMessage);
 
 	InterlockedDecrement64(&g_playerCount);
 }

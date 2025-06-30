@@ -9,7 +9,7 @@ class CContentsManager
 	CWanServer* networkManager;
 	CAgentManager* agentManager;
 	char clientLoginToken[33];
-
+	DWORD prevTime;
 
 public:
 	CContentsManager() = delete;
@@ -23,8 +23,9 @@ public:
 	bool HandeClientLoginMsg(CPacket* message, ULONG64 ID);
 
 	bool SendClientLoginResMsg(ULONG64 ID);
+	bool SendMonitorServerData();
 
-
+	bool MakeCSUpdateMsg(CPacket* msg, BYTE entry, int Value);
 	bool DeleteAgent(ULONG64 ID);
 
 };

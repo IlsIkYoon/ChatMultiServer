@@ -26,6 +26,7 @@ public:
 	BYTE Status;
 	int ServerNo;
 	ULONG64 sessionID;
+	long bResCreate;
 
 	CMonitorAgent()
 	{
@@ -33,6 +34,7 @@ public:
 		Status = static_cast<BYTE>(enAgentStatus::en_IDLE);
 		ServerNo = NO_SERVER;
 		sessionID = 0;
+		bResCreate = 0;
 	}
 
 	bool Clear()
@@ -82,6 +84,7 @@ public:
 			g_NetworkManager->SendPacket(it, sendMsg);
 		}
 
+		g_NetworkManager->EnqueSendRequest();
 		return true;
 	}
 

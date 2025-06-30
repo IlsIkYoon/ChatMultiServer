@@ -669,7 +669,7 @@ void CLanManager::EnqueLog(const char* string)
 
 void CLanManager::EnqueLog(std::string& string)
 {
-	_log.EnqueLog(string.c_str());
+	_log.EnqueLog(string);
 }
 
 
@@ -929,7 +929,6 @@ bool CLanManager::SendCompletionRoutine(Session* _session)
 
 bool CLanManager::RecvCompletionRoutine(Session* _session)
 {
-	int decodeRetval;
 	bool disconnected = false;
 	CPacket* SBuf;
 

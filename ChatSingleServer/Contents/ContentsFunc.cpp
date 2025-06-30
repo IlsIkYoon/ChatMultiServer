@@ -5,7 +5,7 @@
 #include "Sector/Sector.h"
 #include "Network/Network.h"
 
-LFreeQ<CPacket*> g_ContentsJobQ;
+LFreeQ<Job> g_ContentsJobQ;
 extern Player* g_PlayerArr;
 
 extern std::list<Player*> Sector[dfRANGE_MOVE_RIGHT / SECTOR_RATIO][dfRANGE_MOVE_BOTTOM / SECTOR_RATIO];
@@ -82,34 +82,31 @@ unsigned int ContentsThreadFunc(void*)
 
 bool HandleContentJob()
 {
-	unsigned int dequeResult;
-	CPacket* JobMessage;
-	stHeader contentsHeader;
-	CPacket* msgPayload;
+	Job currentJob;
+	WORD contentsType;
 	ULONG64 userId;
+	CPacket* JobMessage;
 
-	ULONG_PTR CPacketPtr;
+	currentJob = g_ContentsJobQ.Dequeue();
 
-	JobMessage = g_ContentsJobQ.Dequeue();
+	JobMessage = currentJob.packet;
+	userId = currentJob.ID;
 
-
-	if (JobMessage->GetDataSize() < sizeof(userId))
+	if (JobMessage->GetDataSize() < sizeof(WORD))
 	{
-		__debugbreak();
+		std::string logString;
+		logString += "Incomplete Packet Error || ID : ";
+		logString += std::to_string(userId);
+
+		pLib->EnqueLog(logString);
+		pLib->DisconnectSession(userId);
+		JobMessage->DecrementUseCount();
+		return false;
 	}
 
-	JobMessage->PopFrontData(sizeof(userId), (char*) & userId);
+		*JobMessage >> contentsType;
 
-
-		if (JobMessage->GetDataSize() < sizeof(contentsHeader))
-		{
-			//데이터 크기가 안 맞음 //Len만큼도 안 왔다
-			__debugbreak();
-		}
-
-		JobMessage->PopFrontData(sizeof(contentsHeader), (char*)&contentsHeader);
-
-		switch (contentsHeader.type)
+		switch (contentsType)
 		{
 		case stPacket_Client_Chat_MoveStart:
 			HandleMoveStartMsg(JobMessage, userId);
@@ -131,18 +128,26 @@ bool HandleContentJob()
 			HandleChatEndMsg(userId);
 			break;
 		case stJob_CreatePlayer:
-			HandleCreatePlayer(userId);
+			HandleCreatePlayer(JobMessage, userId);
 			break;
 
 		case stJob_DeletePlayer:
-			HandleDeletePlayer(userId);
+			HandleDeletePlayer(JobMessage, userId);
 			break;
 
 		default:
-			pLib->DisconnectSession(userId);
-			__debugbreak(); //todo//나중엔 지워야 함//
-			break;
+		{
+			std::string logString;
+			logString += "Packet Type Error || ID : ";
+			logString += std::to_string(userId);
 
+			pLib->EnqueLog(logString);
+
+			pLib->DisconnectSession(userId);
+			JobMessage->DecrementUseCount();
+			return false;
+		}
+			break;
 		}
 
 	JobMessage->DecrementUseCount();

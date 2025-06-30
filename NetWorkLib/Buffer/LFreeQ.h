@@ -71,7 +71,7 @@ public:
 		_head = (Node*)_mPool.Alloc();
 
 		_head->_next = (Node*)this;
-		_head->_data = 0;
+		_head->_data = T{};
 		_tail = _head;
 		_size = 0;
 		_bitCount = 0;
@@ -266,7 +266,7 @@ public:
 		if (localSize < 0)
 		{
 			InterlockedIncrement(&_size);
-			return (T) nullptr;
+			return static_cast<T>(0);
 		}
 
 

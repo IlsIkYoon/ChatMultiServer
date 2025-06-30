@@ -99,11 +99,32 @@ bool HandleMoveStartMsg(CPacket* payLoad, ULONG64 id)
 	*msg >> x;
 	*msg >> y;
 	
-	if (direction > 7)//direction max값
+
+	if (direction > 7)//direction max값보다 큰 값이 왔음
 	{
-		__debugbreak();
+		std::string logString;
+		logString = "MoveStart Message - Direction Error || value : ";
+		logString += std::to_string(direction);
+
+		pLib->EnqueLog(logString);
+
+		pLib->DisconnectSession(id);
+		return false;
 	}
 
+	if (x >= dfRANGE_MOVE_RIGHT || x < dfRANGE_MOVE_LEFT || y >= dfRANGE_MOVE_BOTTOM || y < dfRANGE_MOVE_TOP)
+	{
+		std::string logString;
+		logString = "MoveStart Message - x or y value Error || x : ";
+		logString += std::to_string(x);
+		logString += " y : ";
+		logString += std::to_string(y);
+
+		pLib->EnqueLog(logString);
+
+		pLib->DisconnectSession(id);
+		return false;
+	}
 
 	if (g_PlayerArr[playerIndex].GetID() != id || g_PlayerArr[playerIndex].isAlive() == false)
 	{
@@ -134,9 +155,29 @@ bool HandleMoveStopMsg(CPacket* payLoad, ULONG64 id)
 	*msg >> y;
 
 
-	if (direction > 7)//direction max값
+	if (direction > 7)//direction max값보다 큰 값이 왔음
 	{
-		__debugbreak();
+		std::string logString;
+		logString = "MoveStop Message - Direction Error || value : ";
+		logString += std::to_string(direction);
+
+		pLib->EnqueLog(logString);
+
+		pLib->DisconnectSession(id);
+		return false;
+	}
+	if (x >= dfRANGE_MOVE_RIGHT || x < dfRANGE_MOVE_LEFT || y >= dfRANGE_MOVE_BOTTOM || y < dfRANGE_MOVE_TOP)
+	{
+		std::string logString;
+		logString = "MoveStop Message - x or y value Error || x : ";
+		logString += std::to_string(x);
+		logString += " y : ";
+		logString += std::to_string(y);
+
+		pLib->EnqueLog(logString);
+
+		pLib->DisconnectSession(id);
+		return false;
 	}
 
 	playerIndex = pLib->GetIndex(id);
@@ -210,13 +251,10 @@ bool HandleChatEndMsg(ULONG64 id)
 {
 	InterlockedIncrement(&g_ChatEndCount);
 
-
-
 	int playerIndex = pLib->GetIndex(id);
 
 	if (g_PlayerArr[playerIndex].GetID() != id || g_PlayerArr[playerIndex].isAlive() == false)
 	{
-		__debugbreak();
 		return false;
 	}
 
@@ -230,41 +268,63 @@ bool HandleChatEndMsg(ULONG64 id)
 	pLib->SendPacket(id, sendMsg);
 	sendMsg->DecrementUseCount();
 
-
-
 	return true;
 }
 
 
-bool HandleCreatePlayer(ULONG64 id)
+bool HandleCreatePlayer(CPacket* JobMessage, ULONG64 id)
 {
-	InterlockedIncrement(&g_CreateMsgCount);
+
 	int playerIndex;
-	playerIndex = pLib->GetIndex(id);
+	ULONG64 playerID;
 
-
-	/*
-	if (g_PlayerLogInCount >= PLAYERMAXCOUNT)
+	if (id != SERVER_ID)
 	{
-		EnqueueWaitingPlayerQ(id);
+		std::string logString;
+		logString = "Client sent create Message!!! || ID : ";
+		logString += std::to_string(id);
+
+		pLib->EnqueLog(logString);
+
+		pLib->DisconnectSession(id);
 		return false;
 	}
 
-	*/
-	g_PlayerArr[playerIndex].Init(id);
+	*JobMessage >> playerID;
 
-	ContentsSendCreatePlayerPacket(id);
+	InterlockedIncrement(&g_CreateMsgCount);
+	playerIndex = pLib->GetIndex(playerID);
+
+
+	g_PlayerArr[playerIndex].Init(playerID);
+
+	ContentsSendCreatePlayerPacket(playerID);
 
 	return true;
 }
 
-bool HandleDeletePlayer(ULONG64 id)
+bool HandleDeletePlayer(CPacket* JobMessage, ULONG64 id)
 {
-	InterlockedIncrement(&g_DeleteMsgCount);
 	int playerIndex;
-	playerIndex = pLib->GetIndex(id);
+	ULONG64 playerID;
 
-	if (g_PlayerArr[playerIndex].GetID() != id || g_PlayerArr[playerIndex].isAlive() == false)
+	if (id != SERVER_ID)
+	{
+		std::string logString;
+		logString = "Client sent delete Message!!! || ID : ";
+		logString += std::to_string(id);
+
+		pLib->EnqueLog(logString);
+		pLib->DisconnectSession(id);
+		return false;
+	}
+
+	*JobMessage >> playerID;
+
+	InterlockedIncrement(&g_DeleteMsgCount);
+	playerIndex = pLib->GetIndex(playerID);
+
+	if (g_PlayerArr[playerIndex].GetID() != playerID || g_PlayerArr[playerIndex].isAlive() == false)
 	{
 		if (g_PlayerArr[playerIndex]._status == static_cast<BYTE>(Player::STATUS::WAIT_CREATE))
 		{
@@ -272,12 +332,16 @@ bool HandleDeletePlayer(ULONG64 id)
 		}
 		else
 		{
-			pLib->EnqueLog("Duplicate delete!");
+			std::string logString;
+			logString = "Duplicate delete || ID :  ";
+			logString += std::to_string(playerID);
+
+			pLib->EnqueLog(logString);
 		}
 		return false;
 	}
 	
-	CheckSector(id);
+	CheckSector(playerID);
 
 	int SectorX = g_PlayerArr[playerIndex].GetX() / SECTOR_RATIO;
 	int SectorY = g_PlayerArr[playerIndex].GetY() / SECTOR_RATIO;

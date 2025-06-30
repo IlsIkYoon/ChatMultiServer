@@ -536,7 +536,15 @@ bool CWanManager::SendPacket(ULONG64 playerId, CPacket* buf)
 
 	sendPacket->_ClientEncodePacket();
 
-	_sessionList->GetSession(localIndex)._sendBuffer.Enqueue(sendPacket);
+	if (_session->_sendBuffer.GetSize() > 1000)
+	{
+		DisconnectSession(_session->_ID._ulong64);
+		DecrementSessionIoCount(_session);
+		sendPacket->DecrementUseCount();
+		return false;
+	}
+
+	_session->_sendBuffer.Enqueue(sendPacket);
 
 
 	DecrementSessionIoCount(_session);
@@ -559,7 +567,6 @@ void CWanManager::_DisconnectSession(ULONG64 sessionID)
 		return;
 	}
 
-
 	_OnDisConnect(sessionID);
 
 	closesocket(_sessionList->GetSession(localIndex)._socket);
@@ -578,7 +585,6 @@ void CWanManager::_DisconnectSession(Session* _session)
 {
 	if (InterlockedCompareExchange64(&_session->_releaseIOFlag._all, SESSION_DISCONNECTING, SESSION_CLOSABLE) != SESSION_CLOSABLE)
 	{
-		//그 사이에 누가 iocount를 올리고 작업에 들어갔음 ?
 		return;
 	}
 
@@ -591,7 +597,6 @@ void CWanManager::_DisconnectSession(Session* _session)
 	InterlockedIncrement(&g_LogoutSessionCount);
 
 	_sessionList->Delete(_session->_ID.GetIndex());
-	
 }
 bool CWanManager::DisconnectSession(ULONG64 playerID)
 {
@@ -688,7 +693,7 @@ void CWanManager::EnqueLog(const char* string)
 
 void CWanManager::EnqueLog(std::string& string)
 {
-	_log.EnqueLog(string.c_str());
+	_log.EnqueLog(string);
 }
 
 
@@ -840,7 +845,6 @@ bool CWanManager::RequestSessionAbort(ULONG64 playerID)
 		return false;
 	}
 
-
 	if (_session->_ID._ulong64 != playerID)
 	{
 		DecrementSessionIoCount(_session);
@@ -850,7 +854,7 @@ bool CWanManager::RequestSessionAbort(ULONG64 playerID)
 	InterlockedExchange(&_session->_status, static_cast<long>(Session::Status::MarkForDeletion));
 	CanelIoExResult = CancelIoEx((HANDLE)_session->_socket, NULL);
 
-	if (CanelIoExResult == false) //등록된 io가 없었음
+	if (CanelIoExResult == false)
 	{
 		DecrementSessionIoCount(_session);
 		return false;
@@ -878,7 +882,6 @@ void CWanManager::DisconnectAllSessions()
 	}
 
 	EnqueLog("DisConnect All session Clear");
-
 }
 
 
@@ -973,7 +976,7 @@ bool CWanManager::RecvCompletionRoutine(Session* _session)
 		{
 			std::string errorMsg;
 			errorMsg = std::format("Packet Decode Error !!! SessionID [{}]", GetID(_session->_ID._ulong64));
-			_log.EnqueLog(errorMsg.c_str());
+			_log.EnqueLog(errorMsg);
 
 			DecrementSessionIoCount(_session);
 			disconnected = true;

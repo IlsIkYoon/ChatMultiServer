@@ -2,7 +2,7 @@
 #include "Resource/CommonProtocol.h"
 
 CContentsManager* g_ContentsManager;
-
+extern CPdhManager g_PDH;
 
 
 bool CContentsManager::HandleContentsMsg(CPacket* message, ULONG64 ID)
@@ -65,6 +65,9 @@ bool CContentsManager::HandleServerLoginMsg(CPacket* message, ULONG64 ID)
 	(*agentManager)[agentIndex].sessionID = ID;
 
 	agentManager->RegistServer(ID);
+
+	printf("Server Login! \n");
+
 	return true;
 }
 bool CContentsManager::HandleDataUpdateMsg(CPacket* message, ULONG64 ID)
@@ -82,7 +85,6 @@ bool CContentsManager::HandleDataUpdateMsg(CPacket* message, ULONG64 ID)
 		return false;
 	}
 
-
 	AgentIndex = CWanServer::GetIndex(ID);
 
 	*message >> DataType;
@@ -90,7 +92,7 @@ bool CContentsManager::HandleDataUpdateMsg(CPacket* message, ULONG64 ID)
 	*message >> TimeStamp;
 
 	//---------------------------------------------------
-	// 메세지 예외처리 //todo//
+	// 메세지 예외처리
 	//---------------------------------------------------
 	if (DataType > 44)
 	{
@@ -98,7 +100,6 @@ bool CContentsManager::HandleDataUpdateMsg(CPacket* message, ULONG64 ID)
 		return false;
 	}
 	
-
 	//여기까지가 Message Dequeue;
 
 	WORD msgType;
@@ -116,7 +117,7 @@ bool CContentsManager::HandleDataUpdateMsg(CPacket* message, ULONG64 ID)
 
 	agentManager->SendAllClient(sendMsg);
 
-	message->DecrementUseCount();
+	SendMonitorServerData();
 	sendMsg->DecrementUseCount();
 
 	return true;
@@ -132,19 +133,22 @@ bool CContentsManager::HandeClientLoginMsg(CPacket* message, ULONG64 ID)
 
 	if (strcmp(loginToken, clientLoginToken) != 0)
 	{
+		printf("Token Error ! \n");
 		networkManager->DisconnectSession(ID);
 		return false;
 	}
 
 	agentIndex = CWanServer::GetIndex(ID);
-	(*agentManager)[agentIndex].Status = static_cast<BYTE>(enAgentStatus::en_Alive);
 	(*agentManager)[agentIndex].Type = static_cast<BYTE>(enAgentType::en_Server);
+	(*agentManager)[agentIndex].Status = static_cast<BYTE>(enAgentStatus::en_Alive);
 	(*agentManager)[agentIndex].sessionID = ID;
-
 	agentManager->RegistClient(ID);
-	SendClientLoginResMsg(ID);
 
-	message->DecrementUseCount();
+	SendClientLoginResMsg(ID);
+	InterlockedExchange(&(*agentManager)[agentIndex].bResCreate, 1);
+
+
+	printf("ClientLogin!\n");
 
 	return true;
 }
@@ -165,17 +169,92 @@ bool CContentsManager::SendClientLoginResMsg(ULONG64 ID)
 	*sendMsg << LoginResult;
 
 	networkManager->SendPacket(ID, sendMsg);
+	networkManager->EnqueSendRequest();
 
 	sendMsg->DecrementUseCount();
 
 	return true;
 }
 
-
-
 bool CContentsManager::DeleteAgent(ULONG64 ID)
 {
 	unsigned short agentIndex = CWanServer::GetIndex(ID);
 	(*agentManager)[agentIndex].Clear();
+	return true;
+}
+
+bool CContentsManager::SendMonitorServerData()
+{
+	DWORD nowTime = timeGetTime();
+
+	if (nowTime - prevTime < 1000)
+	{
+		return false;
+	}
+
+	CPacket* MSG_processorTotal;
+	CPacket* MSG_nonPagedTotal;
+	CPacket* MSG_availableMem;
+	CPacket* MSG_networkRecv;
+	CPacket* MSG_networkSend;
+
+	double processorCpuTotal;
+	double nonPagedTotal;
+	double availableMem;
+	double networkRecv;
+	double networkSend;
+
+	g_PDH.GetCpuData(&processorCpuTotal, NULL, NULL);
+	g_PDH.GetMemoryData(nullptr, nullptr, &nonPagedTotal, &availableMem);
+	g_PDH.GetEthernetData(&networkRecv, &networkSend);
+	
+	MSG_processorTotal = CPacket::Alloc();
+	MSG_nonPagedTotal = CPacket::Alloc();
+	MSG_availableMem = CPacket::Alloc();
+	MSG_networkRecv = CPacket::Alloc();
+	MSG_networkSend = CPacket::Alloc();
+	
+	MakeCSUpdateMsg(MSG_processorTotal, dfMONITOR_DATA_TYPE_MONITOR_CPU_TOTAL, (int)processorCpuTotal);
+	MakeCSUpdateMsg(MSG_nonPagedTotal, dfMONITOR_DATA_TYPE_MONITOR_NONPAGED_MEMORY, (int)(nonPagedTotal / 1024 / 1024));
+	MakeCSUpdateMsg(MSG_availableMem, dfMONITOR_DATA_TYPE_MONITOR_AVAILABLE_MEMORY, (int)availableMem);
+	MakeCSUpdateMsg(MSG_networkRecv, dfMONITOR_DATA_TYPE_MONITOR_NETWORK_RECV, (int)networkRecv);
+	MakeCSUpdateMsg(MSG_networkSend, dfMONITOR_DATA_TYPE_MONITOR_NETWORK_SEND, (int)networkSend);
+
+	agentManager->SendAllClient(MSG_processorTotal);
+	agentManager->SendAllClient(MSG_nonPagedTotal);
+	agentManager->SendAllClient(MSG_availableMem);
+	agentManager->SendAllClient(MSG_networkRecv);
+	agentManager->SendAllClient(MSG_networkSend);
+
+	MSG_processorTotal->DecrementUseCount();
+	MSG_nonPagedTotal->DecrementUseCount();
+	MSG_availableMem->DecrementUseCount();
+	MSG_networkRecv->DecrementUseCount();
+	MSG_networkSend->DecrementUseCount();
+
+
+
+	prevTime = nowTime;
+
+	return true;
+}
+
+bool CContentsManager::MakeCSUpdateMsg(CPacket* msg, BYTE dataType, int Value)
+{
+	WORD type;
+	int nowTime;
+	BYTE serverNo;
+
+
+	type = en_PACKET_CS_MONITOR_TOOL_DATA_UPDATE;
+	nowTime = (int)time(nullptr);
+	serverNo = MONITOR_SERVERNO;
+
+	*msg << type;
+	*msg << serverNo;
+	*msg << dataType;
+	*msg << Value;
+	*msg << nowTime;
+
 	return true;
 }

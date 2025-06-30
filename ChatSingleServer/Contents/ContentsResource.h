@@ -6,6 +6,8 @@
 
 #define __JOBQLOCKFREEQ_
 
+#define SERVER_ID 0xffffffffffffffff
+
 #define NetWorkProtocol 0xa9
 
 #define SECTOR_RATIO 100 //100분의 1 비율 6400에서 나눠서 떨어지는 수를 하는게 좋다

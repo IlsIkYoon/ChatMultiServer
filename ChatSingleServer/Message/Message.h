@@ -41,11 +41,11 @@ bool HandleChatEndMsg(ULONG64 id);
 //------------------------------------------------------
 // Create 메세지를 받아서 실제로 생성해주는 함수
 //------------------------------------------------------
-bool HandleCreatePlayer(ULONG64 id);
+bool HandleCreatePlayer(CPacket* JobMessage, ULONG64 id);
 //------------------------------------------------------
 // Delete 메세지를 받아서 delete작업을 해주는 함수
 //------------------------------------------------------
-bool HandleDeletePlayer(ULONG64 id);
+bool HandleDeletePlayer(CPacket* JobMessage, ULONG64 id);
 
 
 

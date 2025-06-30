@@ -257,7 +257,6 @@ void ExitAllProcess()
 
 void UpdateMonitorData()
 {
-	long long localAcceptTPS = InterlockedExchange(&g_AcceptTps, 0);
 	long long localRECVTPS = 0;
 	long long localSENDTPS = 0;
 	int localFrame = 0;
@@ -266,6 +265,10 @@ void UpdateMonitorData()
 	double ProcessNonPaged = 0;
 	double TotalNonPaged = 0;
 	double Available = 0;
+	long long localAcceptTPS = InterlockedExchange(&g_AcceptTps, 0);
+
+
+
 	for (int i = 0; i < pLib->_workerThreadCount; i++)
 	{
 		localRECVTPS += InterlockedExchange(&g_pRecvTps[i], 0);
@@ -275,17 +278,13 @@ void UpdateMonitorData()
 
 	g_PDH.GetMemoryData(&PrivateMem, &ProcessNonPaged, &TotalNonPaged, &Available);
 	
-
-	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_GAME_GAME_THREAD_FPS, localFrame);
-	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_GAME_ACCEPT_TPS, localAcceptTPS);
-	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_GAME_PACKET_RECV_TPS, localRECVTPS);
-	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_GAME_PACKET_SEND_TPS, localSENDTPS);
-	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_GAME_SESSION, pLib->_sessionLoginCount);
-	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_GAME_GAME_PLAYER, g_PlayerLogInCount);
-	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_MONITOR_CPU_TOTAL, localProcessorTotal);
-	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_MONITOR_NONPAGED_MEMORY, (int)TotalNonPaged);
-	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_MONITOR_AVAILABLE_MEMORY, (int)Available);
-	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_GAME_SERVER_MEM, (int)PrivateMem);
-
-
+	CPUUsage.UpdateCpuTime();
+	localProcessorTotal = (int)CPUUsage.ProcessorTotal();
+	
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_SERVER_RUN, 1);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_SERVER_CPU, localProcessorTotal);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_SERVER_MEM, PrivateMem / 1024 / 1024);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_SESSION, pLib->_sessionLoginCount);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_PLAYER, g_PlayerLogInCount);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_UPDATE_TPS, localRECVTPS);
 }
