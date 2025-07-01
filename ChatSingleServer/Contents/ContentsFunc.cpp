@@ -35,7 +35,7 @@ DWORD g_sec;
 
 unsigned int ContentsThreadFunc(void*)
 {
-
+	unsigned long long frameCount = 0;
 	InitContentsResource();
 
 	DWORD startTime = timeGetTime();
@@ -47,6 +47,7 @@ unsigned int ContentsThreadFunc(void*)
 
 	while (1)
 	{
+		frameCount++;
 		DWORD currentTime = timeGetTime();
 		DWORD deltaTime = currentTime - g_prevFrameTime;
 		DWORD deltaCount = deltaTime / FrameSec;
@@ -59,7 +60,10 @@ unsigned int ContentsThreadFunc(void*)
 
 		UpdateContentsLogic(g_fixedDeltaTime);
 
-		pLib->EnqueSendRequest();
+		if (frameCount % 4 == 0)
+		{
+			pLib->EnqueSendRequest();
+		}
 
 		DWORD logicTime = timeGetTime() - currentTime;
 

@@ -60,7 +60,6 @@ extern LFreeQ<Job> g_ContentsJobQ;
 void PrintSendBufferPool();
 void PrintSerializePool();
 void PrintSessionCount();
-void PrintMessageCount();
 void PrintConsolMenu();
 void PrintfCpuUsage();
 void PrintConsolAll();
@@ -215,7 +214,6 @@ void PrintfCpuUsage()
 
 void PrintConsolAll()
 {
-	PrintMessageCount();
 	PrintSerializePool();
 	PrintSessionCount();
 	PrintfCpuUsage();
@@ -266,6 +264,6 @@ void UpdateMonitorData()
 	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_UPDATE_TPS, (int)localRECVTPS);
 	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_PACKET_POOL, localPacketPoolTps);
 	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_UPDATEMSG_POOL, jobSize);
-
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_GAME_ACCEPT_TPS, localAcceptTPS);
 	
 }
