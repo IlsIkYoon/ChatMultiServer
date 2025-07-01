@@ -13,9 +13,6 @@ int g_concurrentCount;
 int g_workerThreadCount;
 int g_maxSessionCount;
 
-
-
-unsigned long long g_SessionTotalCreateCount;
 unsigned long long g_PlayerTotalCreateCount;
 unsigned long long g_LoginSessionCount;
 unsigned long long g_LogoutSessionCount;
@@ -432,16 +429,10 @@ bool CWanManager::_SendPost(Session* _session)
 	{	
 		if (errCode == 10054 || errCode == 10053 || errCode == 10004)
 		{
-			std::string error;
-			error = "WSA Send Error || ErrorCode : ";
-			error += std::to_string(errCode);
-			error += "session ID : ";
-			error += std::to_string(_session->_ID._ulong64);
-			EnqueLog(error);
 			DecrementSessionIoCount(_session);
 		}
 		else {
-			printf("GetLastError : %d\n", GetLastError());
+			printf("GetLastError : %d\n", errCode);
 			__debugbreak();
 		}
 	}

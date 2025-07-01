@@ -293,7 +293,6 @@ public:
 			delete rpos;
 			_msize--;
 		}
-		printf("Thread %d Á¾·á\n", GetCurrentThreadId());
 	}
 
 	inline LONG GetSize()

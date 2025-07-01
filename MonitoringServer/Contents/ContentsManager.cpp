@@ -1,8 +1,10 @@
 #include "ContentsManager.h"
 #include "Resource/CommonProtocol.h"
+#include "DBConnector/DBConnector.h"
 
 CContentsManager* g_ContentsManager;
 extern CPdhManager g_PDH;
+extern CDBManager* g_DBManager; 
 
 
 bool CContentsManager::HandleContentsMsg(CPacket* message, ULONG64 ID)
@@ -44,7 +46,8 @@ bool CContentsManager::HandleContentsMsg(CPacket* message, ULONG64 ID)
 CContentsManager::CContentsManager(CWanServer* pNetworkManager)
 {
 	networkManager = pNetworkManager;
-	
+	prevTime = 0;
+	dbSavetime = 0;
 	agentManager = new CAgentManager(networkManager->_sessionMaxCount);
 	strcpy_s(clientLoginToken, "ajfw@!cv980dSZ[fje#@fdj123948djf");
 
@@ -103,7 +106,8 @@ bool CContentsManager::HandleDataUpdateMsg(CPacket* message, ULONG64 ID)
 	//여기까지가 Message Dequeue;
 
 	WORD msgType;
-	serverNo = (*agentManager)[AgentIndex].ServerNo;
+	CMonitorAgent* currentAgent = &(*agentManager)[AgentIndex];
+	serverNo = currentAgent->ServerNo;
 
 	CPacket* sendMsg = CPacket::Alloc();
 
@@ -115,9 +119,90 @@ bool CContentsManager::HandleDataUpdateMsg(CPacket* message, ULONG64 ID)
 	*sendMsg << DataValue;
 	*sendMsg << TimeStamp;
 
+	//평균값 구해서 등록해놓기
+	auto it = currentAgent->datatypeAverage_Map.find(DataType);
+
+	if (it != currentAgent->datatypeAverage_Map.end()) //이미 등록이 되어 있었다면
+	{
+		auto& dataStat = it->second;
+
+		int currentValue = DataValue;
+		if (dataStat.max < DataValue)
+		{
+			dataStat.max = DataValue;
+		}
+		else if (dataStat.min > DataValue)
+		{
+			dataStat.min = DataValue;
+		}
+
+
+		int prevCount = dataStat.count;
+		int prevAverage = dataStat.average;
+		int prevTotal = prevCount * prevAverage;
+
+		int nextTotal = prevTotal + currentValue;
+		int nextCount = prevCount + 1;
+		int nextAverage = nextTotal / nextCount;
+		
+		dataStat.average = nextAverage;
+		dataStat.count = nextCount;
+	}
+	else
+	{
+		auto& dataStat = currentAgent->datatypeAverage_Map[DataType];
+
+		dataStat.count = 1;
+		dataStat.max = DataValue;
+		dataStat.min = DataValue;
+		dataStat.average = DataValue;
+
+		switch (DataType)
+		{
+		case dfMONITOR_DATA_TYPE_CHAT_SERVER_RUN : 
+			dataStat.name = "Chat_Server_Run";
+			break;
+
+		case dfMONITOR_DATA_TYPE_CHAT_SERVER_CPU:
+			dataStat.name = "Chat_Server_CPU";
+			break;
+
+		case dfMONITOR_DATA_TYPE_CHAT_SERVER_MEM:
+			dataStat.name = "Chat_Server_Mem";
+			break;
+
+		case dfMONITOR_DATA_TYPE_CHAT_SESSION:
+			dataStat.name = "Chat_Server_Session";
+			break;
+		case dfMONITOR_DATA_TYPE_CHAT_PLAYER:
+			dataStat.name = "Chat_Server_Player";
+			break;
+		case dfMONITOR_DATA_TYPE_CHAT_UPDATE_TPS:
+			dataStat.name = "Chat_Server_UPDATE_TPS";
+			break;
+		case dfMONITOR_DATA_TYPE_CHAT_PACKET_POOL:
+			dataStat.name = "Chat_Server_PACKET_POOL";
+			break;
+
+		case dfMONITOR_DATA_TYPE_CHAT_UPDATEMSG_POOL:
+			dataStat.name = "Chat_Server_MSGQ";
+			break;
+		default:
+			break;
+
+		}
+
+
+
+
+	}
+
+
+	//메세지 보내기
 	agentManager->SendAllClient(sendMsg);
 
 	SendMonitorServerData();
+	DBSaveData();
 	sendMsg->DecrementUseCount();
 
 	return true;
@@ -232,8 +317,6 @@ bool CContentsManager::SendMonitorServerData()
 	MSG_networkRecv->DecrementUseCount();
 	MSG_networkSend->DecrementUseCount();
 
-
-
 	prevTime = nowTime;
 
 	return true;
@@ -255,6 +338,53 @@ bool CContentsManager::MakeCSUpdateMsg(CPacket* msg, BYTE dataType, int Value)
 	*msg << dataType;
 	*msg << Value;
 	*msg << nowTime;
+
+	return true;
+}
+
+
+bool CContentsManager::DBSaveData()
+{
+	unsigned short agentIndex;
+	CMonitorAgent* currentAgent;
+	BYTE dataType;
+
+	DWORD nowTime = timeGetTime();
+
+	if (nowTime - dbSavetime < 1000 * 60 * 10)
+	{
+		return false;
+	}
+
+	dbSavetime = nowTime;
+
+	for (auto& it: agentManager->serverList)
+	{
+		agentIndex = CLanManager::GetIndex(it);
+		currentAgent = &(*agentManager)[agentIndex];
+
+		for (auto& agentIt : currentAgent->datatypeAverage_Map)
+		{
+			dataType = agentIt.first;
+			DataAverage* data = &agentIt.second;
+			CDBManager::MonitorData monitorData;
+			
+			monitorData.aver = data->average;
+			monitorData.max = data->max;
+			monitorData.min = data->min;
+			monitorData.timeStamp = (int)time(nullptr);
+			monitorData.dataType = data->name;
+			
+			data->average = 0;
+			data->count = 0;
+			data->max = 0;
+			data->min = 0;
+
+			g_DBManager->WriteMonitorData(&monitorData);
+		}
+	}
+
+	
 
 	return true;
 }

@@ -10,6 +10,11 @@ class CContentsManager
 	CAgentManager* agentManager;
 	char clientLoginToken[33];
 	DWORD prevTime;
+	DWORD dbSavetime;
+
+	//서버별 데이터 존재
+
+
 
 public:
 	CContentsManager() = delete;
@@ -28,5 +33,7 @@ public:
 	bool MakeCSUpdateMsg(CPacket* msg, BYTE entry, int Value);
 	bool DeleteAgent(ULONG64 ID);
 
+
+	bool DBSaveData();
 };
 

@@ -4,7 +4,6 @@
 #include "Buffer/RingBuffer.h"
 #include "Buffer/SerializeBuf.h"
 
-extern unsigned long long g_SessionTotalCreateCount;
 extern unsigned long long g_LoginSessionCount;
 
 enum class enSessionType

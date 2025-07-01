@@ -20,7 +20,6 @@ extern int g_concurrentCount;
 extern int g_workerThreadCount;
 extern int g_maxSessionCount;
 
-extern unsigned long long g_SessionTotalCreateCount;
 extern unsigned long long g_LoginSessionCount;
 extern unsigned long long g_LogoutSessionCount;
 extern unsigned long long g_HeartBeatOverCount;
@@ -29,17 +28,7 @@ extern unsigned long long g_AcceptTps;
 extern unsigned long long* g_pRecvTps;
 extern unsigned long long* g_pSendTps;
 
-//----------------------------------------
-// 메세지 카운트
-//----------------------------------------
-extern unsigned long long g_MoveStopCompleteCount;
-extern unsigned long long g_MoveStartCount;
-extern unsigned long long g_MoveStopCount;
-extern unsigned long long g_LocalChatCount;
-extern unsigned long long g_ChatEndCount;
-extern unsigned long long g_DeleteMsgCount;
-extern unsigned long long g_CreateMsgCount;
-extern unsigned long long g_HeartBeatCount;
+extern unsigned long long g_CPacketAllocCount;
 
 //-----------------------------------------
 // 플레이어 카운팅을 위한 변수
@@ -47,6 +36,8 @@ extern unsigned long long g_HeartBeatCount;
 extern unsigned long long g_TotalPlayerCreate;
 extern unsigned long long g_PlayerLogInCount;
 extern unsigned long long g_PlayerLogOut;
+
+
 
 extern std::queue<ULONG64> g_WaitingPlayerAcceptQ;
 
@@ -61,6 +52,7 @@ HANDLE g_ContentsThread;
 
 HANDLE g_ExitEvent;
 
+extern LFreeQ<Job> g_ContentsJobQ;
 
 //----------------------------------------
 // 출력 함수들
@@ -146,7 +138,6 @@ int main()
 		endTimeTick = timeGetTime();
 		resultTimeTick = (endTimeTick - startTimeTick) / 1000;
 		Sleep(1000 - resultTimeTick);
-
 	}
 
 	return 0;
@@ -169,7 +160,6 @@ void PrintSerializePool()
 void PrintSessionCount()
 {
 	printf("------------------------------------------\n");
-	printf("Session Create Total : %lld\n", g_SessionTotalCreateCount);
 	printf("Session LogIn : %lld\n", g_LoginSessionCount);
 	printf("Session LogOut : %lld\n", g_LogoutSessionCount);
 	printf("Session HeartBeat Time Over : %lld\n", g_HeartBeatOverCount);
@@ -178,20 +168,6 @@ void PrintSessionCount()
 	printf("Player LogIn : %lld\n", g_PlayerLogInCount);
 	printf("Player LogOut : %lld\n", g_PlayerLogOut);
 	printf("Waiting Player : %lld\n", g_WaitingPlayerAcceptQ.size());
-}
-
-
-void PrintMessageCount()
-{
-	printf("------------------------------------------\n");
-	printf("MoveStartPacket(Recv) : %lld\n", g_MoveStartCount);
-	printf("MoveStopPacket(Recv) : %lld\n", g_MoveStopCount);
-	printf("MoveStopCompletePacket(Send) : %lld\n", g_MoveStopCompleteCount);
-	printf("LocalChat Msg (Recv) : %lld\n", g_LocalChatCount);
-	printf("HeartBeat Msg (Recv) : %lld\n", g_HeartBeatCount);
-	printf("ChatEnd Msg (Recv) : %lld\n", g_ChatEndCount);
-	printf("CreateMsg (ContentsRecv) : %lld\n", g_CreateMsgCount);
-	printf("DeleteMsg (ContentsRecv) : %lld\n", g_DeleteMsgCount);
 }
 
 
@@ -266,8 +242,9 @@ void UpdateMonitorData()
 	double TotalNonPaged = 0;
 	double Available = 0;
 	long long localAcceptTPS = InterlockedExchange(&g_AcceptTps, 0);
-
-
+	int localPacketPoolTps = (int)InterlockedExchange(&g_CPacketAllocCount, 0);
+	int jobSize = (int)g_ContentsJobQ.GetSize();
+	
 
 	for (int i = 0; i < pLib->_workerThreadCount; i++)
 	{
@@ -283,8 +260,12 @@ void UpdateMonitorData()
 	
 	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_SERVER_RUN, 1);
 	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_SERVER_CPU, localProcessorTotal);
-	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_SERVER_MEM, PrivateMem / 1024 / 1024);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_SERVER_MEM, (int)(PrivateMem / 1024 / 1024));
 	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_SESSION, pLib->_sessionLoginCount);
-	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_PLAYER, g_PlayerLogInCount);
-	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_UPDATE_TPS, localRECVTPS);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_PLAYER, (int)g_PlayerLogInCount);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_UPDATE_TPS, (int)localRECVTPS);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_PACKET_POOL, localPacketPoolTps);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_UPDATEMSG_POOL, jobSize);
+
+	
 }

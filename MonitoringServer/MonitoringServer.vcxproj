@@ -147,7 +147,7 @@
       <ConformanceMode>true</ConformanceMode>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>C:\Users\yun-ilsik\source\repos\ChatMultiServer\NetWorkLib;C:\Users\yun-ilsik\source\repos\ChatMultiServer\MonitoringServer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\yun-ilsik\source\repos\ChatMultiServer\NetWorkLib;C:\Users\yun-ilsik\source\repos\ChatMultiServer\MonitoringServer;C:\Users\yun-ilsik\source\repos\ChatMultiServer\MySqlResource;C:\Program Files\MySQL\MySQL Server 8.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -155,7 +155,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\yun-ilsik\source\repos\ChatMultiServer\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\yun-ilsik\source\repos\ChatMultiServer\x64\Release;C:\Users\yun-ilsik\source\repos\ChatMultiServer\MySqlResource;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
@@ -188,6 +188,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Contents\ContentsManager.cpp" />
+    <ClCompile Include="DBConnector\DBConnector.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MonitoringServer.cpp" />
     <ClCompile Include="Network\NetworkManager.cpp" />
@@ -195,6 +196,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Contents\ContentsManager.h" />
+    <ClInclude Include="DBConnector\DBConnector.h" />
     <ClInclude Include="MonitorAgent\MonitorAgent.h" />
     <ClInclude Include="MonitoringServer.h" />
     <ClInclude Include="Network\NetworkManager.h" />

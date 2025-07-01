@@ -5,6 +5,14 @@
 #define NO_SERVER 0
 
 extern CWanServer* g_NetworkManager;
+struct DataAverage
+{
+	std::string name;
+	int count;
+	int average;
+	int min;
+	int max;
+};
 
 enum class enAgentType
 {
@@ -27,6 +35,8 @@ public:
 	int ServerNo;
 	ULONG64 sessionID;
 	long bResCreate;
+	std::map<BYTE, DataAverage> datatypeAverage_Map;
+
 
 	CMonitorAgent()
 	{
@@ -79,6 +89,8 @@ public:
 
 	bool SendAllClient(CPacket* sendMsg)
 	{
+		
+
 		for (const auto& it : clientList)
 		{
 			g_NetworkManager->SendPacket(it, sendMsg);

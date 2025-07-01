@@ -95,7 +95,7 @@ bool HandleContentJob()
 	if (JobMessage->GetDataSize() < sizeof(WORD))
 	{
 		std::string logString;
-		logString += "Incomplete Packet Error || ID : ";
+		logString += "Incomplete Packet Error(Not Recved Type - 2Byte) || ID : ";
 		logString += std::to_string(userId);
 
 		pLib->EnqueLog(logString);

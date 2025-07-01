@@ -143,7 +143,6 @@ bool SessionManager::_makeNewSession(unsigned short* outIDex, SOCKET* newSocket,
 	_sessionList[iDex]._type = static_cast<BYTE>(enSessionType::en_Client); //기본이 클라이언트
 
 
-	g_SessionTotalCreateCount++; //acceptThread에서만 증가 연산 중
 	InterlockedIncrement(&_sessionCount);
 	InterlockedIncrement(&g_LoginSessionCount);
 

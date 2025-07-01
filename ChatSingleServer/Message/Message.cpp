@@ -5,18 +5,6 @@
 #include "Contents/ContentsFunc.h"
 #include "Network/Network.h"
 #include <format>
-//-----------------------------------------
-// 출력을 위한 메세지 카운팅
-//-----------------------------------------
-unsigned long long g_MoveStopCompleteCount;
-unsigned long long g_MoveStartCount;
-unsigned long long g_MoveStopCount;
-unsigned long long g_LocalChatCount;
-unsigned long long g_ChatEndCount;
-unsigned long long g_DeleteMsgCount;
-unsigned long long g_CreateMsgCount;
-unsigned long long g_HeartBeatCount;
-
 extern std::stack<int> g_playerIndexStack;
 extern Player* g_PlayerArr;
 extern long long g_playerCount;
@@ -85,7 +73,6 @@ void MsgSectorBroadCasting(void (*Func)(ULONG64 srcID, ULONG64 destID, CPacket* 
 
 bool HandleMoveStartMsg(CPacket* payLoad, ULONG64 id)
 {
-	InterlockedIncrement(&g_MoveStartCount);
 	int playerIndex = pLib->GetIndex(id);
 	int x;
 	int y;
@@ -93,6 +80,19 @@ bool HandleMoveStartMsg(CPacket* payLoad, ULONG64 id)
 
 	CPacket* msg;
 	msg = payLoad;
+
+
+	if (msg->GetDataSize() != sizeof(direction) + sizeof(x) + sizeof(y))
+	{
+		std::string logString;
+		logString = "MoveStart Message - Msg size Error || messageSize : ";
+		logString += std::to_string(msg->GetDataSize());
+
+		pLib->EnqueLog(logString);
+
+		pLib->DisconnectSession(id);
+		return false;
+	}
 
 
 	*msg >> direction;
@@ -141,7 +141,6 @@ bool HandleMoveStartMsg(CPacket* payLoad, ULONG64 id)
 }
 bool HandleMoveStopMsg(CPacket* payLoad, ULONG64 id)
 {
-	InterlockedIncrement(&g_MoveStopCount);
 	int playerIndex;
 	int x;
 	int y;
@@ -149,6 +148,19 @@ bool HandleMoveStopMsg(CPacket* payLoad, ULONG64 id)
 
 	CPacket* msg;
 	msg = payLoad;
+
+	if (msg->GetDataSize() != sizeof(direction) + sizeof(x) + sizeof(y))
+	{
+		std::string logString;
+		logString = "MoveStop Message - Msg Size Error || messageSize : ";
+		logString += std::to_string(msg->GetDataSize());
+
+		pLib->EnqueLog(logString);
+
+		pLib->DisconnectSession(id);
+		return false;
+	}
+
 
 	*msg >> direction;
 	*msg >> x;
@@ -199,7 +211,6 @@ bool HandleMoveStopMsg(CPacket* payLoad, ULONG64 id)
 }
 bool HandleLocalChatMsg(CPacket* payLoad, ULONG64 id)
 {
-	InterlockedIncrement(&g_LocalChatCount);
 	int playerIndex;
 	BYTE chatMessageLen;
 	stHeader sendChatHeader;
@@ -213,8 +224,35 @@ bool HandleLocalChatMsg(CPacket* payLoad, ULONG64 id)
 	}
 
 	CPacket* msg = payLoad;
+
+	if (msg->GetDataSize() < sizeof(chatMessageLen))
+	{
+		//로그 남기기 작업
+		std::string error;
+		error = "Local Chat Error || message Size error";
+		
+		pLib->EnqueLog(error);
+
+		pLib->DisconnectSession(id);
+		return false;
+	}
+
 	*msg >> chatMessageLen;
 	
+
+	if (msg->GetDataSize() != chatMessageLen)
+	{
+		//로그 남기기 작업
+		std::string error;
+		error = "Local Chat Error || message Size error";
+
+		pLib->EnqueLog(error);
+
+		pLib->DisconnectSession(id);
+		return false;
+	}
+
+
 	sendChatHeader.type = stPacket_Chat_Client_LocalChat;
 
 	sendMsg = CPacket::Alloc();
@@ -225,7 +263,6 @@ bool HandleLocalChatMsg(CPacket* payLoad, ULONG64 id)
 	sendMsg->PutData(msg->GetDataPtr(), chatMessageLen);
 	msg->MoveFront(chatMessageLen);
 
-
 	MsgSectorBroadCasting(ContentsSendPacket, (char*) & g_PlayerArr[playerIndex],sendMsg, false);
 	sendMsg->DecrementUseCount();
 
@@ -233,7 +270,6 @@ bool HandleLocalChatMsg(CPacket* payLoad, ULONG64 id)
 }
 bool HandleHeartBeatMsg(ULONG64 id)
 {
-	InterlockedIncrement(&g_HeartBeatCount);
 	int playerIndex;
 
 	playerIndex = pLib->GetIndex(id);
@@ -249,8 +285,6 @@ bool HandleHeartBeatMsg(ULONG64 id)
 }
 bool HandleChatEndMsg(ULONG64 id)
 {
-	InterlockedIncrement(&g_ChatEndCount);
-
 	int playerIndex = pLib->GetIndex(id);
 
 	if (g_PlayerArr[playerIndex].GetID() != id || g_PlayerArr[playerIndex].isAlive() == false)
@@ -292,7 +326,6 @@ bool HandleCreatePlayer(CPacket* JobMessage, ULONG64 id)
 
 	*JobMessage >> playerID;
 
-	InterlockedIncrement(&g_CreateMsgCount);
 	playerIndex = pLib->GetIndex(playerID);
 
 
@@ -321,7 +354,6 @@ bool HandleDeletePlayer(CPacket* JobMessage, ULONG64 id)
 
 	*JobMessage >> playerID;
 
-	InterlockedIncrement(&g_DeleteMsgCount);
 	playerIndex = pLib->GetIndex(playerID);
 
 	if (g_PlayerArr[playerIndex].GetID() != playerID || g_PlayerArr[playerIndex].isAlive() == false)
@@ -378,7 +410,6 @@ void ContentsSendPacket(ULONG64 srcID, ULONG64 destID, CPacket* packet)
 
 void SendMoveStopCompleteMessage(ULONG64 destID)
 {
-	InterlockedIncrement(&g_MoveStopCompleteCount);
 	stHeader packetHeader;
 	CPacket* sendMsg = CPacket::Alloc();
 	packetHeader.type = stPacket_Chat_Client_MoveStopComplete;

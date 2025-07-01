@@ -6,10 +6,12 @@
 #include "MonitoringServer.h"
 #include "Network/NetworkManager.h"
 #include "Contents/ContentsManager.h"
+#include "DBConnector/DBConnector.h"
 
 extern CWanServer* g_NetworkManager;
 extern CContentsManager* g_ContentsManager;
 CPdhManager g_PDH;
+CDBManager* g_DBManager;
 
 
 bool MonitoringServer()
@@ -31,6 +33,7 @@ bool MonitoringServer()
 	g_ContentsManager = new CContentsManager(g_NetworkManager);
 	g_PDH.RegistEthernetMax(ethernetCount);
 	g_PDH.Start();
+	g_DBManager = new CDBManager;
 
 	g_NetworkManager->Start();
 
