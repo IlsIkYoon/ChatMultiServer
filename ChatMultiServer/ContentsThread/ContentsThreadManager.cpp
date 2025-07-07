@@ -3,11 +3,14 @@
 #include "ContentsFunc.h"
 #include "Sector/Sector.h"
 #include "TickThread.h"
+#include "MonitorManager.h"
 
 int CContentsThreadManager::playerMaxCount;
 CPlayerManager* CContentsThreadManager::playerList;
 CWanManager* CContentsThreadManager::ntManager;
 CCharacterKeyManager* CContentsThreadManager::keyList;
+extern CMonitorManager g_MonitorManager;
+
 
 CContentsThreadManager::CContentsThreadManager(CWanManager* ntLib)
 {
@@ -25,7 +28,10 @@ CContentsThreadManager::~CContentsThreadManager()
 bool CContentsThreadManager::Start()
 {
 	ReadConfig();
+	ntManager->Start();
 	ContentsThreadInit();
+
+	g_MonitorManager.RegistMonitor(L"127.0.0.1", monitorPort);
 
 	return true;
 }
@@ -39,7 +45,7 @@ bool CContentsThreadManager::ReadConfig()
 	int workerThreadCount;
 	int portNum;
 
-	retval = txParser.GetData("ChatMultiServer_Config.txt");
+	retval = txParser.GetData("ChatMultiServer_Config.ini");
 	if (retval == false)
 	{
 		__debugbreak();
@@ -50,6 +56,7 @@ bool CContentsThreadManager::ReadConfig()
 	txParser.SearchData("WorkerThreadCount", &workerThreadCount);
 	txParser.SearchData("PortNum", &portNum);
 	txParser.SearchData("SessionCount", &sessionMaxCount);
+	txParser.SearchData("MonitorPort", &monitorPort);
 
 	ntManager->RegistConcurrentCount(concurrentThreadcount);
 	ntManager->RegistPortNum(portNum);

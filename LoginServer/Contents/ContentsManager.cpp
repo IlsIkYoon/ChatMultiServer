@@ -1,27 +1,50 @@
 #include "ContentsManager.h"
 #include "CommonProtocol.h"
 #include "Monitor/Monitor.h"
+#include "Monitor/MonitorManager.h"
 
 CContentsManager* g_ContentsManager;
+extern CMonitor g_MonitorManager;
 
 
-
-extern CMonitor g_Monitor;
-
+extern CMonitor_delete g_Monitor;
+extern CPdhManager g_Pdh;
 
 CContentsManager::CContentsManager(CWanServer* pNetworkManager)
 {
+	unsigned short monitorPort;
+	unsigned short portNum;
+	int sessionCount;
+	int workerThreadCount;
+	int concurrentThreadCount;
 	networkManager = pNetworkManager;
-	userManager = new CUserManager(pNetworkManager->_sessionMaxCount);
-	tickThread = std::thread([this]() {tickThreadFunc(); });
-	DBConnector = new CDBManager;
-	//RedisConnector = new CRedisConnector;
-
 	TextParser parser;
 	parser.GetData("LoginConfig.ini");
 	parser.SearchData("ChatServerPort", &chatServerPort);
 	parser.SearchData("GameServerPort", &gameServerPort);
+	parser.SearchData("MonitorPort", &monitorPort);
+	parser.SearchData("PortNum", &portNum);
+	parser.SearchData("SessionCount", &sessionCount);
+	parser.SearchData("WorkerThreadCount", &workerThreadCount);
+	parser.SearchData("ConcurrentThreadCount", &concurrentThreadCount);
 	parser.CloseData();
+
+	//내거 포트도 다 등록해야함 레지스트 함수로
+
+	networkManager->RegistPortNum(portNum);
+	networkManager->RegistSessionMaxCoiunt(sessionCount);
+	networkManager->RegistConcurrentCount(concurrentThreadCount);
+	networkManager->RegistWorkerThreadCount(workerThreadCount);
+
+	userManager = new CUserManager(pNetworkManager->_sessionMaxCount);
+	networkManager->Start();
+	g_MonitorManager.RegistMonitor(L"127.0.0.1", monitorPort);
+	tickThread = std::thread([this]() {tickThreadFunc(); });
+	DBConnector = new CDBManager;
+	redisPort = 0;
+	//RedisConnector = new CRedisConnector;
+
+
 
 	wcscpy_s(chatServerIP, IP_CHATSERVER);
 	wcscpy_s(gameServerIP, IP_GAMESERVER);
@@ -32,14 +55,20 @@ CContentsManager::CContentsManager(CWanServer* pNetworkManager)
 
 void CContentsManager::tickThreadFunc()
 {
+	DWORD prevTime;
+	DWORD currentTime;
+	DWORD resultTime;
 	
+	g_Pdh.Start();
+	prevTime = timeGetTime();
 
 	while (1)
 	{
-		//어떤 틱 쓰레드 로직 진행
+		//틱 쓰레드 로직 진행
 		g_Monitor.ConsolPrintAll();
 		networkManager->EnqueSendRequest();
-		Sleep(1000);
+
+		g_MonitorManager.UpdateAllMonitorData();
 
 		if (_kbhit())
 		{
@@ -57,6 +86,15 @@ void CContentsManager::tickThreadFunc()
 
 			}
 		}
+
+		currentTime = timeGetTime();
+		resultTime = currentTime - prevTime;
+		if (resultTime < 1000)
+		{
+			Sleep(1000 - resultTime);
+		}
+		prevTime = timeGetTime();
+
 	}
 
 
@@ -96,6 +134,8 @@ bool CContentsManager::HandleContentsMessage(CPacket* message, ULONG64 ID)
 	}
 	break;
 	}
+
+	return true;
 }
 
 
@@ -154,7 +194,7 @@ bool CContentsManager::HandleLoginREQMsg(CPacket* message, ULONG64 ID)
 
 	networkManager->SendPacket(ID, sendMsg);
 
-	InterlockedIncrement(&g_Monitor.loginSuccessCount);
+	InterlockedIncrement(&g_MonitorManager.loginSuccessCount);
 
 	sendMsg->DecrementUseCount();
 	return true;

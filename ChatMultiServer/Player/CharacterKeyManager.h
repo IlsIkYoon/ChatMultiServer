@@ -9,8 +9,8 @@ class CCharacterKeyManager
 
 	//이 자료구조에서 접근할 때 락 필요
 
-	std::unordered_set<ULONG64> _Key_uSet;
-	std::mutex _Key_uSetLock;
+	std::unordered_map<ULONG64, ULONG64> _Key_uMap;
+	std::recursive_mutex _Key_uMapLock;
 	DWORD _playerMaxCount;
 
 public:
@@ -19,11 +19,11 @@ public:
 	CCharacterKeyManager(DWORD playerCount)
 	{
 		_playerMaxCount = playerCount;
-		_Key_uSet.reserve(playerCount);
+		_Key_uMap.rehash(playerCount);
 	}
 	
-	bool InsertID(ULONG64 characterKey);
-	bool DeleteID(ULONG64 characterKey);
+	bool InsertID(ULONG64 characterKey, ULONG64 sessionID);
+	bool DeleteID(ULONG64 characterKey, ULONG64 sessionID);
 
 
 };

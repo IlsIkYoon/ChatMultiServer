@@ -52,8 +52,8 @@ public:
 		}
 
 		const char* createQuery =
-			"CREATE TABLE IF NOT EXISTS MonitorServer_Data ("
-			"timestamp BIGINT, "
+			"CREATE TABLE IF NOT EXISTS MonitorServer_Data2 ("
+			"timestamp VARCHAR(64), "
 			"data_type VARCHAR(64), "
 			"serverNo INT, "
 			"avg_value INT, "
@@ -90,7 +90,7 @@ public:
 
 	struct MonitorData
 	{
-		int timeStamp;
+		std::string timeStamp;
 		std::string dataType;
 		int serverNo;
 		int aver;

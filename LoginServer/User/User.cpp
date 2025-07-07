@@ -22,7 +22,7 @@ CUserManager::CUserManager(DWORD pUserMaxCount)
 bool CUserManager::InitUser(unsigned long long sessionID)
 {
 	unsigned short userIndex;
-	userIndex = NetWorkManager::GetIndex(sessionID);
+	userIndex = CWanManager::GetIndex(sessionID);
 
 	std::lock_guard guard(userArr[userIndex].userLock);
 
@@ -41,7 +41,7 @@ bool CUserManager::InitUser(unsigned long long sessionID)
 bool CUserManager::DeleteUser(unsigned long long sessionID)
 {
 	unsigned short userIndex;
-	userIndex = NetWorkManager::GetIndex(sessionID);
+	userIndex = CWanManager::GetIndex(sessionID);
 
 	std::lock_guard guard(userArr[userIndex].userLock);
 

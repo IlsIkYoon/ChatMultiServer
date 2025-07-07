@@ -28,7 +28,7 @@ extern unsigned long long g_PlayerLogInCount;
 extern unsigned long long g_TotalPlayerCreate;
 extern std::queue<ULONG64> g_WaitingPlayerAcceptQ;
 
-extern CLanServer* networkServer;
+extern CWanServer* networkServer;
 extern CContentsThreadManager contentsManager;
 
 //-------------------------------------
@@ -236,6 +236,17 @@ bool HandleLoginMessage(CPacket* message, ULONG64 sessionID)
 		return false;
 	}
 
+	if (message->GetDataSize() != sizeof(AccountNo) + sizeof(WCHAR) * 20 + sizeof(WCHAR) * 20 + 64)
+	{
+		std::string error;
+		error = "Login Message Error || data Size error || size : ";
+		error += std::to_string(message->GetDataSize());
+		error += " || RequireSize : ";
+		error += std::to_string(sizeof(AccountNo) + sizeof(WCHAR) * 20 + sizeof(WCHAR) * 20 + 64);
+
+		networkServer->DisconnectSession(sessionID);
+		return false;
+	}
 
 
 	//------------------------------------
@@ -249,12 +260,16 @@ bool HandleLoginMessage(CPacket* message, ULONG64 sessionID)
 
 	std::string redisKey = std::to_string(AccountNo);
 	std::string redisToken = SessionKey;
-	bool tokenRetval;
+	bool tokenRetval = true;
 
-	tokenRetval = TLS_REDIS_CONNECTOR.CheckToken(redisKey, redisToken);
+
+	//tokenRetval = TLS_REDIS_CONNECTOR.CheckToken(redisKey, redisToken);
+
+
+
 	if (tokenRetval == false)
 	{
-		__debugbreak();
+		__debugbreak();//지워야 함
 		networkServer->DisconnectSession(sessionID);
 		//여기서 뭐 데이터를 보내줘야 했나 ?
 		return false;
@@ -263,9 +278,8 @@ bool HandleLoginMessage(CPacket* message, ULONG64 sessionID)
 	//LoadCharacterDataOnLogin(AccountNo, userId); 
 	//토큰이 유효하다면 DB에서 캐릭터 데이터 긁어오기 요청 후 긁어온 뒤에 결과에 따라 Login_res 메세지 전송
 
-	if (contentsManager.keyList->InsertID(AccountNo) == false)
+	if (contentsManager.keyList->InsertID(AccountNo, sessionID) == false)
 	{
-		InterlockedIncrement(&g_ErrorCharacterKeyInsert);
 		networkServer->DisconnectSession(sessionID);
 		return false;
 	}
@@ -327,7 +341,7 @@ bool HandleSectorMoveMessage(CPacket* message, ULONG64 sessionID)
 		networkServer->DisconnectSession(sessionID);
 		return false;
 	}
-	if (SectorX > SECTOR_MAX || SectorY > SECTOR_MAX)
+	if (SectorX >= SECTOR_MAX || SectorY >= SECTOR_MAX)
 	{
 		InterlockedIncrement(&g_ErrorSectorSize);
 		networkServer->DisconnectSession(sessionID);
@@ -385,27 +399,50 @@ bool HandleChatMessage(CPacket* message, ULONG64 sessionID)
 	localPlayerList = contentsManager.playerList->playerArr;
 	playerIndex = CWanManager::GetIndex(sessionID);
 
+	if (message->GetDataSize() < sizeof(AccountNo) + sizeof(MessageLen))
+	{
+		std::string error;
+		error = "Chat Message Error || Data Size Error : ";
+		error += std::to_string(message->GetDataSize());
+
+		networkServer->EnqueLog(error);
+
+		networkServer->DisconnectSession(sessionID);
+		return false;
+	}
+
 	*message >> AccountNo;
 	*message >> MessageLen;
 
-	Message = new WCHAR[MessageLen / 2];
 
 	//-----------------------------------------
 	//오류체크
 	//-----------------------------------------
 	if (AccountNo != localPlayerList[playerIndex].accountNo)
 	{
-		InterlockedIncrement(&g_ErrorChatAccountNoMissmatch);
+		std::string error;
+		error += "Chat Message Error || AccountNo : ";
+		error += std::to_string(AccountNo);
+
+		networkServer->EnqueLog(error);
+
 		networkServer->DisconnectSession(sessionID);
 		return false;
 	}
 	if (message->GetDataSize() != MessageLen)
 	{
-		InterlockedIncrement(&g_ErrorChatMsgLen);
+		std::string error;
+		error += "Chat Message Error || MessageLen : ";
+		error += std::to_string(MessageLen);
+
+		networkServer->EnqueLog(error);
+
 		networkServer->DisconnectSession(sessionID);
 		return false;
 	}
 	//-----------------------------------------
+
+	Message = new WCHAR[MessageLen / 2];
 
 	message->PopFrontData(MessageLen, (char*)Message);
 

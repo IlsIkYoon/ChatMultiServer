@@ -2,7 +2,7 @@
 #include "Resource/LoginServerResource.h"
 
 
-class CMonitor
+class CMonitor_delete
 {
 public:
 	unsigned long long loginSuccessCount;

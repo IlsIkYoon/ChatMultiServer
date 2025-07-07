@@ -6,6 +6,7 @@
 #include "Sector/Sector.h"
 #include "ContentsThread/ContentsThreadManager.h"
 #include "Msg/CommonProtocol.h"
+#include "MonitorManager.h"
 //-------------------------------------
 // 에러 메세지 종료에 대한 카운트
 //-------------------------------------
@@ -21,12 +22,14 @@ extern std::recursive_mutex SectorLock[SECTOR_MAX][SECTOR_MAX];
 
 extern long long g_playerCount;
 
-extern CLanServer* networkServer;
+extern CWanServer* networkServer;
 
 extern unsigned long long g_HeartBeatOverCount;
 
 extern CContentsThreadManager* contentsManager;
 
+extern CMonitorManager g_MonitorManager;
+extern CPdhManager g_PDH;
 
 //출력용 카운팅 변수들 DEBUG//
 unsigned long long g_loginMsgCnt;
@@ -37,11 +40,30 @@ extern unsigned long long g_TotalPlayerCreate;
 extern unsigned long long g_PlayerLogInCount;
 extern unsigned long long g_PlayerLogOut;
 
-void CLanServer::_OnMessage(CPacket* message, ULONG64 sessionID)
+extern unsigned long long g_CPacketAllocCount;
+
+extern CCpuUsage g_CpuUsage;
+
+unsigned long long g_UpdateMsgTps;
+
+void CWanServer::_OnMessage(CPacket* message, ULONG64 sessionID)
 {
 	unsigned short playerIndex;
 	WORD contentsType;
 	Player* localPlayerList;
+
+	InterlockedIncrement(&g_UpdateMsgTps);
+
+	if (message->GetDataSize() < sizeof(contentsType))
+	{
+		std::string error;
+		error += "Incomplete Message || Contents Header size Error";
+		
+		EnqueLog(error);
+
+		DisconnectSession(sessionID);
+		return;
+	}
 
 	*message >> contentsType;
 	playerIndex = GetIndex(sessionID);
@@ -92,7 +114,7 @@ void ShutDownAllThread()
 
 }
 
-void CLanServer::_OnAccept(ULONG64 sessionID)
+void CWanServer::_OnAccept(ULONG64 sessionID)
 {
 	unsigned short playerIndex = GetIndex(sessionID);
 
@@ -112,12 +134,12 @@ void CLanServer::_OnAccept(ULONG64 sessionID)
 	localPlayerList[playerIndex]._move = false;
 
 }
-void CLanServer::_OnSend(ULONG64 ID)
+void CWanServer::_OnSend(ULONG64 ID)
 {
 	//할 일 없음
 	return;
 }
-void CLanServer::_OnDisConnect(ULONG64 sessionID)
+void CWanServer::_OnDisConnect(ULONG64 sessionID)
 {
 
 	unsigned short playerIndex = GetIndex(sessionID);
@@ -157,13 +179,12 @@ void CLanServer::_OnDisConnect(ULONG64 sessionID)
 		Sector[SectorX][SectorY].remove(&localPlayerList[playerIndex]);
 	}
 
-	contentsManager->keyList->DeleteID(localPlayerList[playerIndex].accountNo);
+	contentsManager->keyList->DeleteID(localPlayerList[playerIndex].accountNo, sessionID);
 	localPlayerList[playerIndex].Clear();
-
 
 }
 
-CLanServer::CLanServer()
+CWanServer::CWanServer()
 {
 }
 
@@ -201,4 +222,42 @@ void TimeOutCheck()
 		}
 	}
 
+}
+
+bool UpdateMonitorData()
+{
+	//데이터 정산 후에 모니터 데이터로 보내주는 함수
+	int localPlayerCount = g_PlayerLogInCount;
+	int localSessionCount = g_LoginSessionCount;
+	int localProcessTotal;
+	int localUpdateMsgTps;
+	double privateMem;
+	g_PDH.GetMemoryData(&privateMem, nullptr, nullptr, nullptr);
+	g_CpuUsage.UpdateCpuTime();
+	localProcessTotal = (int)g_CpuUsage.ProcessTotal();
+
+	localUpdateMsgTps = (int)InterlockedExchange(&g_UpdateMsgTps, 0);
+
+	g_MonitorManager.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_SERVER_RUN, 1);
+	g_MonitorManager.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_SERVER_CPU, localProcessTotal);
+	g_MonitorManager.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_SESSION, localSessionCount);
+	g_MonitorManager.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_PLAYER, localPlayerCount);
+	g_MonitorManager.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_SERVER_MEM, (int)privateMem / 1024 / 1024);
+	g_MonitorManager.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_UPDATE_TPS, localUpdateMsgTps);
+	g_MonitorManager.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_PACKET_POOL, (int)g_CPacketAllocCount);
+
+
+
+	/*
+		dfMONITOR_DATA_TYPE_CHAT_SERVER_RUN = 30,		// 채팅서버 ChatServer 실행 여부 ON / OFF
+		dfMONITOR_DATA_TYPE_CHAT_SERVER_CPU = 31,		// 채팅서버 ChatServer CPU 사용률
+		dfMONITOR_DATA_TYPE_CHAT_SERVER_MEM = 32,		// 채팅서버 ChatServer 메모리 사용 MByte
+		dfMONITOR_DATA_TYPE_CHAT_SESSION = 33,		// 채팅서버 세션 수 (컨넥션 수)
+		dfMONITOR_DATA_TYPE_CHAT_PLAYER = 34,		// 채팅서버 인증성공 사용자 수 (실제 접속자)
+		dfMONITOR_DATA_TYPE_CHAT_UPDATE_TPS = 35,		// 채팅서버 UPDATE 스레드 초당 초리 횟수
+		dfMONITOR_DATA_TYPE_CHAT_PACKET_POOL = 36,		// 채팅서버 패킷풀 사용량
+		dfMONITOR_DATA_TYPE_CHAT_UPDATEMSG_POOL = 37,		// 채팅서버 UPDATE MSG 풀 사용량
+	*/
+
+	return true;
 }

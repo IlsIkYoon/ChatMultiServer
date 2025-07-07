@@ -22,7 +22,7 @@ extern std::list<Player*> Sector[SECTOR_MAX][SECTOR_MAX];
 extern std::recursive_mutex SectorLock[SECTOR_MAX][SECTOR_MAX];
 
 
-extern CLanServer* networkServer;
+extern CWanServer* networkServer;
 extern CContentsThreadManager contentsManager;
 //-----------------------------------------
 // Session은 여유가 있는데 Player가 맥스일때 들어가는 대기열

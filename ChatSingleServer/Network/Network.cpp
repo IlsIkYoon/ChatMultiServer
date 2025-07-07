@@ -3,7 +3,7 @@
 
 extern LFreeQ<Job> g_ContentsJobQ;
 extern long long g_playerCount;
-
+DWORD g_messageCount;
 
 void CWanServer::_OnMessage(CPacket* message, ULONG64 ID)
 {
@@ -12,6 +12,8 @@ void CWanServer::_OnMessage(CPacket* message, ULONG64 ID)
 	enqueMessage.packet = message;
 	message->IncrementUseCount(); // 넣었다는 의미
 	g_ContentsJobQ.Enqueue(enqueMessage);
+	InterlockedIncrement(&g_messageCount);
+
 }
 
 

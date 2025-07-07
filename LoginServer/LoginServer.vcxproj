@@ -196,6 +196,7 @@
     <ClInclude Include="Contents\ContentsManager.h" />
     <ClInclude Include="LoginServer.h" />
     <ClInclude Include="Monitor\Monitor.h" />
+    <ClInclude Include="Monitor\MonitorManager.h" />
     <ClInclude Include="Network\NetworkManager.h" />
     <ClInclude Include="Resource\LoginServerResource.h" />
     <ClInclude Include="User\User.h" />
@@ -207,6 +208,7 @@
     <ClCompile Include="LoginServer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Monitor\Monitor.cpp" />
+    <ClCompile Include="Monitor\MonitorManager.cpp" />
     <ClCompile Include="Network\NetworkManager.cpp" />
     <ClCompile Include="Resource\LoginServerResource.cpp" />
     <ClCompile Include="User\User.cpp" />

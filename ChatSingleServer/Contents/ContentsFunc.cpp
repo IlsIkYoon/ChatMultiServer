@@ -60,7 +60,7 @@ unsigned int ContentsThreadFunc(void*)
 
 		UpdateContentsLogic(g_fixedDeltaTime);
 
-		if (frameCount % 4 == 0)
+		if (frameCount % 6 == 0)
 		{
 			pLib->EnqueSendRequest();
 		}

@@ -42,6 +42,9 @@
     <ClInclude Include="Connector\DBConnector.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Monitor\MonitorManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Resource\LoginServerResource.cpp">
@@ -69,6 +72,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Connector\RedisConnector.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Monitor\MonitorManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

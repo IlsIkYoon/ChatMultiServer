@@ -192,6 +192,7 @@
     <ClCompile Include="ContentsThread\ContentsFunc.cpp" />
     <ClCompile Include="ContentsResource.cpp" />
     <ClCompile Include="ContentsThread\ContentsThreadManager.cpp" />
+    <ClCompile Include="ContentsThread\MonitorManager.cpp" />
     <ClCompile Include="ContentsThread\TickThread.cpp" />
     <ClCompile Include="Log\Monitoring.cpp" />
     <ClCompile Include="main.cpp" />
@@ -207,6 +208,7 @@
     <ClInclude Include="ContentsThread\ContentsFunc.h" />
     <ClInclude Include="ContentsResource.h" />
     <ClInclude Include="ContentsThread\ContentsThreadManager.h" />
+    <ClInclude Include="ContentsThread\MonitorManager.h" />
     <ClInclude Include="ContentsThread\TickThread.h" />
     <ClInclude Include="Log\Monitoring.h" />
     <ClInclude Include="Msg\CommonProtocol.h" />

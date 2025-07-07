@@ -64,7 +64,7 @@ public:
 
 		target->Clear();
 		cLocalPool.Delete(target);
-		InterlockedIncrement(&g_CPacketReleaseCount);
+		InterlockedDecrement(&g_CPacketAllocCount);
 
 	}
 	

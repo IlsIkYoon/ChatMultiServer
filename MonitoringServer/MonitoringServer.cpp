@@ -2,7 +2,7 @@
 //ConcurrentThread 1, WorkerThread 1의 Config File을 읽어야함
 //로직이 완전한 싱글 스레드를 기반으로 설계됨
 //----------------------------------------------------------------
-
+#include "Resource/MonitoringServerResource.h"
 #include "MonitoringServer.h"
 #include "Network/NetworkManager.h"
 #include "Contents/ContentsManager.h"
@@ -11,8 +11,9 @@
 extern CWanServer* g_NetworkManager;
 extern CContentsManager* g_ContentsManager;
 CPdhManager g_PDH;
+#ifndef __MAC__
 CDBManager* g_DBManager;
-
+#endif
 
 bool MonitoringServer()
 {
@@ -33,8 +34,9 @@ bool MonitoringServer()
 	g_ContentsManager = new CContentsManager(g_NetworkManager);
 	g_PDH.RegistEthernetMax(ethernetCount);
 	g_PDH.Start();
+#ifndef __MAC__
 	g_DBManager = new CDBManager;
-
+#endif
 	g_NetworkManager->Start();
 
 	

@@ -4,8 +4,9 @@
 
 CContentsManager* g_ContentsManager;
 extern CPdhManager g_PDH;
+#ifndef __MAC__
 extern CDBManager* g_DBManager; 
-
+#endif
 
 bool CContentsManager::HandleContentsMsg(CPacket* message, ULONG64 ID)
 {
@@ -292,7 +293,7 @@ bool CContentsManager::SendMonitorServerData()
 	g_PDH.GetCpuData(&processorCpuTotal, NULL, NULL);
 	g_PDH.GetMemoryData(nullptr, nullptr, &nonPagedTotal, &availableMem);
 	g_PDH.GetEthernetData(&networkRecv, &networkSend);
-	
+
 	MSG_processorTotal = CPacket::Alloc();
 	MSG_nonPagedTotal = CPacket::Alloc();
 	MSG_availableMem = CPacket::Alloc();
@@ -302,8 +303,8 @@ bool CContentsManager::SendMonitorServerData()
 	MakeCSUpdateMsg(MSG_processorTotal, dfMONITOR_DATA_TYPE_MONITOR_CPU_TOTAL, (int)processorCpuTotal);
 	MakeCSUpdateMsg(MSG_nonPagedTotal, dfMONITOR_DATA_TYPE_MONITOR_NONPAGED_MEMORY, (int)(nonPagedTotal / 1024 / 1024));
 	MakeCSUpdateMsg(MSG_availableMem, dfMONITOR_DATA_TYPE_MONITOR_AVAILABLE_MEMORY, (int)availableMem);
-	MakeCSUpdateMsg(MSG_networkRecv, dfMONITOR_DATA_TYPE_MONITOR_NETWORK_RECV, (int)networkRecv);
-	MakeCSUpdateMsg(MSG_networkSend, dfMONITOR_DATA_TYPE_MONITOR_NETWORK_SEND, (int)networkSend);
+	MakeCSUpdateMsg(MSG_networkRecv, dfMONITOR_DATA_TYPE_MONITOR_NETWORK_RECV, (int)networkRecv / 1024);
+	MakeCSUpdateMsg(MSG_networkSend, dfMONITOR_DATA_TYPE_MONITOR_NETWORK_SEND, (int)networkSend / 1024);
 
 	agentManager->SendAllClient(MSG_processorTotal);
 	agentManager->SendAllClient(MSG_nonPagedTotal);
@@ -351,7 +352,7 @@ bool CContentsManager::DBSaveData()
 
 	DWORD nowTime = timeGetTime();
 
-	if (nowTime - dbSavetime < 1000 * 60 * 10)
+	if (nowTime - dbSavetime < 1000 * 60 * 30)
 	{
 		return false;
 	}
@@ -368,11 +369,20 @@ bool CContentsManager::DBSaveData()
 			dataType = agentIt.first;
 			DataAverage* data = &agentIt.second;
 			CDBManager::MonitorData monitorData;
+
+			time_t now = time(nullptr);                // 현재 시간 (time_t)
+			std::tm localTime;
+			localtime_s(&localTime, &now);
+
+			std::ostringstream oss;
+			oss << std::put_time(&localTime, "%Y-%m-%d %H:%M:%S");
 			
 			monitorData.aver = data->average;
 			monitorData.max = data->max;
 			monitorData.min = data->min;
-			monitorData.timeStamp = (int)time(nullptr);
+
+
+			monitorData.timeStamp = oss.str();
 			monitorData.dataType = data->name;
 			
 			data->average = 0;
@@ -380,7 +390,9 @@ bool CContentsManager::DBSaveData()
 			data->max = 0;
 			data->min = 0;
 
+#ifndef __MAC__
 			g_DBManager->WriteMonitorData(&monitorData);
+#endif
 		}
 	}
 

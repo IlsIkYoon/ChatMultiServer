@@ -5,7 +5,7 @@
 
 
 
-class CWanServer : public NetWorkManager
+class CWanServer : public CWanManager
 {
 public:
 

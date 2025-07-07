@@ -65,7 +65,7 @@ bool CRedisConnector::CheckToken(std::string Key, std::string Token)
 		if (pReply.is_null() == true || Token != pReply.as_string())
 		{
 			retval.set_value(false);
-			return;
+			return false;
 		}
 
 		retval.set_value(true);

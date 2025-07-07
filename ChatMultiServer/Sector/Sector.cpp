@@ -9,7 +9,7 @@ std::recursive_mutex SectorLock[SECTOR_MAX][SECTOR_MAX];
 int sectorXRange = SECTOR_MAX;
 int sectorYRange = SECTOR_MAX;
 
-extern CLanServer* networkServer;
+extern CWanServer* networkServer;
 extern CContentsThreadManager contentsManager;
 
 bool SyncSector(ULONG64 UserId, int oldSectorX, int oldSectorY)

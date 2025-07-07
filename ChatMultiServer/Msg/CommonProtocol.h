@@ -317,7 +317,7 @@ enum en_PACKET_CS_MONITOR_TOOL_SERVER_CONTROL
 	dfMONITOR_SERVER_CONTROL_RUN = 3,		// 서버 프로세스 생성 & 실행
 };
 
-
+/*
 enum en_PACKET_SS_MONITOR_DATA_UPDATE
 {
 	dfMONITOR_DATA_TYPE_LOGIN_SESSION = 1,		// 로그인서버 세션 수 (컨넥션 수)
@@ -357,6 +357,7 @@ enum en_PACKET_SS_MONITOR_DATA_UPDATE
 	dfMONITOR_DATA_TYPE_AGENT_ = 32,		// 에이전트 서버컴퓨터 
 	dfMONITOR_DATA_TYPE_AGENT_AVAILABLE_MEMORY = 33,		// 에이전트 서버컴퓨터 사용가능 메모리
 };
+*/
 
 
 enum en_PACKET_CS_MONITOR_TOOL_RES_LOGIN
@@ -489,7 +490,7 @@ enum en_PACKET_TYPE2
 };
 
 
-/*
+//*
 enum en_PACKET_SS_MONITOR_DATA_UPDATE
 {
 	dfMONITOR_DATA_TYPE_LOGIN_SERVER_RUN = 1,		// 로그인서버 실행여부 ON / OFF
@@ -531,7 +532,7 @@ enum en_PACKET_SS_MONITOR_DATA_UPDATE
 	dfMONITOR_DATA_TYPE_MONITOR_NETWORK_SEND = 43,		// 서버컴퓨터 네트워크 송신량 KByte
 	dfMONITOR_DATA_TYPE_MONITOR_AVAILABLE_MEMORY = 44,		// 서버컴퓨터 사용가능 메모리
 };
-*/
+//*/
 
 
 //#endif

@@ -89,8 +89,6 @@ public:
 
 	bool SendAllClient(CPacket* sendMsg)
 	{
-		
-
 		for (const auto& it : clientList)
 		{
 			g_NetworkManager->SendPacket(it, sendMsg);

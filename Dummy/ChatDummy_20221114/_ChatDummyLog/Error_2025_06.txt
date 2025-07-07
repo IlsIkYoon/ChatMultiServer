@@ -1,0 +1,376 @@
+[Error][2025.06.03 21:10:30 / ERROR /          2] RES_MESSAGE - Chat Message Missmatch (AccountNo:3806)
+[Error][2025.06.03 21:10:30 / ERROR /          3]    + Send Caht:이젠 나 어떡해야 하니 
+
+[Error][2025.06.03 21:10:30 / ERROR /          4]    + Recv Caht:이젠 나 어 
+
+[Error][2025.06.03 21:10:30 / ERROR /          5] RES_MESSAGE - Chat Message Missmatch (AccountNo:2600)
+[Error][2025.06.03 21:10:30 / ERROR /          6]    + Send Caht:발바닥에 불이났어 정신나간 우리라서  
+
+[Error][2025.06.03 21:10:30 / ERROR /          7]    + Recv Caht:발바닥에 불이났어  
+
+[Error][2025.06.03 21:10:42 / ERROR /          2] RES_MESSAGE - Chat Message Missmatch (AccountNo:655)
+[Error][2025.06.03 21:10:42 / ERROR /          3]    + Send Caht:오늘 같은 Saturday night (Saturday night)  
+
+[Error][2025.06.03 21:10:42 / ERROR /          4]    + Recv Caht:오늘 같은 Saturday nigh 
+
+[Error][2025.06.03 21:10:42 / ERROR /          5] RES_MESSAGE - Chat Message Missmatch (AccountNo:1020)
+[Error][2025.06.03 21:10:42 / ERROR /          6]    + Send Caht:오늘따라 왜 바람은 또 완벽한지  
+
+[Error][2025.06.03 21:10:42 / ERROR /          7]    + Recv Caht:오늘따라 왜 바람 
+
+[Error][2025.06.03 21:10:42 / ERROR /          8] RES_MESSAGE - Chat Message Missmatch (AccountNo:2982)
+[Error][2025.06.03 21:10:42 / ERROR /          9]    + Send Caht:혼자오면 아이쇼핑 나랑오면 진짜 쇼핑 되냐? 안되냐? 
+
+[Error][2025.06.03 21:10:42 / ERROR /         10]    + Recv Caht:혼자오면 아이쇼핑 나랑오면  
+
+[Error][2025.06.03 21:10:43 / ERROR /         11] RES_MESSAGE - Chat Message Missmatch (AccountNo:3524)
+[Error][2025.06.03 21:10:43 / ERROR /         12]    + Send Caht:1년내내 쿵칙빡칙 친구집이 나이트냐? 
+
+[Error][2025.06.03 21:10:43 / ERROR /         13]    + Recv Caht:1년내내 쿵칙빡칙  
+
+[Error][2025.06.03 21:10:43 / ERROR /         14] RES_MESSAGE - Not Login (My AccountNo:2479  ChatSender AccountNo:77)
+[Error][2025.06.03 21:10:43 / ERROR /         15] RES_MESSAGE - Chat Message Missmatch (AccountNo:2087)
+[Error][2025.06.03 21:10:43 / ERROR /         16] RES_MESSAGE - Chat Message Missmatch (AccountNo:2664)
+[Error][2025.06.03 21:10:43 / ERROR /         17]    + Send Caht:다시는 주문하지 않을래  
+
+[Error][2025.06.03 21:10:43 / ERROR /         18]    + Send Caht:You are My Boy 내게로  
+
+[Error][2025.06.03 21:10:43 / ERROR /         19]    + Recv Caht:다시는 주문X 
+
+[Error][2025.06.03 21:10:43 / ERROR /         20]    + Recv Caht:You are My 
+
+[Error][2025.06.03 21:10:43 / ERROR /         21] RES_MESSAGE - Chat Message Missmatch (AccountNo:4365)
+[Error][2025.06.03 21:10:43 / ERROR /         22]    + Send Caht:향기로운 거란걸 내게 가르쳐줘요  
+
+[Error][2025.06.03 21:10:43 / ERROR /         23]    + Recv Caht:향기로운 거란걸  
+
+[Error][2025.06.03 21:10:43 / ERROR /         24] RES_MESSAGE - Not Login (My AccountNo:230  ChatSender AccountNo:2600)
+[Error][2025.06.03 21:10:43 / ERROR /         25] RES_MESSAGE - Not Login (My AccountNo:36  ChatSender AccountNo:2600)
+[Error][2025.06.05 10:48:07 / ERROR /          2] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:2010)
+[Error][2025.06.05 10:48:07 / ERROR /          3] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:4837)
+[Error][2025.06.05 10:48:07 / ERROR /          4] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:523)
+[Error][2025.06.05 10:48:07 / ERROR /          5] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:1349)
+[Error][2025.06.05 10:48:07 / ERROR /          6] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:3461)
+[Error][2025.06.05 10:48:07 / ERROR /          7] RES_MESSAGE - Chat Message Missmatch (AccountNo:4352)
+[Error][2025.06.05 10:48:07 / ERROR /          8]    + Send Caht:shake it shake it shake it shake it baby,  
+
+[Error][2025.06.05 10:48:07 / ERROR /          9]    + Recv Caht:이젠 나 어 
+
+[Error][2025.06.05 10:48:07 / ERROR /         10] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:1712)
+[Error][2025.06.05 10:52:34 / ERROR /          2] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:151)
+[Error][2025.06.05 10:52:34 / ERROR /          3] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:4535)
+[Error][2025.06.05 10:52:34 / ERROR /          4] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:74)
+[Error][2025.06.05 10:52:34 / ERROR /          5] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:2381)
+[Error][2025.06.05 10:52:34 / ERROR /          6] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:4473)
+[Error][2025.06.05 10:52:34 / ERROR /          7] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:323)
+[Error][2025.06.05 10:52:51 / ERROR /          2] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:3351)
+[Error][2025.06.05 10:52:51 / ERROR /          3] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:3101)
+[Error][2025.06.05 10:52:51 / ERROR /          4] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:4951)
+[Error][2025.06.05 10:52:51 / ERROR /          5] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:1943)
+[Error][2025.06.05 10:52:51 / ERROR /          6] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:3641)
+[Error][2025.06.05 10:52:51 / ERROR /          7] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:1339)
+[Error][2025.06.05 10:52:51 / ERROR /          8] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:4290)
+[Error][2025.06.05 10:52:52 / ERROR /          9] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:1117)
+[Error][2025.06.05 10:52:52 / ERROR /         10] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:4097)
+[Error][2025.06.05 11:03:49 / ERROR /          2] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:4307)
+[Error][2025.06.05 11:03:49 / ERROR /          3] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:1455)
+[Error][2025.06.05 11:03:49 / ERROR /          4] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:2707)
+[Error][2025.06.05 11:03:49 / ERROR /          5] RES_MESSAGE - Chat Message Missmatch (AccountNo:2878)
+[Error][2025.06.05 11:03:49 / ERROR /          6]    + Send Caht:아무 말 못하게 입맞출까  
+
+[Error][2025.06.05 11:03:49 / ERROR /          7]    + Recv Caht:UV는 이태원 갔어  
+
+[Error][2025.06.05 11:08:08 / ERROR /          2] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:895)
+[Error][2025.06.05 11:08:08 / ERROR /          3] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:926)
+[Error][2025.06.05 11:08:09 / ERROR /          4] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:3231)
+[Error][2025.06.05 11:08:09 / ERROR /          5] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:1840)
+[Error][2025.06.05 11:08:09 / ERROR /          6] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:2234)
+[Error][2025.06.05 11:08:09 / ERROR /          7] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:3815)
+[Error][2025.06.05 11:08:09 / ERROR /          8] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:2024)
+[Error][2025.06.05 11:08:09 / ERROR /          9] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:599)
+[Error][2025.06.05 11:23:43 / ERROR /          2] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:1982)
+[Error][2025.06.05 11:23:43 / ERROR /          3] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:2896)
+[Error][2025.06.05 11:23:43 / ERROR /          4] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:1853)
+[Error][2025.06.05 11:23:43 / ERROR /          5] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:793)
+[Error][2025.06.05 11:23:43 / ERROR /          6] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:2106)
+[Error][2025.06.05 11:23:43 / ERROR /          7] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:3608)
+[Error][2025.06.05 11:23:43 / ERROR /          8] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:3250)
+[Error][2025.06.05 11:23:43 / ERROR /          9] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:2591)
+[Error][2025.06.05 11:23:43 / ERROR /         10] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:4125)
+[Error][2025.06.05 11:23:43 / ERROR /         11] RES_MESSAGE - No Send Chat, but My Chat recv (My AccountNo:904)
+[Error][2025.06.05 11:26:17 / ERROR /          2] RES_MESSAGE - Chat Message Missmatch (AccountNo:3012)
+[Error][2025.06.05 11:26:17 / ERROR /          3]    + Send Caht:님이라는 글자에다 점하나  
+
+[Error][2025.06.05 11:26:17 / ERROR /          4]    + Recv Caht:님이라는 글자 
+
+[Error][2025.06.05 11:26:17 / ERROR /          5] RES_MESSAGE - Chat Message Missmatch (AccountNo:2974)
+[Error][2025.06.05 11:26:17 / ERROR /          6]    + Send Caht:자꾸만 보고 싶은 걸 
+
+[Error][2025.06.05 11:26:17 / ERROR /          7]    + Recv Caht:자꾸만 보a 
+
+[Error][2025.06.05 11:26:18 / ERROR /          8] RES_MESSAGE - Chat Message Missmatch (AccountNo:4060)
+[Error][2025.06.05 11:26:18 / ERROR /          9]    + Send Caht:남자들만(put your hands up!!)  
+
+[Error][2025.06.05 11:26:18 / ERROR /         10]    + Recv Caht:남자들만(put your 
+
+[Error][2025.06.05 11:28:06 / ERROR /          2] RES_MESSAGE - Chat Message Missmatch (AccountNo:4128)
+[Error][2025.06.05 11:28:06 / ERROR /          3]    + Send Caht:님이님이님이님이 사랑하는 님이  
+
+[Error][2025.06.05 11:28:06 / ERROR /          4]    + Recv Caht:님이님이님이님이  
+
+[Error][2025.06.05 11:28:06 / ERROR /          5] RES_MESSAGE - Chat Message Missmatch (AccountNo:2355)
+[Error][2025.06.05 11:28:06 / ERROR /          6]    + Send Caht:김태희도 날 보고 반했지  
+
+[Error][2025.06.05 11:28:06 / ERROR /          7]    + Recv Caht:김태희도 날  
+
+[Error][2025.06.05 11:28:06 / ERROR /          8] RES_MESSAGE - Chat Message Missmatch (AccountNo:4884)
+[Error][2025.06.05 11:28:06 / ERROR /          9]    + Send Caht:내눈을 똑바로 봐 
+
+[Error][2025.06.05 11:28:06 / ERROR /         10]    + Recv Caht:내눈을 [Error][2025.06.05 11:28:06 / ERROR /         11] RES_MESSAGE - Chat Message Missmatch (AccountNo:4079)
+[Error][2025.06.05 11:28:06 / ERROR /         12]    + Send Caht:분위기도 정말 좋은데 전화번호도 따고 있는데 
+
+[Error][2025.06.05 11:28:06 / ERROR /         13]    + Recv Caht:분위기도 정말 좋은데  
+
+[Error][2025.06.05 11:28:06 / ERROR /         14] RES_MESSAGE - Chat Message Missmatch (AccountNo:67)
+[Error][2025.06.05 11:28:06 / ERROR /         15]    + Send Caht:저기 보이는 저것 
+
+[Error][2025.06.05 11:28:06 / ERROR /         16]    + Recv Caht:저기 보앴[Error][2025.06.05 11:28:06 / ERROR /         17] RES_MESSAGE - Chat Message Missmatch (AccountNo:2427)
+[Error][2025.06.05 11:28:06 / ERROR /         18]    + Send Caht:영원한 나만의 사랑 예이예~ 
+
+[Error][2025.06.05 11:28:06 / ERROR /         19]    + Recv Caht:영원한 나만의  
+
+[Error][2025.06.08 18:21:01 / ERROR /          2] RES_MESSAGE - Chat Message Missmatch (AccountNo:3970)
+[Error][2025.06.08 18:21:01 / ERROR /          4]    + Send Caht:Oh G-dragon A-yo Great Park 뭐해요? 
+
+[Error][2025.06.08 18:21:01 / ERROR /          3] RES_MESSAGE - Chat Message Missmatch (AccountNo:1641)
+[Error][2025.06.08 18:21:01 / ERROR /          8]    + Send Caht:아직 이노래를 듣고 앉았네? 아직 세상이 좀 아름답나 보지? 
+
+[Error][2025.06.08 18:21:01 / ERROR /          6] RES_MESSAGE - Chat Message Missmatch (AccountNo:3654)
+[Error][2025.06.08 18:21:01 / ERROR /          7] RES_MESSAGE - Chat Message Missmatch (AccountNo:2541)
+[Error][2025.06.08 18:21:01 / ERROR /          5]    + Recv Caht:Oh G-dragon A-yo Great Park 뭐해요 
+
+[Error][2025.06.08 18:21:01 / ERROR /          9]    + Recv Caht:아직 이노래를 듣고 앉았네? 아직 세상이 좀 아름답나 보지 
+
+[Error][2025.06.08 18:21:01 / ERROR /         10]    + Send Caht:사랑의 섹시 너의 눈빛 (무한도전)(우리눈빛) 
+
+[Error][2025.06.08 18:21:01 / ERROR /         11]    + Send Caht:하지만 내 마음은 아니야  
+
+[Error][2025.06.08 18:21:01 / ERROR /         16]    + Recv Caht:하지만 내 마음은 아니야 
+
+[Error][2025.06.08 18:21:01 / ERROR /         13] RES_MESSAGE - Chat Message Missmatch (AccountNo:1779)
+[Error][2025.06.08 18:21:01 / ERROR /         14] RES_MESSAGE - Chat Message Missmatch (AccountNo:2010)
+[Error][2025.06.08 18:21:01 / ERROR /         19]    + Send Caht:올림픽대로가 막혀요 지금은 어딜가도 막혀요  
+
+[Error][2025.06.08 18:21:01 / ERROR /         12] RES_MESSAGE - Chat Message Missmatch (AccountNo:671)
+[Error][2025.06.08 18:21:01 / ERROR /         17] RES_MESSAGE - Chat Message Missmatch (AccountNo:2055)
+[Error][2025.06.08 18:21:01 / ERROR /         18]    + Send Caht:woo baby woo woo baby  
+
+[Error][2025.06.08 18:21:01 / ERROR /         15]    + Recv Caht:사랑의 섹시 너의 눈빛 (무한도전)(우리눈빛 
+
+[Error][2025.06.08 18:21:01 / ERROR /         20]    + Recv Caht:올림픽대로가 막혀요 지금은 어딜가도 막혀요 
+
+[Error][2025.06.08 18:21:01 / ERROR /         21] RES_MESSAGE - Chat Message Missmatch (AccountNo:2365)
+[Error][2025.06.08 18:21:01 / ERROR /         22]    + Send Caht:비처럼음악처럼 노래 듣지마 너는 비가오면 소주를 마시겠지만  
+
+[Error][2025.06.08 18:21:01 / ERROR /         23]    + Send Caht:알럽 쌈바! 
+
+[Error][2025.06.08 18:21:01 / ERROR /         24]    + Recv Caht:woo baby woo woo baby 
+
+[Error][2025.06.08 18:21:01 / ERROR /         25]    + Send Caht:지워버린척 딴 얘길 시작할까  
+
+[Error][2025.06.08 18:21:01 / ERROR /         26]    + Recv Caht:비처럼음악처럼 노래 듣지마 너는 비가오면 소주를 마시겠지만 
+
+[Error][2025.06.08 18:21:01 / ERROR /         27]    + Recv Caht:알럽 쌈바 
+
+[Error][2025.06.08 18:21:01 / ERROR /         28]    + Recv Caht:지워버린척 딴 얘길 시작할까 
+
+[Error][2025.06.08 18:21:01 / ERROR /         29] RES_MESSAGE - Chat Message Missmatch (AccountNo:4164)
+[Error][2025.06.08 18:21:01 / ERROR /         30]    + Send Caht:다왔다 다왔어! 다왔다 다왔어! 
+
+[Error][2025.06.08 18:21:01 / ERROR /         31] RES_MESSAGE - Chat Message Missmatch (AccountNo:1590)
+[Error][2025.06.08 18:21:01 / ERROR /         33]    + Send Caht:woo baby woo woo baby  
+
+[Error][2025.06.08 18:21:01 / ERROR /         34]    + Recv Caht:woo baby woo woo baby 
+
+[Error][2025.06.08 18:21:01 / ERROR /         32]    + Recv Caht:다왔다 다왔어! 다왔다 다왔어 
+
+[Error][2025.06.08 18:21:01 / ERROR /         35] RES_MESSAGE - Chat Message Missmatch (AccountNo:4328)
+[Error][2025.06.08 18:21:01 / ERROR /         36]    + Send Caht:shake it shake it shake it shake it baby,  
+
+[Error][2025.06.08 18:21:01 / ERROR /         37]    + Recv Caht:shake it shake it shake it shake it baby, 
+
+[Error][2025.06.08 18:21:01 / ERROR /         38] RES_MESSAGE - Chat Message Missmatch (AccountNo:3478)
+[Error][2025.06.08 18:21:01 / ERROR /         39] RES_MESSAGE - Chat Message Missmatch (AccountNo:3133)
+[Error][2025.06.08 18:21:01 / ERROR /         40] RES_MESSAGE - Chat Message Missmatch (AccountNo:1984)
+[Error][2025.06.08 18:21:01 / ERROR /         41] RES_MESSAGE - Chat Message Missmatch (AccountNo:392)
+[Error][2025.06.08 18:21:01 / ERROR /         42] RES_MESSAGE - Chat Message Missmatch (AccountNo:934)
+[Error][2025.06.08 18:21:01 / ERROR /         43] RES_MESSAGE - Chat Message Missmatch (AccountNo:2720)
+[Error][2025.06.08 18:21:01 / ERROR /         44] RES_MESSAGE - Chat Message Missmatch (AccountNo:1015)
+[Error][2025.06.08 18:21:01 / ERROR /         79]    + Send Caht:영원한 나만의 사랑 예이예~ 
+
+[Error][2025.06.08 18:21:01 / ERROR /         80]    + Recv Caht:영원한 나만의 사랑 예이예 
+
+[Error][2025.06.08 18:21:01 / ERROR /         47] RES_MESSAGE - Chat Message Missmatch (AccountNo:4358)
+[Error][2025.06.08 18:21:01 / ERROR /         48] RES_MESSAGE - Chat Message Missmatch (AccountNo:110)
+[Error][2025.06.08 18:21:01 / ERROR /         49] RES_MESSAGE - Chat Message Missmatch (AccountNo:266)
+[Error][2025.06.08 18:21:01 / ERROR /         50] RES_MESSAGE - Chat Message Missmatch (AccountNo:4271)
+[Error][2025.06.08 18:21:01 / ERROR /         51] RES_MESSAGE - Chat Message Missmatch (AccountNo:4547)
+[Error][2025.06.08 18:21:01 / ERROR /         52] RES_MESSAGE - Chat Message Missmatch (AccountNo:3431)
+[Error][2025.06.08 18:21:01 / ERROR /         53] RES_MESSAGE - Chat Message Missmatch (AccountNo:1829)
+[Error][2025.06.08 18:21:01 / ERROR /         54] RES_MESSAGE - Chat Message Missmatch (AccountNo:1308)
+[Error][2025.06.08 18:21:01 / ERROR /         88]    + Send Caht:폭염에도 내가 가고 야! 한번쯤 와라!!! 
+
+[Error][2025.06.08 18:21:01 / ERROR /         56] RES_MESSAGE - Chat Message Missmatch (AccountNo:761)
+[Error][2025.06.08 18:21:01 / ERROR /         57] RES_MESSAGE - Chat Message Missmatch (AccountNo:1701)
+[Error][2025.06.08 18:21:01 / ERROR /         58] RES_MESSAGE - Chat Message Missmatch (AccountNo:3371)
+[Error][2025.06.08 18:21:01 / ERROR /         59] RES_MESSAGE - Chat Message Missmatch (AccountNo:403)
+[Error][2025.06.08 18:21:01 / ERROR /         93]    + Send Caht:흔들어주세요!  
+
+[Error][2025.06.08 18:21:01 / ERROR /         94]    + Recv Caht:흔들어주세요! 
+
+[Error][2025.06.08 18:21:01 / ERROR /         62] RES_MESSAGE - Chat Message Missmatch (AccountNo:581)
+[Error][2025.06.08 18:21:01 / ERROR /         63] RES_MESSAGE - Chat Message Missmatch (AccountNo:4952)
+[Error][2025.06.08 18:21:01 / ERROR /         64] RES_MESSAGE - Chat Message Missmatch (AccountNo:3518)
+[Error][2025.06.08 18:21:01 / ERROR /         65] RES_MESSAGE - Chat Message Missmatch (AccountNo:1528)
+[Error][2025.06.08 18:21:01 / ERROR /         66] RES_MESSAGE - Chat Message Missmatch (AccountNo:4587)
+[Error][2025.06.08 18:21:01 / ERROR /         67] RES_MESSAGE - Chat Message Missmatch (AccountNo:1178)
+[Error][2025.06.08 18:21:01 / ERROR /        100]    + Send Caht:아야!해도 소용없어 베이베~ 
+
+[Error][2025.06.08 18:21:01 / ERROR /         69] RES_MESSAGE - Chat Message Missmatch (AccountNo:3608)
+[Error][2025.06.08 18:21:01 / ERROR /        102]    + Send Caht:shake it shake it baby,  
+
+[Error][2025.06.08 18:21:01 / ERROR /        103]    + Recv Caht:shake it shake it baby, 
+
+[Error][2025.06.08 18:21:01 / ERROR /         72] RES_MESSAGE - Chat Message Missmatch (AccountNo:44)
+[Error][2025.06.08 18:21:01 / ERROR /         73]    + Send Caht:흔들 흔들 흔들 흔들 흔들  
+
+[Error][2025.06.08 18:21:01 / ERROR /         74]    + Send Caht:여기도 여자 저기도 여자 내발에 치이는게 온통 여자  
+
+[Error][2025.06.08 18:21:01 / ERROR /        106]    + Recv Caht:여기도 여자 저기도 여자 내발에 치이는게 온통 여자 
+
+[Error][2025.06.08 18:21:01 / ERROR /         76]    + Send Caht:동해도 번쩍 서해도 번쩍  
+
+[Error][2025.06.08 18:21:01 / ERROR /        107]    + Recv Caht:동해도 번쩍 서해도 번쩍 
+
+[Error][2025.06.08 18:21:01 / ERROR /         78]    + Send Caht:아니아니아니아니아니아니아니아니아니 너랑 사귈때도이미 너는 남자3  
+
+[Error][2025.06.08 18:21:01 / ERROR /        108]    + Recv Caht:아니아니아니아니아니아니아니아니아니 너랑 사귈때도이미 너는 남자3 
+
+[Error][2025.06.08 18:21:01 / ERROR /         46] RES_MESSAGE - Chat Message Missmatch (AccountNo:4851)
+[Error][2025.06.08 18:21:01 / ERROR /        109]    + Send Caht:바라보는 내 마음도 아팠어요  
+
+[Error][2025.06.08 18:21:01 / ERROR /         82]    + Send Caht:흔들어주세요!  
+
+[Error][2025.06.08 18:21:01 / ERROR /        111]    + Recv Caht:흔들어주세요! 
+
+[Error][2025.06.08 18:21:01 / ERROR /         84]    + Send Caht:흔들어주세요!  
+
+[Error][2025.06.08 18:21:01 / ERROR /         85]    + Send Caht:완벽하지 않아도 나만을 아껴줄 그런 남자 Shy Boy 
+
+[Error][2025.06.08 18:21:01 / ERROR /         86]    + Send Caht:2012 뚱스  
+
+[Error][2025.06.08 18:21:01 / ERROR /         87]    + Send Caht:남이남이남이 되버리고 흔들어주세요!  
+
+[Error][2025.06.08 18:21:01 / ERROR /         55] RES_MESSAGE - Chat Message Missmatch (AccountNo:2638)
+[Error][2025.06.08 18:21:01 / ERROR /         89]    + Recv Caht:폭염에도 내가 가고 야! 한번쯤 와라!! 
+
+[Error][2025.06.08 18:21:01 / ERROR /         90]    + Send Caht:사진을 태우고 기억을 지워도 널 잊을 수 없나 봐 사랑해  
+
+[Error][2025.06.08 18:21:01 / ERROR /        117]    + Recv Caht:사진을 태우고 기억을 지워도 널 잊을 수 없나 봐 사랑해 
+
+[Error][2025.06.08 18:21:01 / ERROR /         92]    + Send Caht:남이남이남이 되버리고 흔들어주세요!  
+
+[Error][2025.06.08 18:21:01 / ERROR /         60] RES_MESSAGE - Chat Message Missmatch (AccountNo:873)
+[Error][2025.06.08 18:21:01 / ERROR /        119]    + Send Caht:울면서 할 줄은 나 몰랐던 말  
+
+[Error][2025.06.08 18:21:01 / ERROR /        120]    + Recv Caht:울면서 할 줄은 나 몰랐던 말 
+
+[Error][2025.06.08 18:21:01 / ERROR /         96]    + Send Caht:눈물은 나오는데 활짝 웃어  
+
+[Error][2025.06.08 18:21:01 / ERROR /         97]    + Send Caht:니가 사면 김밥집 내가 사면 스테이크 되냐? 안되냐? 
+
+[Error][2025.06.08 18:21:01 / ERROR /         98]    + Send Caht:뚜루왑 두밥 두밥 (뚜루왑 두밥 두밥 둡) 
+
+[Error][2025.06.08 18:21:01 / ERROR /         99]    + Send Caht:사랑의 섹시 너의 눈빛 (무한도전) 
+
+[Error][2025.06.08 18:21:01 / ERROR /         68] RES_MESSAGE - Chat Message Missmatch (AccountNo:222)
+[Error][2025.06.08 18:21:01 / ERROR /        101]    + Recv Caht:아야!해도 소용없어 베이베 
+
+[Error][2025.06.08 18:21:01 / ERROR /         70] RES_MESSAGE - Chat Message Missmatch (AccountNo:2572)
+[Error][2025.06.08 18:21:01 / ERROR /         71] RES_MESSAGE - Chat Message Missmatch (AccountNo:1224)
+[Error][2025.06.08 18:21:01 / ERROR /        104]    + Send Caht:뚫리고 막히고 뚫리고 막히고  
+
+[Error][2025.06.08 18:21:01 / ERROR /        105]    + Recv Caht:흔들 흔들 흔들 흔들 흔들 
+
+[Error][2025.06.08 18:21:01 / ERROR /         75]    + Send Caht:한번도 못했던 말  
+
+[Error][2025.06.08 18:21:01 / ERROR /         77]    + Send Caht:헤이 레이디 난 여자 많아 너 아니어도 여자 많아  
+
+[Error][2025.06.08 18:21:01 / ERROR /        130]    + Recv Caht:헤이 레이디 난 여자 많아 너 아니어도 여자 많아 
+
+[Error][2025.06.08 18:21:01 / ERROR /         81]    + Send Caht:니 얼굴 쩔어 (쩔어 쩔어 쩔어 이게 바로 미남 Style)  
+
+[Error][2025.06.08 18:21:01 / ERROR /        131]    + Recv Caht:니 얼굴 쩔어 (쩔어 쩔어 쩔어 이게 바로 미남 Style) 
+
+[Error][2025.06.08 18:21:01 / ERROR /         83]    + Send Caht:외로울뿐이고!(뿐이고)  
+
+[Error][2025.06.08 18:21:01 / ERROR /        132]    + Recv Caht:외로울뿐이고!(뿐이고) 
+
+[Error][2025.06.08 18:21:01 / ERROR /        113]    + Recv Caht:완벽하지 않아도 나만을 아껴줄 그런 남자 Shy Bo 
+
+[Error][2025.06.08 18:21:01 / ERROR /        114]    + Recv Caht:2012 뚱스 
+
+[Error][2025.06.08 18:21:01 / ERROR /        115]    + Recv Caht:남이남이남이 되버리고 흔들어주세요! 
+
+[Error][2025.06.08 18:21:01 / ERROR /        116]    + Send Caht:= 
+
+[Error][2025.06.08 18:21:01 / ERROR /         91]    + Send Caht:신데렐라는 12시 니네집은 9시 되냐? 안되냐? 
+
+[Error][2025.06.08 18:21:01 / ERROR /        118]    + Recv Caht:남이남이남이 되버리고 흔들어주세요! 
+
+[Error][2025.06.08 18:21:01 / ERROR /         61] RES_MESSAGE - Chat Message Missmatch (AccountNo:4673)
+[Error][2025.06.08 18:21:01 / ERROR /         95]    + Send Caht:= 
+
+[Error][2025.06.08 18:21:01 / ERROR /        121]    + Recv Caht:눈물은 나오는데 활짝 웃어 
+
+[Error][2025.06.08 18:21:01 / ERROR /        122]    + Recv Caht:니가 사면 김밥집 내가 사면 스테이크 되냐? 안되냐 
+
+[Error][2025.06.08 18:21:01 / ERROR /        123]    + Recv Caht:뚜루왑 두밥 두밥 (뚜루왑 두밥 두밥 둡 
+
+[Error][2025.06.08 18:21:01 / ERROR /        124]    + Recv Caht:사랑의 섹시 너의 눈빛 (무한도전 
+
+[Error][2025.06.08 18:21:01 / ERROR /        125]    + Send Caht:귀티 부티 촌티 날티에 난 치를 떨었어  
+
+[Error][2025.06.08 18:21:01 / ERROR /        137]    + Recv Caht:귀티 부티 촌티 날티에 난 치를 떨었어 
+
+[Error][2025.06.08 18:21:01 / ERROR /        127]    + Send Caht:니가 사면 김밥집 내가 사면 스테이크 되냐? 안되냐? 
+
+[Error][2025.06.08 18:21:01 / ERROR /        128]    + Recv Caht:뚫리고 막히고 뚫리고 막히고 
+
+[Error][2025.06.08 18:21:01 / ERROR /        129]    + Recv Caht:한번도 못했던 말 
+
+[Error][2025.06.08 18:21:01 / ERROR /         45] RES_MESSAGE - Chat Message Missmatch (AccountNo:4059)
+[Error][2025.06.08 18:21:01 / ERROR /        139]    + Send Caht:Oh Oh Oh Bad Boy (Bad Bad Bad Boy) 
+
+[Error][2025.06.08 18:21:01 / ERROR /        140]    + Recv Caht:Oh Oh Oh Bad Boy (Bad Bad Bad Boy 
+
+[Error][2025.06.08 18:21:01 / ERROR /        133]    + Recv Caht: 
+
+[Error][2025.06.08 18:21:01 / ERROR /        134]    + Recv Caht:신데렐라는 12시 니네집은 9시 되냐? 안되냐 
+
+[Error][2025.06.08 18:21:01 / ERROR /        135]    + Send Caht:= 
+
+[Error][2025.06.08 18:21:01 / ERROR /        136]    + Recv Caht: 
+
+[Error][2025.06.08 18:21:01 / ERROR /        126]    + Send Caht:미친듯이 노는거야 (ah-ha!) 
+
+[Error][2025.06.08 18:21:01 / ERROR /        138]    + Recv Caht:니가 사면 김밥집 내가 사면 스테이크 되냐? 안되냐 
+
+[Error][2025.06.08 18:21:01 / ERROR /        110]    + Recv Caht:바라보는 내 마음도 아팠어요 
+
+[Error][2025.06.08 18:21:01 / ERROR /        112]    + Recv Caht:흔들어주세요! 
+
+[Error][2025.06.08 18:21:01 / ERROR /        141]    + Recv Caht: 
+
+[Error][2025.06.08 18:21:01 / ERROR /        142]    + Recv Caht:미친듯이 노는거야 (ah-ha! 
+

@@ -9,6 +9,7 @@
 //----------------------------------------
 //모니터링 출력을 위한 전역 변수들
 //----------------------------------------
+extern DWORD g_messageCount;
 extern long long g_playerCount;
 
 extern unsigned long long g_CPacketCreateCount;
@@ -57,7 +58,6 @@ extern LFreeQ<Job> g_ContentsJobQ;
 //----------------------------------------
 // 출력 함수들
 //----------------------------------------
-void PrintSendBufferPool();
 void PrintSerializePool();
 void PrintSessionCount();
 void PrintConsolMenu();
@@ -142,13 +142,6 @@ int main()
 	return 0;
 }
 
-
-
-void PrintSendBufferPool()
-{
-	
-
-}
 void PrintSerializePool()
 {
 	printf("------------------------------------------\n");
@@ -240,9 +233,12 @@ void UpdateMonitorData()
 	double TotalNonPaged = 0;
 	double Available = 0;
 	long long localAcceptTPS = InterlockedExchange(&g_AcceptTps, 0);
-	int localPacketPoolTps = (int)InterlockedExchange(&g_CPacketAllocCount, 0);
-	int jobSize = (int)g_ContentsJobQ.GetSize();
+	int localPacketPoolTps = (int)g_CPacketAllocCount;
+	//int jobSize = (int)g_ContentsJobQ.GetSize();
 	
+	DWORD localMessageCount = InterlockedExchange(&g_messageCount, 0);
+
+
 
 	for (int i = 0; i < pLib->_workerThreadCount; i++)
 	{
@@ -263,7 +259,8 @@ void UpdateMonitorData()
 	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_PLAYER, (int)g_PlayerLogInCount);
 	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_UPDATE_TPS, (int)localRECVTPS);
 	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_PACKET_POOL, localPacketPoolTps);
-	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_UPDATEMSG_POOL, jobSize);
+	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_UPDATEMSG_POOL, localMessageCount);
 	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_GAME_ACCEPT_TPS, localAcceptTPS);
+
 	
 }

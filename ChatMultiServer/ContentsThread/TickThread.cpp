@@ -3,7 +3,7 @@
 #include "Log/Monitoring.h"
 #include "ContentsFunc.h"
 
-extern CLanServer* networkServer;
+extern CWanServer* networkServer;
 
 
 thread_local DWORD t_prevFrameTime;
@@ -27,6 +27,7 @@ unsigned int TickThread(void*)
 
 	while (1)
 	{
+		
 		DWORD currentTime = timeGetTime();
 		DWORD deltaTime = currentTime - t_prevFrameTime;
 		DWORD deltaCount = deltaTime / FrameSec;
@@ -35,7 +36,7 @@ unsigned int TickThread(void*)
 
 		sendProb++;
 
-		if (sendProb % 2 == 0) 
+		if (sendProb % 4 == 0) 
 		{
 			networkServer->EnqueSendRequest();
 		}
@@ -49,8 +50,9 @@ unsigned int TickThread(void*)
 			Sleep(FrameSec - logicTime);
 		}
 
-
 		t_frame++;
+
+		//여기서 이거 때문에 밀릴듯
 
 		if (t_frame >= FrameRate)
 		{
@@ -68,10 +70,7 @@ unsigned int TickThread(void*)
 				break;
 			}
 			
-			{
-
-				serverMornitor.ConsolPrint();
-			}
+			serverMornitor.ConsolPrint();
 
 			TimeOutCheck();
 

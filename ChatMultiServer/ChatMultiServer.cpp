@@ -3,23 +3,40 @@
 #include "ContentsThread/ContentsFunc.h"
 #include "ContentsThread//ContentsThreadManager.h"
 #include "Log/Monitoring.h"
-CLanServer* networkServer;
+#include "ContentsThread/MonitorManager.h"
+CWanServer* networkServer;
 CContentsThreadManager* contentsManager;
+CMonitorManager g_MonitorManager;
+CPdhManager g_PDH;
+
+
 bool ChatMultiServer()
 {
 	CMonitor serverMornitor;
 	procademy::CCrashDump dump;
-	networkServer = new CLanServer;
+	g_PDH.Start();
+	networkServer = new CWanServer;
 	contentsManager = new CContentsThreadManager(networkServer);
 	contentsManager->Start();
 	//ContentsThreadManager 인스턴스 생성
 
+	DWORD prevTime;
+	DWORD currentTime;
+	DWORD resultTime;
 
-	//종료 대기
+	prevTime = timeGetTime();
+
 	while (1)
 	{
-		Profiler p("Sleep 1000");
-		Sleep(1000);
+		UpdateMonitorData();
+
+		currentTime = timeGetTime();
+
+		resultTime = currentTime - prevTime;
+
+		Sleep(1000 - resultTime);
+		
+		prevTime += 1000;
 	}
 
 	//서버 종료 절차
