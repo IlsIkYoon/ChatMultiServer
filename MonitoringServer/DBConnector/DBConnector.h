@@ -38,7 +38,7 @@ public:
 	{
 		mysql_init(&conn);
 
-		//todo//read config 파일
+		//todo//read config 파일	
 		// 멤버 변수에 DB ip 등의 값 저장
 		//connection 바로 연결
 

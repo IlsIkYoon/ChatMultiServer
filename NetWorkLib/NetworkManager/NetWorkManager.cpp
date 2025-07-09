@@ -27,6 +27,8 @@ unsigned long g_threadIndex;
 
 LogManager CWanManager::_log;
 
+extern HANDLE WorkThreadArr[128];
+
 CWanManager::CWanManager()
 {
 	_exitThreadEvent = CreateEvent(NULL, true, false, NULL);
@@ -286,6 +288,7 @@ void CWanManager::IOCP_WorkerThread()
 
 		errorCheck = CheckGQCSError(GQCS_ret, &recvdBytes, recvdKey, recvdOverLapped, GetLastError());
 
+
 		if (errorCheck == true)
 		{
 			continue;
@@ -293,6 +296,7 @@ void CWanManager::IOCP_WorkerThread()
 
 		_session = nullptr;
 		_session = (Session*)recvdKey;
+
 
 		if ((ULONG_PTR)recvdOverLapped == (ULONG_PTR)&_session->_recvOverLapped) //Recv에 대한 완료 통지
 		{
@@ -529,6 +533,10 @@ bool CWanManager::SendPacket(ULONG64 playerId, CPacket* buf)
 
 	if (_session->_sendBuffer.GetSize() > 1000)
 	{
+		std::string error;
+		error = "sendBuffer Size Error !!!";
+		EnqueLog(error);
+
 		DisconnectSession(_session->_ID._ulong64);
 		DecrementSessionIoCount(_session);
 		sendPacket->DecrementUseCount();
@@ -574,6 +582,7 @@ void CWanManager::_DisconnectSession(ULONG64 sessionID)
 }
 void CWanManager::_DisconnectSession(Session* _session)
 {
+	
 	if (InterlockedCompareExchange64(&_session->_releaseIOFlag._all, SESSION_DISCONNECTING, SESSION_CLOSABLE) != SESSION_CLOSABLE)
 	{
 		return;
@@ -599,8 +608,8 @@ bool CWanManager::CheckGQCSError(bool retval, DWORD* recvdbytes, ULONG_PTR recvd
 {
 	Session* _session = (Session*)recvdkey;
 
-
-	if (recvdbytes == 0)
+	
+	if (*recvdbytes == 0)
 	{
 		DecrementSessionIoCount(_session);
 
@@ -1120,5 +1129,20 @@ bool CWanManager::ConnectServer(std::wstring ip, unsigned short portNum, ULONG64
 	_RecvPost(currentSession);
 
 	DecrementSessionIoCount(currentSession);
+
+}
+
+
+void CWanManager::RegistWork(Work* threadWork, unsigned short workIndex)
+{
+	WorkArg* threadArg = new WorkArg;
+	threadArg->threadindex = workIndex;
+	threadArg->threadJobQ = new LFreeQ<CPacket*>;
+	threadArg->threadWork = threadWork;
+
+	HANDLE thread = (HANDLE)_beginthreadex(NULL, 0, ThreadWorkFunc, threadArg, NULL, NULL);
+	//쓰레드 생성 
+
+	WorkThreadArr[workIndex] = thread;
 
 }

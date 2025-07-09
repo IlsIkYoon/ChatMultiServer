@@ -7,6 +7,7 @@
 #include "Buffer/LFreeQ.h"
 #include "Log/Profiler.h"
 #include "Session/Session.h"
+#include "Work/Work.h"
 
 
 //-----------------------------------------------
@@ -183,6 +184,10 @@ public:
 	void RegistWorkerThreadCount(int pCount);
 	void RegistPortNum(int pPortNum);
 
+	//--------------------------------------------
+	// ÄÁÅÙÃ÷¿¡¼­ Àü´ÞÇÏ´Â work
+	//--------------------------------------------
+	void RegistWork(Work* threadWork, unsigned short workIndex);
 
 	bool ConnectServer(std::wstring ip, unsigned short portNum, ULONG64* outSessionID);
 

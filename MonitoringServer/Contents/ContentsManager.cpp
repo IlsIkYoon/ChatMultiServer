@@ -225,7 +225,7 @@ bool CContentsManager::HandeClientLoginMsg(CPacket* message, ULONG64 ID)
 	}
 
 	agentIndex = CWanServer::GetIndex(ID);
-	(*agentManager)[agentIndex].Type = static_cast<BYTE>(enAgentType::en_Server);
+	(*agentManager)[agentIndex].Type = static_cast<BYTE>(enAgentType::en_Client);
 	(*agentManager)[agentIndex].Status = static_cast<BYTE>(enAgentStatus::en_Alive);
 	(*agentManager)[agentIndex].sessionID = ID;
 	agentManager->RegistClient(ID);
@@ -264,8 +264,23 @@ bool CContentsManager::SendClientLoginResMsg(ULONG64 ID)
 
 bool CContentsManager::DeleteAgent(ULONG64 ID)
 {
+
 	unsigned short agentIndex = CWanServer::GetIndex(ID);
-	(*agentManager)[agentIndex].Clear();
+	CMonitorAgent* currentAgent;
+	currentAgent = &(*agentManager)[agentIndex];
+	if (currentAgent->Type == static_cast<BYTE>(enAgentType::en_Client))
+	{
+		agentManager->clientList.remove(ID);
+	}
+	else if (currentAgent->Type == static_cast<BYTE>(enAgentType::en_Server))
+	{
+		agentManager->serverList.remove(ID);
+	}
+	else
+	{
+		return false;
+	}
+	currentAgent->Clear();
 	return true;
 }
 

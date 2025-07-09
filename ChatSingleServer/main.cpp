@@ -122,11 +122,11 @@ int main()
 	g_Monitor.RegistMonitor(L"127.0.0.1", MonitorPortNum);
 
 	
+	startTimeTick = timeGetTime();
 
 	while (1)
 	{
 
-		startTimeTick = timeGetTime();
 
 		PrintConsolMenu();
 
@@ -136,7 +136,11 @@ int main()
 		
 		endTimeTick = timeGetTime();
 		resultTimeTick = (endTimeTick - startTimeTick) / 1000;
-		Sleep(1000 - resultTimeTick);
+		if (resultTimeTick < 1000)
+		{
+			Sleep(1000 - resultTimeTick);
+		}
+		startTimeTick += 1000;
 	}
 
 	return 0;
@@ -250,7 +254,7 @@ void UpdateMonitorData()
 	g_PDH.GetMemoryData(&PrivateMem, &ProcessNonPaged, &TotalNonPaged, &Available);
 	
 	CPUUsage.UpdateCpuTime();
-	localProcessorTotal = (int)CPUUsage.ProcessorTotal();
+	localProcessorTotal = (int)CPUUsage.ProcessTotal();
 	
 	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_SERVER_RUN, 1);
 	g_Monitor.UpdateMonitor(dfMONITOR_DATA_TYPE_CHAT_SERVER_CPU, localProcessorTotal);

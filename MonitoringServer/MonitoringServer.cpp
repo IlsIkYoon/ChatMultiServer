@@ -31,6 +31,8 @@ bool MonitoringServer()
 	
 	g_NetworkManager->RegistPortNum(portNum);
 	g_NetworkManager->RegistSessionMaxCoiunt(sessionCount);
+	g_NetworkManager->RegistWorkerThreadCount(1);
+	g_NetworkManager->RegistConcurrentCount(1);
 	g_ContentsManager = new CContentsManager(g_NetworkManager);
 	g_PDH.RegistEthernetMax(ethernetCount);
 	g_PDH.Start();
@@ -39,7 +41,14 @@ bool MonitoringServer()
 #endif
 	g_NetworkManager->Start();
 
-	
+	CCpuUsage myCpu;
+
+	while (1)
+	{
+		myCpu.UpdateCpuTime();
+		printf("Total Process : %f, Monitor Process : %f\n", myCpu.ProcessorTotal(), myCpu.ProcessTotal());
+		Sleep(1000);
+	}
 	
 
 	Sleep(INFINITE);

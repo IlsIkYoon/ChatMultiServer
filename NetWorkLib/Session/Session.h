@@ -77,6 +77,7 @@ struct Session
 	long _sendFlag;
 
 	LFreeQ<CPacket*> _sendBuffer;
+	LFreeQ<CPacket*> jobQ;
 	CPacket* _recvBuffer;
 
 
