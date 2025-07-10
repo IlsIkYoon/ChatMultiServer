@@ -4,6 +4,8 @@
 #include "Buffer/RingBuffer.h"
 #include "Buffer/SerializeBuf.h"
 
+class Work;
+
 extern unsigned long long g_LoginSessionCount;
 
 enum class enSessionType
@@ -79,6 +81,7 @@ struct Session
 	LFreeQ<CPacket*> _sendBuffer;
 	LFreeQ<CPacket*> jobQ;
 	CPacket* _recvBuffer;
+	Work* currentWork;
 
 
 	OVERLAPPED _sendOverLapped;
@@ -106,7 +109,7 @@ struct Session
 	void SwapRecvBuffer();
 };
 
-class SessionManager
+class CSessionManager
 {
 	Session* _sessionList;
 	int _sessionMaxCount;
@@ -126,7 +129,7 @@ class SessionManager
 
 public:
 
-	SessionManager(int sessionCount);
+	CSessionManager(int sessionCount);
 	bool _makeNewSession(unsigned short* outIDex, SOCKET* newSocket, SOCKADDR_IN* clientAddr);
 
 

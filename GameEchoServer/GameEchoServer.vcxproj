@@ -188,14 +188,17 @@
     <ClCompile Include="GameEchoServer.cpp" />
     <ClCompile Include="GameEchoServerResource.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Monitor\MonitorManager.cpp" />
     <ClCompile Include="Network\Network.cpp" />
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Thread\Auth.cpp" />
+    <ClCompile Include="Thread\Game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommonProtocol.h" />
     <ClInclude Include="GameEchoServer.h" />
     <ClInclude Include="GameEchoServerResource.h" />
+    <ClInclude Include="Monitor\MonitorManager.h" />
     <ClInclude Include="Network\Network.h" />
     <ClInclude Include="Player\Player.h" />
     <ClInclude Include="Thread\Auth.h" />

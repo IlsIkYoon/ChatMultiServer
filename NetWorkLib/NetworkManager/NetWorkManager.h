@@ -8,12 +8,12 @@
 #include "Log/Profiler.h"
 #include "Session/Session.h"
 #include "Work/Work.h"
-
+#include "Network.h"
 
 //-----------------------------------------------
 // 클라이언트 통신 전용 네트워크 매니저
 //-----------------------------------------------
-class CWanManager
+class CWanManager : public CNetwork
 {
 public:
 
@@ -25,7 +25,7 @@ public:
 
 	unsigned short _portNum;
 
-	SessionManager* _sessionList;
+	CSessionManager* _sessionList;
 	unsigned long _sendInProgress;
 
 	int _sessionMaxCount;
@@ -128,11 +128,11 @@ private:
 	//--------------------------------------------
 	bool RequestSessionAbort(ULONG64 playerID);
 
-	bool IncrementSessionIoCount(Session* _session);
+	virtual bool IncrementSessionIoCount(Session* _session) override final;
 	//--------------------------------------------
 	// IOCount가 0이면 삭제 후 false 반환
 	//--------------------------------------------
-	bool DecrementSessionIoCount(Session* _session);
+	virtual bool DecrementSessionIoCount(Session* _session) override final;
 
 	bool SendCompletionRoutine(Session* _session);
 	bool RecvCompletionRoutine(Session* _session);
@@ -187,7 +187,7 @@ public:
 	//--------------------------------------------
 	// 컨텐츠에서 전달하는 work
 	//--------------------------------------------
-	void RegistWork(Work* threadWork, unsigned short workIndex);
+	void RegistWork(Work* threadWork);
 
 	bool ConnectServer(std::wstring ip, unsigned short portNum, ULONG64* outSessionID);
 

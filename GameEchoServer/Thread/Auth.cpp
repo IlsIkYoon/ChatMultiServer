@@ -2,22 +2,23 @@
 #include "CommonProtocol.h"
 #include "Network/Network.h"
 #include "Player/Player.h"
+#include "Game.h"
 
-CWanServer* g_WanServer;
 
-bool AuthThreadWork::HandleMessage(CPacket* message, ULONG64 id)
+extern CGameThreadWork* g_GameThreadWork;
+
+bool CAuthThreadWork::HandleMessage(CPacket* message, ULONG64 id)
 {
-	//메세지 분기 타는 함수
 	WORD messageType;
 
-	if (message->GetDataSize() < messageType)
+	if (message->GetDataSize() < sizeof(messageType))
 	{
 		std::string error;
 		error += "AuthThread InComplete Message Error || ID : ";
 		error += std::to_string(id);
 
-		g_WanServer->EnqueLog(error);
-		g_WanServer->DisconnectSession(id);
+		networkManager->EnqueLog(error);
+		networkManager->DisconnectSession(id);
 		return false;
 	}
 
@@ -41,8 +42,8 @@ bool AuthThreadWork::HandleMessage(CPacket* message, ULONG64 id)
 		error += "Auth Thread Message Type Error || ID : ";
 		error += std::to_string(id);
 
-		g_WanServer->EnqueLog(error);
-		g_WanServer->DisconnectSession(id);
+		networkManager->EnqueLog(error);
+		networkManager->DisconnectSession(id);
 		return false;
 	}
 		break;
@@ -51,24 +52,18 @@ bool AuthThreadWork::HandleMessage(CPacket* message, ULONG64 id)
 
 	return true;
 }
-bool AuthThreadWork::FrameLogic()
+bool CAuthThreadWork::FrameLogic()
 {
-	//messageQ에서 메세지 꺼내서 처리하기
-
-
-
+	InterlockedIncrement(&frame);
 	return true;
 }
 
 
-bool AuthThreadWork::HandleLoginMessage(CPacket* message, ULONG64 id)
+bool CAuthThreadWork::HandleLoginMessage(CPacket* message, ULONG64 id)
 {
-//		INT64	AccountNo
-//		char	SessionKey[64]
-//
-//		int		Version			// 1 
 	CPlayer* currentPlayer;
 	unsigned short playerIndex;
+
 
 	INT64 AccountNo;
 	char SessionKey[64];
@@ -80,8 +75,8 @@ bool AuthThreadWork::HandleLoginMessage(CPacket* message, ULONG64 id)
 		error = "AuthThread Message Len Error || ";
 		error += std::to_string(id);
 
-		g_WanServer->EnqueLog(error);
-		g_WanServer->DisconnectSession(id);
+		networkManager->EnqueLog(error);
+		networkManager->DisconnectSession(id);
 		return false;
 	}
 	
@@ -89,11 +84,49 @@ bool AuthThreadWork::HandleLoginMessage(CPacket* message, ULONG64 id)
 	message->PopFrontData(64, SessionKey);
 	*message >> Version;
 
-	playerIndex = g_WanServer->GetIndex(id);
-	currentPlayer = &(*g_WanServer->playerManager)[playerIndex];
+	playerIndex = CWanServer::GetIndex(id);
+	currentPlayer = &(*playerManager)[playerIndex];
 	currentPlayer->accountNo = AccountNo;
 	
-	//todo//게임 쓰레드에 캐릭터 생성 요청 보내기
+	g_GameThreadWork->CreateSession(id);
+	//DeleteSession(id);
+	HandleDeleteSessionMsg(id);
 
 	return true;
+}
+
+
+bool CAuthThreadWork::WorkInit()
+{
+	return true;
+}
+
+void CAuthThreadWork::OnCreateSession(ULONG64 ID)
+{
+	CPlayer* currentPlayer;
+	unsigned short playerIndex;
+
+	playerIndex = CWanServer::GetIndex(ID);
+	currentPlayer = &(*playerManager)[playerIndex];
+
+	playerList.push_back(currentPlayer);
+	currentPlayer->work = static_cast<BYTE>(enPlayerWork::en_Auth);
+	workPlayerCount++;
+}
+void CAuthThreadWork::OnDeleteSession(ULONG64 ID)
+{
+	CPlayer* currentPlayer;
+	unsigned short playerIndex;
+
+	playerIndex = CWanServer::GetIndex(ID);
+	currentPlayer = &(*playerManager)[playerIndex];
+
+	playerList.remove(currentPlayer);
+	workPlayerCount--;
+}
+
+CAuthThreadWork::CAuthThreadWork()
+{
+	frame = 0;
+	workPlayerCount = 0;
 }

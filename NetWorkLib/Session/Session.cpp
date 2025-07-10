@@ -42,7 +42,7 @@ long* Session::SessionReleaseIOCount::GetIoCountPtr()
 	return &_struct.ioCount;
 }
 
-SessionManager::SessionManager(int sessionCount)
+CSessionManager::CSessionManager(int sessionCount)
 {
 	_sessionMaxCount = sessionCount;
 	_sessionList = new Session[sessionCount];
@@ -52,7 +52,7 @@ SessionManager::SessionManager(int sessionCount)
 	_sessionID = 1;
 }
 
-void SessionManager::_InitIndexStack()
+void CSessionManager::_InitIndexStack()
 {
 	for (int i = 19999; i >= 0; i--)
 	{
@@ -80,6 +80,7 @@ Session::Session()
 	_status = static_cast<long>(Session::Status::Active);
 	_type = static_cast<BYTE>(enSessionType::en_IDLE);
 	
+	currentWork = nullptr;
 }
 
 Session::~Session()
@@ -87,12 +88,12 @@ Session::~Session()
 
 }
 
-Session& SessionManager::operator[](int idex)
+Session& CSessionManager::operator[](int idex)
 {
 	return _sessionList[idex];
 }
 
-void SessionManager::Delete(unsigned short iDex)
+void CSessionManager::Delete(unsigned short iDex)
 {
 	_sessionList[iDex].clear();
 	_indexStack.Delete(iDex);
@@ -115,6 +116,7 @@ void Session::clear()
 
 	InterlockedExchange(&_status, static_cast<long>(Session::Status::Active));
 	_type = static_cast<BYTE>(enSessionType::en_IDLE);
+	currentWork = nullptr;
 }
 
 void Session::init()
@@ -129,7 +131,7 @@ void Session::init()
 
 }
 
-bool SessionManager::_makeNewSession(unsigned short* outIDex, SOCKET* newSocket, SOCKADDR_IN* clientAddr)
+bool CSessionManager::_makeNewSession(unsigned short* outIDex, SOCKET* newSocket, SOCKADDR_IN* clientAddr)
 {
 	unsigned short iDex = _indexStack.Alloc();
 	ULONG64 localID = _sessionID++;
@@ -149,7 +151,7 @@ bool SessionManager::_makeNewSession(unsigned short* outIDex, SOCKET* newSocket,
 	return true;
 }
 
-Session& SessionManager::GetSession(int idex)
+Session& CSessionManager::GetSession(int idex)
 {
 	return _sessionList[idex];
 }
@@ -169,4 +171,3 @@ void Session::SwapRecvBuffer()
 	}
 	oldRecvbuf->DecrementUseCount();
 }
-

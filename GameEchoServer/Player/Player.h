@@ -9,15 +9,17 @@ class CPlayer
 public:
 	INT64 accountNo;
 	LFreeQ<CPacket*> messageQ;
-
+	BYTE work;
 
 public:
 	CPlayer()
 	{
 		_id = 0;
+		accountNo = 0;
+		work = 0;
 	}
 
-	void init();
+	void init(ULONG64 ID);
 	void clear();
 
 
@@ -38,6 +40,12 @@ public:
 	{
 		return playerArr[iDex];
 	}
+	CPlayerManager(unsigned int playerMaxCount);
 
+};
 
+enum class enPlayerWork
+{
+	en_Auth = 10,
+	en_Game
 };

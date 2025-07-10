@@ -7,6 +7,12 @@ class CWanServer : public CWanManager
 public:
 	CPlayerManager* playerManager;
 
+	unsigned int acceptCount;
+	unsigned int recvCount;
+	unsigned int sendCount;
+	
+	CWanServer();
+
 	virtual void _OnMessage(CPacket* message, ULONG64 ID) override final;
 	virtual void _OnAccept(ULONG64 ID) override final;
 	virtual void _OnDisConnect(ULONG64 ID) override final;

@@ -72,6 +72,12 @@
     <ClInclude Include="Work\Work.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Work\WorkProtocol.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkManager\Network.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NetWorkLib.cpp">

@@ -217,12 +217,14 @@
     <ClInclude Include="Log\Profiler.h" />
     <ClInclude Include="NetWorkLib_Unified.h" />
     <ClInclude Include="NetworkManager\CLanManager.h" />
+    <ClInclude Include="NetworkManager\Network.h" />
     <ClInclude Include="NetworkManager\NetWorkManager.h" />
     <ClInclude Include="ntPacketDefine.h" />
     <ClInclude Include="Parser\TextParser.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Session\Session.h" />
     <ClInclude Include="Work\Work.h" />
+    <ClInclude Include="Work\WorkProtocol.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Buffer\LFreeQ.cpp" />

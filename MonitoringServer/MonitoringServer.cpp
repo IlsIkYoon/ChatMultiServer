@@ -43,12 +43,6 @@ bool MonitoringServer()
 
 	CCpuUsage myCpu;
 
-	while (1)
-	{
-		myCpu.UpdateCpuTime();
-		printf("Total Process : %f, Monitor Process : %f\n", myCpu.ProcessorTotal(), myCpu.ProcessTotal());
-		Sleep(1000);
-	}
 	
 
 	Sleep(INFINITE);

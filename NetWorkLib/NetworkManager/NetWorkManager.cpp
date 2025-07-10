@@ -289,13 +289,14 @@ void CWanManager::IOCP_WorkerThread()
 		errorCheck = CheckGQCSError(GQCS_ret, &recvdBytes, recvdKey, recvdOverLapped, GetLastError());
 
 
-		if (errorCheck == true)
-		{
-			continue;
-		}
-
 		_session = nullptr;
 		_session = (Session*)recvdKey;
+
+		if (errorCheck == true)
+		{
+			DecrementSessionIoCount(_session);
+			continue;
+		}
 
 
 		if ((ULONG_PTR)recvdOverLapped == (ULONG_PTR)&_session->_recvOverLapped) //Recv에 대한 완료 통지
@@ -357,8 +358,8 @@ bool CWanManager::_RecvPost(Session* _session)
 
 		if (GetLastError() == 10054 || GetLastError() == 10053)
 		{
+			
 			RequestSessionAbort(_session->_ID._ulong64);
-			DecrementSessionIoCount(_session);
 		}
 		else 
 		{
@@ -415,7 +416,6 @@ bool CWanManager::_SendPost(Session* _session)
 	
 	if (_session->sendCount > 1000)
 	{
-		__debugbreak();
 		DisconnectSession(_session->_ID._ulong64);
 		delete[] buf;
 		return false;
@@ -425,15 +425,14 @@ bool CWanManager::_SendPost(Session* _session)
 	OVERLAPPED localOverlapped = _session->_sendOverLapped;
 	SOCKET localSocket = _session->_socket;
 
-	{
-		sendRet = WSASend(localSocket, buf, (DWORD)sendSize, NULL, NULL, &_session->_sendOverLapped, NULL);
-	}
+	sendRet = WSASend(localSocket, buf, (DWORD)sendSize, NULL, NULL, &_session->_sendOverLapped, NULL);
+
 	DWORD errCode = GetLastError();
 	if (sendRet != 0 && errCode != WSA_IO_PENDING)
 	{	
 		if (errCode == 10054 || errCode == 10053 || errCode == 10004)
 		{
-			DecrementSessionIoCount(_session);
+			RequestSessionAbort(_session->_ID._ulong64);
 		}
 		else {
 			printf("GetLastError : %d\n", errCode);
@@ -611,23 +610,23 @@ bool CWanManager::CheckGQCSError(bool retval, DWORD* recvdbytes, ULONG_PTR recvd
 	
 	if (*recvdbytes == 0)
 	{
-		DecrementSessionIoCount(_session);
+		RequestSessionAbort(_session->_ID._ulong64);
 
 		return true;
 	}
 	if (retval == false && errorno == ERROR_OPERATION_ABORTED) //CancelIoEx 호출됨
 	{
-		DecrementSessionIoCount(_session);
+		RequestSessionAbort(_session->_ID._ulong64);
 		return true;
 	}
 	if (retval == false && errorno == ERROR_SEM_TIMEOUT)
 	{
-		DecrementSessionIoCount(_session);
+		RequestSessionAbort(_session->_ID._ulong64);
 		return true;
 	}
 	if (retval == false && errorno == ERROR_CONNECTION_ABORTED)
 	{
-		DecrementSessionIoCount(_session);
+		RequestSessionAbort(_session->_ID._ulong64);
 		return true;
 	}
 
@@ -699,7 +698,7 @@ void CWanManager::EnqueLog(std::string& string)
 
 void CWanManager::InitSessionList(int SessionCount)
 {
-	_sessionList = new SessionManager(SessionCount);
+	_sessionList = new CSessionManager(SessionCount);
 }
 
 
@@ -854,12 +853,10 @@ bool CWanManager::RequestSessionAbort(ULONG64 playerID)
 	InterlockedExchange(&_session->_status, static_cast<long>(Session::Status::MarkForDeletion));
 	CanelIoExResult = CancelIoEx((HANDLE)_session->_socket, NULL);
 
-	if (CanelIoExResult == false)
+	if (_session->currentWork != nullptr)
 	{
-		DecrementSessionIoCount(_session);
-		return false;
+		_session->currentWork->DeleteSession(_session->_ID._ulong64);
 	}
-
 
 	DecrementSessionIoCount(_session);
 	return true;
@@ -978,7 +975,7 @@ bool CWanManager::RecvCompletionRoutine(Session* _session)
 			errorMsg = std::format("Packet Decode Error !!! SessionID [{}]", GetID(_session->_ID._ulong64));
 			_log.EnqueLog(errorMsg);
 
-			DecrementSessionIoCount(_session);
+			RequestSessionAbort(_session->_ID._ulong64);
 			disconnected = true;
 			break;
 		}
@@ -1006,6 +1003,9 @@ bool CWanManager::RecvCompletionRoutine(Session* _session)
 
 
 		{
+			_session->jobQ.Enqueue(SBuf);
+			SBuf->IncrementUseCount(); //메세지를 넣었다는 의미
+
 			_OnMessage(SBuf, _session->_ID._ulong64);
 
 
@@ -1050,8 +1050,6 @@ bool CWanManager::Start()
 
 	g_pRecvTps = new unsigned long long[_workerThreadCount];
 	g_pSendTps = new unsigned long long[_workerThreadCount];
-
-	InitSessionList(_sessionMaxCount);
 	
 	networkInit_retval = _NetworkInit();
 	if (networkInit_retval == false)
@@ -1075,6 +1073,8 @@ void CWanManager::RegistConcurrentCount(int pCount)
 void CWanManager::RegistSessionMaxCoiunt(int pCount)
 {
 	_sessionMaxCount = pCount;
+	InitSessionList(_sessionMaxCount);
+
 }
 void CWanManager::RegistWorkerThreadCount(int pCount)
 {
@@ -1111,10 +1111,17 @@ bool CWanManager::ConnectServer(std::wstring ip, unsigned short portNum, ULONG64
 		__debugbreak();
 	}
 
-	retval = connect(newSocket, (SOCKADDR*)&serverAddr, sizeof(serverAddr));
-	if (retval != 0)
+	while (1)
 	{
-		__debugbreak();
+		retval = connect(newSocket, (SOCKADDR*)&serverAddr, sizeof(serverAddr));
+		if (retval != 0)
+		{
+			printf("Connect Error !!!\n");
+			Sleep(1000);
+			continue;
+		}
+
+		break;
 	}
 
 	_sessionList->_makeNewSession(&currentIdex, &newSocket, &serverAddr);
@@ -1130,19 +1137,15 @@ bool CWanManager::ConnectServer(std::wstring ip, unsigned short portNum, ULONG64
 
 	DecrementSessionIoCount(currentSession);
 
+	return true;
 }
 
 
-void CWanManager::RegistWork(Work* threadWork, unsigned short workIndex)
+void CWanManager::RegistWork(Work* threadWork)
 {
 	WorkArg* threadArg = new WorkArg;
-	threadArg->threadindex = workIndex;
-	threadArg->threadJobQ = new LFreeQ<CPacket*>;
 	threadArg->threadWork = threadWork;
-
+	threadWork->networkManager = this;
+	threadWork->sessionManager = _sessionList;
 	HANDLE thread = (HANDLE)_beginthreadex(NULL, 0, ThreadWorkFunc, threadArg, NULL, NULL);
-	//쓰레드 생성 
-
-	WorkThreadArr[workIndex] = thread;
-
 }

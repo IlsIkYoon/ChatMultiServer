@@ -429,7 +429,7 @@ bool CLanManager::_SendPost(Session* _session)
 			error += "session ID : ";
 			error += std::to_string(_session->_ID._ulong64);
 			EnqueLog(error);
-			DecrementSessionIoCount(_session);
+			RequestSessionAbort(_session->_ID._ulong64);
 		}
 		else {
 			printf("GetLastError : %d\n", GetLastError());
@@ -675,7 +675,7 @@ void CLanManager::EnqueLog(std::string& string)
 
 void CLanManager::InitSessionList(int SessionCount)
 {
-	_sessionList = new SessionManager(SessionCount);
+	_sessionList = new CSessionManager(SessionCount);
 }
 
 
@@ -829,12 +829,6 @@ bool CLanManager::RequestSessionAbort(ULONG64 playerID)
 
 	InterlockedExchange(&_session->_status, static_cast<long>(Session::Status::MarkForDeletion));
 	CanelIoExResult = CancelIoEx((HANDLE)_session->_socket, NULL);
-
-	if (CanelIoExResult == false) //등록된 io가 없었음
-	{
-		DecrementSessionIoCount(_session);
-		return false;
-	}
 
 
 	DecrementSessionIoCount(_session);

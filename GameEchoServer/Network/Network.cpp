@@ -1,17 +1,11 @@
 #include "Network.h"
+#include "Thread/Auth.h"
 
+extern CAuthThreadWork* g_AuthThreadWork;
 
 void CWanServer::_OnMessage(CPacket* SBuf, ULONG64 ID)
 {
-	//Session이 어디 쓰레드에 있는지를 얻어내고
-	//그 쓰레드에 넘겨 줌 
-	//user job q 구조로 간다면 ?
-	
-	//플레이어의 메세지 큐에 메세지를 넣어 준다. (work)
-	unsigned short PlayerIndex = GetIndex(ID);
-	(*playerManager)[PlayerIndex].messageQ.Enqueue(SBuf);
-	SBuf->IncrementUseCount();
-
+	InterlockedIncrement(&recvCount);
 
 	return;
 }
@@ -19,9 +13,30 @@ void CWanServer::_OnMessage(CPacket* SBuf, ULONG64 ID)
 
 void CWanServer::_OnAccept(ULONG64 ID)
 {
-	//여기서 authThread에 생성 요청.
+	unsigned short playerIndex;
+	playerIndex = GetIndex(ID);
+	(*playerManager)[playerIndex].init(ID);
 
+	g_AuthThreadWork->CreateSession(ID);
 
+	InterlockedIncrement(&acceptCount);
+}
 
+CWanServer::CWanServer()
+{
+	acceptCount = 0;
+	recvCount = 0;
+	sendCount = 0;
+	playerManager = nullptr;
+}
 
+void CWanServer::_OnDisConnect(ULONG64 ID)
+{
+	unsigned short playerIndex;
+	playerIndex = GetIndex(ID);
+	(*playerManager)[playerIndex].clear();
+}
+void CWanServer::_OnSend(ULONG64 ID)
+{
+	return;
 }
