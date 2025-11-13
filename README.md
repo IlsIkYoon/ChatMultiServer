@@ -2,7 +2,7 @@
 <h1>프로젝트 구조</h1>
 <ul>모든 서버는 물리적 분산이 가능할 수 있도록 설계했습니다.</ul>
 </br>
-<img src="image/ServerFlowChart2.png" alt="로고" width="300"/>
+<img src="image/ServerFlowChart2.png" alt="분산 서버 구조" width="600"/>
 </br>
 </br>
 <h3>NetWorkLib</h3>
