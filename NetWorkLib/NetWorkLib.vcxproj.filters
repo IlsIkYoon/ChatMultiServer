@@ -78,6 +78,15 @@
     <ClInclude Include="NetworkManager\Network.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Logger\CpuUsage.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger\Log.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger\Profiler.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NetWorkLib.cpp">
@@ -126,6 +135,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Work\Work.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger\CpuUsage.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger\Log.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger\Profiler.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
