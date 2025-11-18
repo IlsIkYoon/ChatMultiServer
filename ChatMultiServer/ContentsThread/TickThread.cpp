@@ -61,7 +61,6 @@ unsigned int TickThread(void*)
 			switch (retval)
 			{
 			case static_cast<char>(en_InputType::en_ProcessExit):
-				//todo//서버 종료 요청 실행
 				break;
 			case static_cast<char>(en_InputType::en_SaveProfiler):
 				WriteAllProfileData();
@@ -81,8 +80,6 @@ unsigned int TickThread(void*)
 		t_prevFrameTime += t_fixedDeltaTime;
 
 	}
-
-	//todo//여기서 종료 절차
 
 
 	return 0;

@@ -22,11 +22,6 @@ public:
 	CDBConnector()
 	{
 		mysql_init(&conn);
-
-		//todo//read config 파일
-		// 멤버 변수에 DB ip 등의 값 저장
-		//connection 바로 연결
-
 		connection = mysql_real_connect(&conn, "127.0.0.1", "root", "12341234", "test", 3306, (char*)NULL, 0);
 
 		if (connection == NULL)

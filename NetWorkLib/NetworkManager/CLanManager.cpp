@@ -200,7 +200,6 @@ void CLanManager::AcceptThread()
 
 	while (1)
 	{
-		//todo//어떤 시그널을 받아서 마지막에 정상 종료할 수 있게 로직을 짜기
 		newSocket = 0;
 		ZeroMemory(&clientAddr, sizeof(clientAddr));
 
@@ -610,9 +609,6 @@ bool CLanManager::CheckGQCSError(bool retval, DWORD* recvdbytes, ULONG_PTR recvd
 	if (recvdkey == THREAD_EXIT)
 	{
 		__debugbreak();
-		//todo//
-		//종료에 대한 키 값 전달 
-		//종료 로직
 	}
 	if (recvdkey == NULL)
 	{

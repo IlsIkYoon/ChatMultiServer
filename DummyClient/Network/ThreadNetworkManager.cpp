@@ -183,8 +183,6 @@ bool CThreadNetworkManager::HandleReadSelect(DummySession* _session)
 
 	if (recv_retval == 0)
 	{
-		//todo//Delete세션 요청
-
 		//DeleteSession(_session);
 	}
 

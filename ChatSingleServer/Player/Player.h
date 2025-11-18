@@ -1,13 +1,6 @@
 #pragma once
 #include "Contents/ContentsResource.h"
 
-//todo//
-//접속을 종료하면 그냥 바로 꺼내야 하는데 
-//그러려면 단순한 큐가 아닌게 좋긴 하지 ??
-//intrussive Q 가자
-//g_WaitingAccessPlayerQ
-//그리고 얘는 출력 될 수 있게 ㄱㄱ
-
 extern unsigned long long g_PlayerID;
 extern std::stack<int> g_playerIndexStack;
 

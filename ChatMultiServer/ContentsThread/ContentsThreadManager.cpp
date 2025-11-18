@@ -79,7 +79,7 @@ bool CContentsThreadManager::ContentsThreadInit()
 
 bool CContentsThreadManager::End()
 {
-	//todo//서버 종료 절차에 따른 리소스 반환
+
 
 	return true;
 }

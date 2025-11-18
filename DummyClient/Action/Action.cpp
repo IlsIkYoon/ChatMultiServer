@@ -192,7 +192,7 @@ bool HandleCheckMsgAction(DummySession* mySessionArr, DWORD mySessionCount)
 
 	if (allRecvd == true)
 	{
-		//todo//disconnect 없이 계속 돌게 할 목적으로 넣은 로직
+		
 		for (unsigned int i = 0; i < mySessionCount; i++)
 		{
 			if (mySessionArr[i].dummyStatus < static_cast<long>(DummySession::DummyStatus::Connected))
@@ -230,7 +230,6 @@ bool HandleSendChatMsgAction(DummySession* mySessionArr, DWORD mySessionCount)
 			continue;
 		}
 
-		//todo//확률 체크 로직 필요
 		if (mySessionArr[i].dummyStatus == static_cast<long>(DummySession::DummyStatus::RecvdMoveEnd))
 		{
 			char* sendMsg;
@@ -291,7 +290,6 @@ bool HandleCheckMoveStopAction(DummySession* mySessionArr, DWORD mySessionCount)
 			allActionComplete = false;
 			break;
 		}
-		//todo//얼마나 안 왔는지 체크 해야하나 ? 
 	}
 
 

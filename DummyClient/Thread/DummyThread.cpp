@@ -153,7 +153,6 @@ bool ContentsWork(DummySession* mySessionArr, DWORD mySessionCount, DWORD fixedD
 
 bool ThreadActionComplete()
 {
-	//todo//이미 카운트를 올렸는데 다시 올리는 상황을 없앨 방법 마련해야함
 	bool allActionComplete = true;
 	bool retval = false;
 
@@ -343,7 +342,6 @@ bool Decode_NetworkHeader(DummySession* _session,CPacket* ContentsPacket)
 
 	if (_session->_recvQ.GetSizeUsed() < ntHeader._len)
 	{
-		//todo//restorePacket 
 		RestoreNetworkHeader(ntHeader, _session);
 		return false;
 	}
@@ -355,7 +353,6 @@ bool Decode_NetworkHeader(DummySession* _session,CPacket* ContentsPacket)
 
 	if (decodeRetval == static_cast<int>(CPacket::ErrorCode::INVALID_DATA_PACKET))
 	{
-		//todo//세션 종료 절차 필요
 		__debugbreak();
 		return false;
 	}

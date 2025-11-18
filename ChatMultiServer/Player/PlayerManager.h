@@ -7,7 +7,6 @@ class CPlayerManager
 {
 public:
 	Player* playerArr;
-//todo Ã¤¿ì±â
 	CPlayerManager(int playerCount);
 
 	Player& operator[](int iDex)
