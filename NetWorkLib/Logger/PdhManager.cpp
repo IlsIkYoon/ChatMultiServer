@@ -241,7 +241,7 @@ bool CPdhManager::CMemoryData::GetData(double* Private, double* ProcessNonPaged,
 		{
 			__debugbreak();
 		}
-		*Private = counterVal.largeValue;
+		*Private = (double)counterVal.largeValue;
 	}
 
 	if (ProcessNonPaged != nullptr)
@@ -250,7 +250,7 @@ bool CPdhManager::CMemoryData::GetData(double* Private, double* ProcessNonPaged,
 		{
 			__debugbreak();
 		}
-		*ProcessNonPaged = counterVal.largeValue;
+		*ProcessNonPaged = (double)counterVal.largeValue;
 	}
 
 	if (TotalNonPaged != nullptr)
@@ -259,7 +259,7 @@ bool CPdhManager::CMemoryData::GetData(double* Private, double* ProcessNonPaged,
 		{
 			__debugbreak();
 		}
-		*TotalNonPaged = counterVal.largeValue;
+		*TotalNonPaged = (double)counterVal.largeValue;
 	}
 
 	if (Available != nullptr)
@@ -268,7 +268,7 @@ bool CPdhManager::CMemoryData::GetData(double* Private, double* ProcessNonPaged,
 		{
 			__debugbreak();
 		}
-		*Available = counterVal.largeValue;
+		*Available = (double)counterVal.largeValue;
 	}
 	return true;
 }

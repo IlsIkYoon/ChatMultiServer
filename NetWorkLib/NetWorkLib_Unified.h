@@ -13,7 +13,7 @@
 #include "Buffer/LFreeQ.h"
 #include "Buffer/LFMemoryPool.h"
 #include "Logger/Profiler.h"
-#include "Logger/Log.h"
+#include "Logger/Logger.h"
 #include "Logger/CpuUsage.h"
 #include "NetworkManager/NetWorkManager.h"
 #include "NetworkManager/CLanManager.h"

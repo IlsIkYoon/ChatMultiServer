@@ -17,7 +17,7 @@ extern CRITICAL_SECTION g_Lock;
 
 unsigned long g_LanThreadIndex;
 
-LogManager CLanManager::_log;
+CLogManager CLanManager::_log;
 
 CLanManager::CLanManager()
 {

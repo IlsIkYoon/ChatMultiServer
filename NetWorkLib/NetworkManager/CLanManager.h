@@ -3,9 +3,9 @@
 
 #include "Buffer/RingBuffer.h"
 #include "Buffer/SerializeBuf.h"
-#include "Log/Log.h"
+#include "Logger/Logger.h"
 #include "Buffer/LFreeQ.h"
-#include "Log/Profiler.h"
+#include "Logger/Profiler.h"
 #include "Session/Session.h"
 #include "Network.h"
 
@@ -53,7 +53,7 @@ public:
 	// 로그 관리를 하는 매니저
 	// 내부에서 로그 쓰레드 생성 및 큐에 있는 로그를 파일에 출력하는 역할
 	//---------------------------------------------
-	static LogManager _log;
+	static CLogManager _log;
 
 
 	SOCKET _listenSocket;

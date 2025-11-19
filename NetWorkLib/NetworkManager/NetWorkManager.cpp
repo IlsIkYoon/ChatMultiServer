@@ -25,7 +25,7 @@ unsigned long long* g_pSendTps;
 unsigned long g_threadIndex;
 
 
-LogManager CWanManager::_log;
+CLogManager CWanManager::_log;
 
 extern HANDLE WorkThreadArr[128];
 
