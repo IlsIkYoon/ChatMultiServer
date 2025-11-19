@@ -146,7 +146,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\Users\yun-ilsik\source\repos\ChatMultiServer\NetWorkLib;C:\Users\yun-ilsik\source\repos\ChatMultiServer\ChatMultiServer;C:\Users\yun-ilsik\source\repos\ChatMultiServer\x64\Release\RedisLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\USER\source\repos\IlsIkYoon\ChatMultiServer\NetWorkLib;C:\Users\USER\source\repos\IlsIkYoon\ChatMultiServer\x64\Release;C:\Users\USER\source\repos\IlsIkYoon\ChatMultiServer\ChatMultiServer;C:\Users\yun-ilsik\source\repos\ChatMultiServer\NetWorkLib;C:\Users\yun-ilsik\source\repos\ChatMultiServer\ChatMultiServer;C:\Users\yun-ilsik\source\repos\ChatMultiServer\x64\Release\RedisLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>

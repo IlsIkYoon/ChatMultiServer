@@ -159,7 +159,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\yun-ilsik\source\repos\ChatMultiServer\NetWorkLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\USER\source\repos\IlsIkYoon\ChatMultiServer\NetWorkLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
@@ -243,11 +243,6 @@
     <ClCompile Include="Logger\Logger.cpp" />
     <ClCompile Include="Logger\PdhManager.cpp" />
     <ClCompile Include="Logger\Profiler.cpp" />
-    <ClCompile Include="Log\CpuUsage.cpp" />
-    <ClCompile Include="Log\CrashDump.cpp" />
-    <ClCompile Include="Log\Log.cpp" />
-    <ClCompile Include="Log\PdhManager.cpp" />
-    <ClCompile Include="Log\Profiler.cpp" />
     <ClCompile Include="NetWorkLib.cpp" />
     <ClCompile Include="NetworkManager\CLanManager.cpp" />
     <ClCompile Include="NetworkManager\NetWorkManager.cpp" />

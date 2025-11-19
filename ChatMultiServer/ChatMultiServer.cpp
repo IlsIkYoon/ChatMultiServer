@@ -2,7 +2,7 @@
 #include "ContentsResource.h"
 #include "ContentsThread/ContentsFunc.h"
 #include "ContentsThread//ContentsThreadManager.h"
-#include "Log/Monitoring.h"
+#include "Logger/PdhManager.h"
 #include "ContentsThread/MonitorManager.h"
 CWanServer* networkServer;
 CContentsThreadManager* contentsManager;
