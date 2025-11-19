@@ -1,13 +1,33 @@
+#include "pch.h"
 #include "Profiler.h"
 
-//#ifdef __PROFILE__
-thread_local ProfilerMap g_ProfileMap;
-CRITICAL_SECTION g_ProfilerWriteLock;
-unsigned long g_lockInit = (unsigned long)LockStatus::LOCK_UNINITIALIZED;
+std::list<CProfilerMap*> g_ProfileMapList;
+std::mutex g_ProfileMapListLock;
 
+bool WriteAllProfileData()
+{
+	std::lock_guard guard(g_ProfileMapListLock);
 
+	for (auto it : g_ProfileMapList)
+	{
+		std::lock_guard guard2(it->profilerMapLock);
+		it->SaveProfile();
+	}
+	printf("Profile Saved !!!!\n");
 
+	return true;
+}
 
+bool ResetAllProfileDate()
+{
+	std::lock_guard guard(g_ProfileMapListLock);
 
+	for (auto it : g_ProfileMapList)
+	{
+		it->ResetData();
+	}
 
-//#endif
+	printf("Profile Reset !!!!\n");
+
+	return true;
+}

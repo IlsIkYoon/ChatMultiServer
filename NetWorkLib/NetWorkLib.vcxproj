@@ -213,7 +213,9 @@
     <ClInclude Include="Buffer\TLSPool.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Logger\CpuUsage.h" />
-    <ClInclude Include="Logger\Log.h" />
+    <ClInclude Include="Logger\CrashDump.h" />
+    <ClInclude Include="Logger\Logger.h" />
+    <ClInclude Include="Logger\PdhManager.h" />
     <ClInclude Include="Logger\Profiler.h" />
     <ClInclude Include="Log\CpuUsage.h" />
     <ClInclude Include="Log\CrashDump.h" />
@@ -237,7 +239,9 @@
     <ClCompile Include="Buffer\SerializeBuf.cpp" />
     <ClCompile Include="Buffer\TLSPool.cpp" />
     <ClCompile Include="Logger\CpuUsage.cpp" />
-    <ClCompile Include="Logger\Log.cpp" />
+    <ClCompile Include="Logger\CrashDump.cpp" />
+    <ClCompile Include="Logger\Logger.cpp" />
+    <ClCompile Include="Logger\PdhManager.cpp" />
     <ClCompile Include="Logger\Profiler.cpp" />
     <ClCompile Include="Log\CpuUsage.cpp" />
     <ClCompile Include="Log\CrashDump.cpp" />

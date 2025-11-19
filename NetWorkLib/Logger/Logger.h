@@ -1,11 +1,8 @@
 #pragma once
 
-
 #include "pch.h"
 
-
-
-class LogManager
+class CLogManager
 {
 	DWORD sec;
 
@@ -15,12 +12,14 @@ class LogManager
 	std::list<std::string> _LogQ;
 	CRITICAL_SECTION logQLock;
 
-	HANDLE _LogThreadExitEvent;
+	std::string myFileName;
 
+	HANDLE _LogThreadExitEvent;
+	HANDLE _LogThreadDataEvent;
 public:
 	
-	LogManager();
-	~LogManager();
+	CLogManager();
+	~CLogManager();
 
 	bool InitLogManager();
 
@@ -30,32 +29,19 @@ public:
 	//-------------------------------------------//
 	unsigned int __stdcall LogThread();
 	//-------------------------------------------//
-	//모니터링 출력
-	//-------------------------------------------//
-	//void PrintLog();
-	
-	//-------------------------------------------//
-	//프레임이 FrameError 값 이하로 떨어졌을 때 모니터링 되는 화면을 로그로 저장
-	//-------------------------------------------//
-	void WriteLog();
-	//-------------------------------------------//
 	//LogQ에서 뽑아서 로그로 저장
 	//-------------------------------------------//
 	void WriteLogQToFile();
-	
 	//-------------------------------------------//
 	//파일 이름을 xxx.cpp로 남겨줌
 	//-------------------------------------------//
 	std::string getFileName(const std::string& path);
-	
-	
 	//-------------------------------------------//
 	//로그 형태 문자열로 로그 큐에 Enque
 	//-------------------------------------------//
 	void EnqueLog(const char* name,long long PlayID,  const char* FileName, const char* FuncName, int Line, int errorCode);
 	void EnqueLog(const char* string);
-
-
+	void EnqueLog(std::string& logEntry);
 	//------------------------------------------
 	// EnterCriticalSection(&LogQLock)매핑 함수
 	//------------------------------------------
@@ -64,17 +50,16 @@ public:
 	// LeaveCriticalSection(&LogQLock)매핑 함수
 	//------------------------------------------
 	void LeaveLog();
-
 	//------------------------------------------
 	// 로그 쓰레드 종료 요청 함수
 	//------------------------------------------
 	void CloseLogManager();
-
 	//------------------------------------------
 	// Logthread 종료 절차 - LogQ를 비운 뒤에 종료
 	//------------------------------------------
-
 	void _ExitLogThread();
+
+	void RegistMyFileName(std::string name);
 };
 
 

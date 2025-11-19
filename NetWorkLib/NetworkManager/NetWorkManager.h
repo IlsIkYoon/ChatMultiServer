@@ -3,9 +3,9 @@
 
 #include "Buffer/RingBuffer.h"
 #include "Buffer/SerializeBuf.h"
-#include "Log/Log.h"
+#include "Logger/Logger.h"
 #include "Buffer/LFreeQ.h"
-#include "Log/Profiler.h"
+#include "Logger/Profiler.h"
 #include "Session/Session.h"
 #include "Work/Work.h"
 #include "Network.h"
@@ -30,8 +30,6 @@ public:
 
 	int _sessionMaxCount;
 	long _sessionLoginCount;
-	
-	
 
 	//--------------------------------------------
 	// IOCP 변수
@@ -39,8 +37,6 @@ public:
 	int _concurrentCount;
 	int _workerThreadCount;
 	HANDLE _hIOCP;
-
-	
 	//---------------------------------------------
 	//쓰레드 관리를 위한 변수
 	//---------------------------------------------
@@ -48,19 +44,13 @@ public:
 	std::thread _acceptThread;
 
 	HANDLE _exitThreadEvent;
-	
-	
 	//---------------------------------------------
 	// 로그 관리를 하는 매니저
 	// 내부에서 로그 쓰레드 생성 및 큐에 있는 로그를 파일에 출력하는 역할
 	//---------------------------------------------
-	static LogManager _log;
-
+	static CLogManager _log;
 
 	SOCKET _listenSocket;
-
-
-
 
 public:
 	CWanManager();
@@ -187,11 +177,7 @@ public:
 	void RegistWork(Work* threadWork);
 
 	bool ConnectServer(std::wstring ip, unsigned short portNum, ULONG64* outSessionID);
-
 };
-
-
-
 
 enum class SendStatus
 {

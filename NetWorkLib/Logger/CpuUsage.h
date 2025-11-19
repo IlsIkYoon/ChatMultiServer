@@ -1,19 +1,8 @@
 #ifndef __CPU_USAGE_H__
 #define __CPU_USAGE_H__
 
-#include "windows.h"
-/////////////////////////////////////////////////////////////////////////////
-// CCpuUsage CPUTime(); // CPUTime(hProcess)
-//
-// while ( 1 )
-// {
-// CPUTIme.UpdateCpuTime();
-// wprintf(L"Processor:%f / Process:%f \n", CPUTime.ProcessorTotal(), CPUTime.ProcessTotal());
-// wprintf(L"ProcessorKernel:%f / ProcessKernel:%f \n", CPUTime.ProcessorKernel(), CPUTime.ProcessKernel());
-// wprintf(L"ProcessorUser:%f / ProcessUser:%f \n", CPUTime.ProcessorUser(), CPUTime.ProcessUser());
-// Sleep(1000);
-// }
-/////////////////////////////////////////////////////////////////////////////
+#include "pch.h"
+
 class CCpuUsage
 {
 public:

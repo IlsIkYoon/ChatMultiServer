@@ -81,10 +81,16 @@
     <ClInclude Include="Logger\CpuUsage.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Logger\Log.h">
+    <ClInclude Include="Logger\Logger.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Logger\Profiler.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger\CrashDump.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger\PdhManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -140,10 +146,16 @@
     <ClCompile Include="Logger\CpuUsage.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Logger\Log.cpp">
+    <ClCompile Include="Logger\Logger.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Logger\Profiler.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger\CrashDump.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger\PdhManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
